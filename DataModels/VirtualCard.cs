@@ -41,6 +41,7 @@ namespace HertzNetFramework.DataModels
 
         public List<MemberDetails> MemberDetails = new List<MemberDetails>();
         public List<MemberPreferences> MemberPreferences = new List<MemberPreferences>();
+        public List<TxnHeader> TxnHeaders = new List<TxnHeader>();
 
         public static VirtualCard Generate(Member member)
         {

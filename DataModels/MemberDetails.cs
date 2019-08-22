@@ -7,17 +7,9 @@ namespace HertzNetFramework.DataModels
 {
     public class MemberDetails
     {
-        public class TierCode
-        {
-            public static readonly string RG = "RG"; 
-        }
-        public class EarningPreference
-        {
-            public static readonly string N1 = "N1";
-        }
-
         public static readonly string[] BaseVerify = new string[] { };
         public static readonly string TableName = "ATS_MEMBERDETAILS";
+
         #region Properties
         public decimal A_ROWKEY { get; set; }
         public decimal? A_PARENTROWKEY { get; set; }
@@ -136,7 +128,7 @@ namespace HertzNetFramework.DataModels
         public DateTime? A_BIRTHDATE { get; set; }
         [ModelAttribute("PrimaryPhoneNumber")]
         public string A_PRIMARYPHONENUMBER { get; set; }
-        [ModelAttribute("LastActivityDate")]
+        [ModelAttribute("LastActivityDate", check: EqualityCheck.Skip)]
         public DateTime? A_LASTACTIVITYDATE { get; set; }
         public decimal? A_VCKEY { get; set; }
         [ModelAttribute("MarriottRwdsNum")]
@@ -156,21 +148,23 @@ namespace HertzNetFramework.DataModels
         public string A_PREVIOUSMKTGPROGRAMID { get; set; }
         public string A_PREVIOUSTIERCODE { get; set; }
         public DateTime? A_PREVIOUSTIERENDDATE { get; set; }
-        [ModelAttribute("EmailUpdateDate")]
+        [ModelAttribute("EmailUpdateDate", check: EqualityCheck.Skip)]
         public DateTime? A_EMAILUPDATEDATE { get; set; }
         [ModelAttribute("AddressUpdateDate", check: EqualityCheck.Skip)]
         public DateTime? A_ADDRESSUPDATEDATE { get; set; }
-        [ModelAttribute("TokenValidationDate")]
+        [ModelAttribute("TokenValidationDate", check: EqualityCheck.Skip)]
         public DateTime? A_TOKENVALIDATIONDATE { get; set; }
-        [ModelAttribute("LastRedemptionDate")]
+        [ModelAttribute("LastRedemptionDate", check: EqualityCheck.Skip)]
         public DateTime? A_LASTREDEMPTIONDATE { get; set; }
         public DateTime LAST_DML_DATE { get; set; }
         public decimal A_IPCODE { get; set; }
         public string A_HERTZCUSTOMERID { get; set; }
         #endregion
 
-        public static MemberDetails GenerateMemberDetails(Member member)
+        public static MemberDetails GenerateMemberDetails(Member member, IHertzProgram program = null)
         {
+            if (program == null) program = HertzProgram.GoldPointsRewards;
+
             MemberDetails details = new MemberDetails();
             details.A_FIRSTNAME = member.FIRSTNAME;
             details.A_LASTNAME = member.LASTNAME;
@@ -178,7 +172,7 @@ namespace HertzNetFramework.DataModels
             details.A_NAMESUFFIX = member.NAMESUFFIX;
             details.A_PRIMARYPHONENUMBER = member.PRIMARYPHONENUMBER;
             details.A_SECONDARYEMAILADDRESS = null;
-            details.A_TIERCODE = TierCode.RG;
+            details.A_TIERCODE = program.SpecificTier;
             details.A_ADDRESSLINEONE = "Hertz Dr";
             details.A_ADDRESSLINETWO = "APT " + StrongRandom.NumericString(4);
             details.A_ADDRESSLINETHREE = null;
@@ -204,7 +198,7 @@ namespace HertzNetFramework.DataModels
             details.A_PENDINGEMAILSENTFLAG = null;
             details.A_PURGEDCONTRACT = null;
             details.A_HODINDICATOR = null;
-            details.A_EARNINGPREFERENCE = EarningPreference.N1;
+            details.A_EARNINGPREFERENCE = program.EarningPreference;
             details.A_OTHERADDRTHREE = null;
             details.A_ADDRESSTYPE = null;
             details.A_OTHERADDRESSTYPE = null;

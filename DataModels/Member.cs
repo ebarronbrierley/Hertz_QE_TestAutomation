@@ -116,9 +116,33 @@ namespace HertzNetFramework.DataModels
                 return MemberPreferences;
             }
         }
-        
-        public static Member GenerateRandom(MemberStyle memberStyle = MemberStyle.PreProjectOne)
+        public Member AddRandomTransaction(decimal? vckey = null)
         {
+            VirtualCard memberCard;
+            if (vckey != null)
+                memberCard = this.VirtualCards.Find(x => x.VCKEY == vckey.Value);
+            else memberCard = this.VirtualCards.FirstOrDefault();
+
+            memberCard.TxnHeaders.Add(TxnHeader.Generate(memberCard.LOYALTYIDNUMBER,
+                                                         checkInDate: DateTime.Now.Comparable(),
+                                                         checkOutDate: DateTime.Now.AddDays(-1).Comparable()));
+            return this;
+        }
+        public Member AddTransaction(TxnHeader txn, decimal? vckey = null)
+        {
+            VirtualCard memberCard;
+            if (vckey != null)
+                memberCard = this.VirtualCards.Find(x => x.VCKEY == vckey.Value);
+            else memberCard = this.VirtualCards.FirstOrDefault();
+
+            memberCard.TxnHeaders.Add(txn);
+            return this;
+        }
+
+        public static Member GenerateRandom(MemberStyle memberStyle = MemberStyle.PreProjectOne, IHertzProgram program = null)
+        {
+            if (program == null) program = HertzProgram.GoldPointsRewards;
+
             Member member = new Member()
             {
                 IPCODE = Convert.ToInt64(StrongRandom.NumericString(6)),
@@ -152,7 +176,9 @@ namespace HertzNetFramework.DataModels
             {
                 member.MemberDetails.Add(DataModels.MemberDetails.GenerateMemberDetails(member));
                 member.MemberPreferences.Add(DataModels.MemberPreferences.Generate());
-                member.VirtualCards.Add(VirtualCard.Generate(member));
+                VirtualCard vc = VirtualCard.Generate(member);
+                member.VirtualCards.Add(vc);
+                member.ALTERNATEID = vc.LOYALTYIDNUMBER;
             }
             return member;
         }
@@ -220,6 +246,7 @@ namespace HertzNetFramework.DataModels
                         var lwMemberOut = client.AddMember(lwMemberIn, string.Empty, out double time);
                         TestManager.Instance.AddAttachment<TestStep>(MethodBase.GetCurrentMethod().Name, capture.Output, Attachment.Type.Text);
                         memberOut = ConvertFromLWModel(lwMemberOut, member.style);
+                        memberOut.style = member.style;
                         return memberOut;
                     }
                 }
@@ -266,6 +293,35 @@ namespace HertzNetFramework.DataModels
                 }
             }
         }
+        public static Member UpdateMember(Member member)
+        {
+            Member memberOut = new Member();
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    using (LWIntegrationSvcClientManager client = new LWIntegrationSvcClientManager(EnvironmentManager.Get.SOAPServiceURL, "CDIS", true, string.Empty))
+                    {
+                        var lwMemberIn = ConvertToLWModel(member);
+                        var lwMemberOut = client.UpdateMember(lwMemberIn, string.Empty, out double time);
+                        TestManager.Instance.AddAttachment<TestStep>(MethodBase.GetCurrentMethod().Name, capture.Output, Attachment.Type.Text);
+                        memberOut = ConvertFromLWModel(lwMemberOut, member.style);
+                        memberOut.style = member.style;
+                        return memberOut;
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    TestManager.Instance.AddAttachment<TestStep>(MethodBase.GetCurrentMethod().Name, capture.Output, Attachment.Type.Text);
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    TestManager.Instance.AddAttachment<TestStep>(MethodBase.GetCurrentMethod().Name, capture.Output, Attachment.Type.Text);
+                    throw new MemberException($"Unhandled exception throw in {MethodBase.GetCurrentMethod().Name}", ex.Message);
+                }
+            }
+        }
         #endregion
 
         #region LoyaltyWare DLL Data Conversion
@@ -292,11 +348,14 @@ namespace HertzNetFramework.DataModels
 
                 IList<Brierley.LoyaltyWare.ClientLib.DomainModel.LWAttributeSetContainer> lwMemberPreferences = lwVirtualCard.GetAttributeSets("MemberPreferences");
                 IList<Brierley.LoyaltyWare.ClientLib.DomainModel.LWAttributeSetContainer> lwMemberDetails = lwVirtualCard.GetAttributeSets("MemberDetails");
+                IList<Brierley.LoyaltyWare.ClientLib.DomainModel.LWAttributeSetContainer> lwTxnHeaders = lwVirtualCard.GetAttributeSets("TxnHeader");
 
                 foreach (var lwMemberPreference in lwMemberPreferences)
                     virtualCard.MemberPreferences.Add(DataConverter.ConvertTo<MemberPreferences>(lwMemberPreference));
                 foreach (var lwMemberDetail in lwMemberDetails)
                     virtualCard.MemberDetails.Add(DataConverter.ConvertTo<MemberDetails>(lwMemberDetail));
+                foreach (var lwTxnHeader in lwTxnHeaders)
+                    virtualCard.TxnHeaders.Add(DataConverter.ConvertTo<TxnHeader>(lwTxnHeader));
 
                 member.VirtualCards.Add(virtualCard);
             }
@@ -309,7 +368,14 @@ namespace HertzNetFramework.DataModels
 
             IList<Brierley.LoyaltyWare.ClientLib.DomainModel.LWAttributeSetContainer> lwVirtualCards = lwMember.GetAttributeSets("VirtualCard");
             foreach (var lwVirtualCard in lwVirtualCards)
-                member.VirtualCards.Add(DataConverter.ConvertTo<VirtualCard>(lwVirtualCard));
+            {
+                VirtualCard vc = DataConverter.ConvertTo<VirtualCard>(lwVirtualCard);
+                var lwTxnHeaders = lwMember.GetAttributeSets("TxnHeader");
+                foreach (var lwTxnHeader in lwTxnHeaders)
+                    vc.TxnHeaders.Add(DataConverter.ConvertTo<TxnHeader>(lwTxnHeader));
+
+                member.VirtualCards.Add(vc);
+            }
 
             IList<Brierley.LoyaltyWare.ClientLib.DomainModel.LWAttributeSetContainer> lwMemberPreferences = lwMember.GetAttributeSets("MemberPreferences");
             foreach (var lwMemberPreference in lwMemberPreferences)
@@ -337,6 +403,10 @@ namespace HertzNetFramework.DataModels
                     foreach (MemberPreferences memberPreference in virtualCard.MemberPreferences)
                         vc.Add(DataConverter.ConvertTo<Brierley.LoyaltyWare.ClientLib.DomainModel.Client.MemberPreferences>(memberPreference));
 
+                if (virtualCard.TxnHeaders != null)
+                    foreach (TxnHeader txn in virtualCard.TxnHeaders)
+                        vc.Add(DataConverter.ConvertTo<Brierley.LoyaltyWare.ClientLib.DomainModel.Client.TxnHeader>(txn));
+
                 lwMember.Add(vc);
             }
 
@@ -356,7 +426,16 @@ namespace HertzNetFramework.DataModels
 
             if (member.VirtualCards != null)
                 foreach (VirtualCard virtualCard in member.VirtualCards)
-                    lwMember.Add(DataConverter.ConvertTo<Brierley.LoyaltyWare.ClientLib.DomainModel.Framework.VirtualCard>(virtualCard));
+                {
+                    var vc = DataConverter.ConvertTo<Brierley.LoyaltyWare.ClientLib.DomainModel.Framework.VirtualCard>(virtualCard);
+                    if (virtualCard.TxnHeaders != null)
+                    {
+                        foreach (TxnHeader txn in virtualCard.TxnHeaders)
+                            vc.Add(DataConverter.ConvertTo<Brierley.LoyaltyWare.ClientLib.DomainModel.Client.TxnHeader>(txn));
+                    }
+                    lwMember.Add(vc);
+                }
+            
 
             return lwMember;
         }

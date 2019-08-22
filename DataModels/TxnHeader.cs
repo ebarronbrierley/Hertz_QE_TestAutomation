@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Brierley.TestAutomation.Core.Database;
 using Brierley.TestAutomation.Core.Utilities;
 
 namespace HertzNetFramework.DataModels
 {
     public class TxnHeader
     {
+        public static List<string> UsedRANUMs = new List<string>();
         public static readonly string TableName = "ats_txnheader";
+        public const string dbUser = "bp_htz";
 
+        #region Public Properties
         public decimal A_ROWKEY { get; set; }
         public decimal A_VCKEY { get; set; }
         public decimal? A_PARENTROWKEY { get; set; }
-        [ModelAttribute("Key")]
+        [ModelAttribute("Key", check: EqualityCheck.Skip)]
         public string A_KEY { get; set; }
         [ModelAttribute("QUALTOTAMT")]
         public decimal? A_QUALTOTAMT { get; set; }
@@ -142,7 +146,7 @@ namespace HertzNetFramework.DataModels
         public string A_GOLDRNTALIND { get; set; }
         [ModelAttribute("TxnDate")]
         public DateTime A_TXNDATE { get; set; }
-        [ModelAttribute("TxnHeaderId")]
+        [ModelAttribute("TxnHeaderId", check:EqualityCheck.Skip)]
         public string A_TXNHEADERID { get; set; }
         [ModelAttribute("CHKOUTTM")]
         public string A_CHKOUTTM { get; set; }
@@ -191,6 +195,171 @@ namespace HertzNetFramework.DataModels
         public decimal? LAST_DML_ID { get; set; }
         [ModelAttribute("HODIndicator")]
         public short? A_HODINDICATOR { get; set; }
+        #endregion
 
+        public static TxnHeader Generate(string loyaltyId,  
+                                            DateTime? checkInDate = null, DateTime? checkOutDate = null, DateTime? bookDate = null, 
+                                            decimal? CDP = null, IHertzProgram program = null, short? HODIndicator = null, string RSDNCTRYCD = "US"
+                                            )
+        {
+            if (program == null) program = HertzProgram.GoldPointsRewards;
+
+            TxnHeader output = new TxnHeader()
+            {
+                A_LYLTYMEMBERNUM = loyaltyId,
+                A_CHKINDT = checkInDate,
+                A_RANUM = RANUM.Generate(),
+                A_RESVID = null,
+                A_CHKINLOCNUM = "06",
+                A_PROMNUM = null,
+                A_VCHRNUM = null,
+                A_CHKINAREANUM = "01474",
+                A_CHKOUTDT = checkOutDate,
+                A_CHKOUTLOCNUM = "06",
+                A_CHKOUTAREANUM = "01474",
+                A_FTPTNRNUM = program.A_FTPTNRNUM,
+                A_CHKOUTCITYCD = null,
+                A_CHKOUTWORLDWIDERGNCTRYISO = "MX",
+                A_CHKOUTWWDSTPROVCD = StrongRandom.NumericString(2),
+                A_ORIGBOOKDT = bookDate,
+                A_CHRGVEHCLSCD = StrongRandom.NumericString(1),
+                A_CRCARDTYPECD = "0",
+                A_RQSTSIPPCD = null,
+                A_GEOLOCTYPECD = null,
+                A_RASRCCD = program.A_RASRCCD,
+                A_INTRNLNETRTGCD = null,
+                A_TRAVLPRPSTYPECD = null,
+                A_MKTGRTANALCD = null,
+                A_CRNCYISOCD = null,
+                A_RENTALTYPE = null,
+                A_DAYSCHRGQTY = StrongRandom.Next(1, 9),
+                A_LDWCDWCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_DISCAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_NWEXECSAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_PAITOTCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_ADDLAUTHDRVRCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_AGEDIFFCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_ADDLSRVCCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_SBTOTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_TOTCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_LISTOTCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_CHILDSEATTOTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_ITVALLFEETOTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_GARSPECLEQMNTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_GRSREVNAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_MISCGRPAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_NVGTNSYSTOTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_SATLTRADIOTOTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_REFUELINGOPTCD = StrongRandom.AlphaString(1),
+                A_REFUELINGCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_TPTOTCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_TRANSACTIONSTATE = "MX",
+                A_RESCHANNEL = StrongRandom.AlphaString(2),
+                A_TOTEXPIRINGEUPGRADES = null,
+                A_TOTEUPGRADES = null,
+                A_RARTTYPECD = null,
+                A_RESVRTTYPECD = null,
+                A_RTCATCD = null,
+                A_RTCLSNCD = null,
+                A_RTFMLYCD = null,
+                A_SACCD = "N",
+                A_RSDNCTRYCD = RSDNCTRYCD,
+                A_GOLDRNTALIND = "Y",
+                A_TXNDATE = checkInDate ?? DateTime.Now.Comparable(),
+                A_TXNHEADERID = null,
+                A_CHKOUTTM = null,
+                A_TRANSTYPE = program.A_TRANSTYPE,
+                A_RNTINGCTRYCRNCYUSDEXCHRT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_CORPDISCPRGID = CDP ?? Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_CONTRACTTYPECD = StrongRandom.NumericString(3),
+                A_CONTRACTNUM = Convert.ToDecimal(StrongRandom.Next(1, 999999)),
+                A_BRANDID = null,
+                A_CREDITCARDID = null,
+                A_TXNMASKID = null,
+                A_TXNNUMBER = null,
+                A_TXNREGISTERNUMBER = StrongRandom.NumericString(1),
+                A_TXNSTOREID = StrongRandom.Next(1, 9),
+                A_TXNTYPEID = StrongRandom.Next(1, 9),
+                A_TXNAMOUNT = Convert.ToDecimal(StrongRandom.Next(1, 9)),
+                A_TXNQUALPURCHASEAMT = Convert.ToDecimal(StrongRandom.Next(1, 999)),
+                A_TXNDISCOUNTAMOUNT = 0M,
+                A_TXNEMPLOYEEID = StrongRandom.NumericString(2),
+                A_TXNCHANNEL = StrongRandom.NumericString(2),
+                A_TXNORIGINALTXNROWKEY = null,
+                A_TXNCREDITSUSED = null,
+                A_HODINDICATOR = HODIndicator
+            };
+            return output;
+        }
+        public static IEnumerable<TxnHeader> GetFromDB(IDatabase db, decimal vckey, string RANUM = null)
+        {
+            StringBuilder query = new StringBuilder();
+            query.Append($"select * from {dbUser}.{TableName} where a_vckey = {vckey}");
+            if (!String.IsNullOrEmpty(RANUM)) query.Append($" and a_ranum = '{RANUM}'");
+
+            return db.Query<TxnHeader>(query.ToString());
+        }
+        
+    }
+    public class RANUM
+    {
+        private const int section1Max = 9999;
+        private const int section2Max = 26;
+        private const int section2MaxSize = 3;
+        private const int section3Max = 99;
+
+        private static RANUM current = null;
+        private int section1;
+        private int[] section2 = new int[section2MaxSize];
+        private int section3;
+
+
+        public RANUM()
+        {
+            section1 = StrongRandom.Next(0, 9000);
+            for(int i = section2MaxSize-1; i >= 0; i--)
+                section2[i] = StrongRandom.Next(0, 25);
+            section3 = StrongRandom.Next(0, 99);
+        }
+
+        public static string Generate()
+        {
+            current = RANUM.current??new RANUM();
+            string output = String.Format("{0:D4}{1}{2:D2}",current.section1, section2String(), current.section3);
+            RANUM.incrementCurrent();
+            return output;
+        }
+        private static void incrementCurrent()
+        {
+            if (current.section3 < 99) current.section3 += 1;
+            else
+            {
+                current.section3 = 0;
+                rollSection2();
+            }
+        }
+        private static void rollSection2()
+        {
+            if (current.section2[section2MaxSize] < section2Max) current.section2[2] += 1;
+            else
+            {
+                current.section2[2] = 0;
+                if (current.section2[1] < section2Max) current.section2[1] += 1;
+                else
+                {
+                    if (current.section2[0] < section2Max) current.section2[0] += 1;
+                    else rollSection1();
+                }
+            }
+        }
+        private static void rollSection1()
+        {
+            if (current.section1 < section1Max) current.section1 += 1;
+            else throw new Exception("RANUM overflow");
+        }
+        private static string section2String()
+        {
+            return String.Format("{0}{1}{2}", Convert.ToChar(65 + current.section2[0]), Convert.ToChar(65 + current.section2[1]), Convert.ToChar(65 + current.section2[2]));
+        }
     }
 }
