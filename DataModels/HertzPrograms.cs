@@ -24,30 +24,25 @@ namespace HertzNetFramework.DataModels
     public class GPR:IHertzProgram
     {
         public string SpecificTier { get; set; }
-        public IEnumerable<IHertzTier> TierCodes { get { return new List<HertzTier>()
-        {
-            new HertzTier("Regular Gold", TierCode.RegularGold, 0),
-            new HertzTier("5-Star", TierCode.FiveStar, 0.25),
-            new HertzTier("Presidents Circle", TierCode.PresidentsCircle, 0.5),
-            new HertzTier("Platinum",TierCode.Platinum,0.5)
-        }; } }
+        
         public string A_TRANSTYPE { get { return "G"; } }
         public string EarningPreference { get { return "N1"; } }
         public string A_FTPTNRNUM { get { return "ZE1"; } }
         public string A_RASRCCD { get { return "1"; } }
 
-        public class TierCode
+        public class Tier
         {
-            public static string RegularGold = "RG";
-            public static string FiveStar = "FG";
-            public static string PresidentsCircle = "PC";
-            public static string Platinum = "PL";
+            public static HertzTier RegularGold { get { return new HertzTier("Regular Gold", "RG", 0); } }
+            public static HertzTier FiveStar { get { return new HertzTier("5-Star", "FG", 0.25M); } }
+            public static HertzTier PresidentsCircle { get { return new HertzTier("Presidents Circle", "PC", 0.5M); } }
+            public static HertzTier Platinum { get { return new HertzTier("Platinum", "PL", 0.5M); } }
+            public static HertzTier PlatinumSelect { get { return new HertzTier("Platinum Select", "PS", 0.5M); } }
+            public static HertzTier PlatinumVIP { get { return new HertzTier("Platinum VIP", "VP", 0.5M); } }
         }
     }
     public class Thrifty:IHertzProgram
     {
         public string SpecificTier { get { return null; } }
-        public IEnumerable<IHertzTier> TierCodes { get { return new List<IHertzTier>(); } }
         public string A_TRANSTYPE { get { return "T"; } }
         public string EarningPreference { get { return "BC"; } }
         public string A_FTPTNRNUM { get { return "BC1"; } }
@@ -56,7 +51,6 @@ namespace HertzNetFramework.DataModels
     public class Dollar:IHertzProgram
     {
         public string SpecificTier { get { return null; } }
-        public IEnumerable<IHertzTier> TierCodes { get { return new List<IHertzTier>(); } }
         public string A_TRANSTYPE { get { return "D"; } }
         public string EarningPreference { get { return "DX"; } }
         public string A_FTPTNRNUM { get { return "RR1"; } }
@@ -64,21 +58,20 @@ namespace HertzNetFramework.DataModels
     }
     public class HertzTier : IHertzTier
     {
-        public string TierName { get; private set; }
-        public string TierCode { get; private set; } 
-        public double EarningRateModifier { get; private set; }
+        public string Name { get; private set; }
+        public string Code { get; private set; } 
+        public decimal EarningRateModifier { get; private set; }
 
-        public HertzTier(string tierName, string tierCode, double earningRateModifier)
+        public HertzTier(string tierName, string tierCode, decimal earningRateModifier)
         {
-            this.TierName = tierName;
-            this.TierCode = tierCode;
+            this.Name = tierName;
+            this.Code = tierCode;
             this.EarningRateModifier = earningRateModifier;
         }
     }
 
     public interface IHertzProgram
     {
-        IEnumerable<IHertzTier> TierCodes { get; }
         string SpecificTier { get; }
         string EarningPreference { get; }
         string A_FTPTNRNUM { get; }
@@ -87,9 +80,9 @@ namespace HertzNetFramework.DataModels
     }
     public interface IHertzTier
     {
-        string TierName { get; }
-        string TierCode { get;  }
-        double EarningRateModifier { get;}
+        string Name { get; }
+        string Code { get;  }
+        decimal EarningRateModifier { get;}
     }
 
 }

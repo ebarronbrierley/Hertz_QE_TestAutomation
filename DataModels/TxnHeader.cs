@@ -30,25 +30,25 @@ namespace HertzNetFramework.DataModels
         public string A_REFSRCNUM { get; set; }
         [ModelAttribute("CHKINDT")]
         public DateTime? A_CHKINDT { get; set; }
-        [ModelAttribute("RANUM")]
+        [ModelAttribute("RANUM", ReportOption.Print)]
         public string A_RANUM { get; set; }
         [ModelAttribute("RESVID")]
         public string A_RESVID { get; set; }
-        [ModelAttribute("CHKINLOCNUM")]
+        [ModelAttribute("CHKINLOCNUM", ReportOption.Print)]
         public string A_CHKINLOCNUM { get; set; }
         [ModelAttribute("PROMNUM")]
         public string A_PROMNUM { get; set; }
         [ModelAttribute("VCHRNUM")]
         public string A_VCHRNUM { get; set; }
-        [ModelAttribute("CHKINAREANUM")]
+        [ModelAttribute("CHKINAREANUM", ReportOption.Print)]
         public string A_CHKINAREANUM { get; set; }
-        [ModelAttribute("CHKOUTDT")]
+        [ModelAttribute("CHKOUTDT", ReportOption.Print)]
         public DateTime? A_CHKOUTDT { get; set; }
-        [ModelAttribute("CHKOUTLOCNUM")]
+        [ModelAttribute("CHKOUTLOCNUM", ReportOption.Print)]
         public string A_CHKOUTLOCNUM { get; set; }
-        [ModelAttribute("CHKOUTAREANUM")]
+        [ModelAttribute("CHKOUTAREANUM", ReportOption.Print)]
         public string A_CHKOUTAREANUM { get; set; }
-        [ModelAttribute("FTPTNRNUM")]
+        [ModelAttribute("FTPTNRNUM", ReportOption.Print)]
         public string A_FTPTNRNUM { get; set; }
         [ModelAttribute("CHKOUTCITYCD")]
         public string A_CHKOUTCITYCD { get; set; }
@@ -56,7 +56,7 @@ namespace HertzNetFramework.DataModels
         public string A_CHKOUTWORLDWIDERGNCTRYISO { get; set; }
         [ModelAttribute("CHKOUTWWDSTPROVCD")]
         public string A_CHKOUTWWDSTPROVCD { get; set; }
-        [ModelAttribute("ORIGBOOKDT")]
+        [ModelAttribute("ORIGBOOKDT", ReportOption.Print)]
         public DateTime? A_ORIGBOOKDT { get; set; }
         [ModelAttribute("CHRGVEHCLSCD")]
         public string A_CHRGVEHCLSCD { get; set; }
@@ -66,7 +66,7 @@ namespace HertzNetFramework.DataModels
         public string A_RQSTSIPPCD { get; set; }
         [ModelAttribute("GEOLOCTYPECD")]
         public string A_GEOLOCTYPECD { get; set; }
-        [ModelAttribute("RASRCCD")]
+        [ModelAttribute("RASRCCD", ReportOption.Print)]
         public string A_RASRCCD { get; set; }
         [ModelAttribute("INTRNLNETRTGCD")]
         public string A_INTRNLNETRTGCD { get; set; }
@@ -154,7 +154,7 @@ namespace HertzNetFramework.DataModels
         public string A_TRANSTYPE { get; set; }
         [ModelAttribute("RNTINGCTRYCRNCYUSDEXCHRT")]
         public decimal? A_RNTINGCTRYCRNCYUSDEXCHRT { get; set; }
-        [ModelAttribute("CORPDISCPRGID")]
+        [ModelAttribute("CORPDISCPRGID", ReportOption.Print)]
         public decimal? A_CORPDISCPRGID { get; set; }
         [ModelAttribute("CONTRACTTYPECD")]
         public string A_CONTRACTTYPECD { get; set; }
@@ -166,7 +166,7 @@ namespace HertzNetFramework.DataModels
         public long? A_CREDITCARDID { get; set; }
         [ModelAttribute("TxnMaskId")]
         public string A_TXNMASKID { get; set; }
-        [ModelAttribute("TxnNumber")]
+        [ModelAttribute("TxnNumber", ReportOption.Print)]
         public string A_TXNNUMBER { get; set; }
         [ModelAttribute("TxnRegisterNumber")]
         public string A_TXNREGISTERNUMBER { get; set; }
@@ -176,7 +176,7 @@ namespace HertzNetFramework.DataModels
         public long? A_TXNTYPEID { get; set; }
         [ModelAttribute("TxnAmount")]
         public decimal? A_TXNAMOUNT { get; set; }
-        [ModelAttribute("TxnQualPurchaseAmt")]
+        [ModelAttribute("TxnQualPurchaseAmt", ReportOption.Print)]
         public decimal? A_TXNQUALPURCHASEAMT { get; set; }
         [ModelAttribute("TxnDiscountAmount")]
         public decimal? A_TXNDISCOUNTAMOUNT { get; set; }
@@ -193,14 +193,14 @@ namespace HertzNetFramework.DataModels
         public DateTime? UPDATEDATE { get; set; }
         public decimal? LASTDMLID { get; set; }
         public decimal? LAST_DML_ID { get; set; }
-        [ModelAttribute("HODIndicator")]
+        [ModelAttribute("HODIndicator", ReportOption.Print)]
         public short? A_HODINDICATOR { get; set; }
         #endregion
 
         public static TxnHeader Generate(string loyaltyId,  
                                             DateTime? checkInDate = null, DateTime? checkOutDate = null, DateTime? bookDate = null, 
-                                            decimal? CDP = null, IHertzProgram program = null, short? HODIndicator = null, string RSDNCTRYCD = "US"
-                                            )
+                                            decimal? CDP = null, IHertzProgram program = null, short? HODIndicator = null, string RSDNCTRYCD = "US",
+                                            decimal? qualifyingAmount = null)
         {
             if (program == null) program = HertzProgram.GoldPointsRewards;
 
@@ -219,7 +219,7 @@ namespace HertzNetFramework.DataModels
                 A_CHKOUTAREANUM = "01474",
                 A_FTPTNRNUM = program.A_FTPTNRNUM,
                 A_CHKOUTCITYCD = null,
-                A_CHKOUTWORLDWIDERGNCTRYISO = "MX",
+                A_CHKOUTWORLDWIDERGNCTRYISO = RSDNCTRYCD,
                 A_CHKOUTWWDSTPROVCD = StrongRandom.NumericString(2),
                 A_ORIGBOOKDT = bookDate,
                 A_CHRGVEHCLSCD = StrongRandom.NumericString(1),
@@ -232,27 +232,27 @@ namespace HertzNetFramework.DataModels
                 A_MKTGRTANALCD = null,
                 A_CRNCYISOCD = null,
                 A_RENTALTYPE = null,
-                A_DAYSCHRGQTY = StrongRandom.Next(1, 9),
-                A_LDWCDWCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_DISCAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_NWEXECSAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_PAITOTCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_ADDLAUTHDRVRCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_AGEDIFFCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_ADDLSRVCCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_SBTOTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_TOTCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_LISTOTCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_CHILDSEATTOTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_ITVALLFEETOTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_GARSPECLEQMNTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_GRSREVNAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_MISCGRPAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_NVGTNSYSTOTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_SATLTRADIOTOTAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_DAYSCHRGQTY = 1,
+                A_LDWCDWCHRGAMT = 0M,
+                A_DISCAMT = 0M,
+                A_NWEXECSAMT = 0M,
+                A_PAITOTCHRGAMT = 0M,
+                A_ADDLAUTHDRVRCHRGAMT = 0M,
+                A_AGEDIFFCHRGAMT = 0M,
+                A_ADDLSRVCCHRGAMT = 0M,
+                A_SBTOTAMT = qualifyingAmount,
+                A_TOTCHRGAMT = qualifyingAmount,
+                A_LISTOTCHRGAMT = 0M,
+                A_CHILDSEATTOTAMT = 0M,
+                A_ITVALLFEETOTAMT = 0M,
+                A_GARSPECLEQMNTAMT = 0M,
+                A_GRSREVNAMT = 0M,
+                A_MISCGRPAMT = 0M,
+                A_NVGTNSYSTOTAMT = 0M,
+                A_SATLTRADIOTOTAMT = 0M,
                 A_REFUELINGOPTCD = StrongRandom.AlphaString(1),
-                A_REFUELINGCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_TPTOTCHRGAMT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_REFUELINGCHRGAMT = 0M,
+                A_TPTOTCHRGAMT = 0M,
                 A_TRANSACTIONSTATE = "MX",
                 A_RESCHANNEL = StrongRandom.AlphaString(2),
                 A_TOTEXPIRINGEUPGRADES = null,
@@ -269,7 +269,7 @@ namespace HertzNetFramework.DataModels
                 A_TXNHEADERID = null,
                 A_CHKOUTTM = null,
                 A_TRANSTYPE = program.A_TRANSTYPE,
-                A_RNTINGCTRYCRNCYUSDEXCHRT = Convert.ToDecimal(StrongRandom.Next(0, 9)),
+                A_RNTINGCTRYCRNCYUSDEXCHRT = 1M,
                 A_CORPDISCPRGID = CDP ?? Convert.ToDecimal(StrongRandom.Next(0, 9)),
                 A_CONTRACTTYPECD = StrongRandom.NumericString(3),
                 A_CONTRACTNUM = Convert.ToDecimal(StrongRandom.Next(1, 999999)),
@@ -280,8 +280,9 @@ namespace HertzNetFramework.DataModels
                 A_TXNREGISTERNUMBER = StrongRandom.NumericString(1),
                 A_TXNSTOREID = StrongRandom.Next(1, 9),
                 A_TXNTYPEID = StrongRandom.Next(1, 9),
-                A_TXNAMOUNT = Convert.ToDecimal(StrongRandom.Next(1, 9)),
-                A_TXNQUALPURCHASEAMT = Convert.ToDecimal(StrongRandom.Next(1, 999)),
+                A_TXNAMOUNT = qualifyingAmount,
+                A_TXNQUALPURCHASEAMT = qualifyingAmount,
+                A_QUALTOTAMT = qualifyingAmount,
                 A_TXNDISCOUNTAMOUNT = 0M,
                 A_TXNEMPLOYEEID = StrongRandom.NumericString(2),
                 A_TXNCHANNEL = StrongRandom.NumericString(2),

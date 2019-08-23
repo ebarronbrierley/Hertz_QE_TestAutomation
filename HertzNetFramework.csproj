@@ -46,16 +46,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrierleyTestFixture.cs" />
+    <Compile Include="DataModels\ExpectedPointEvent.cs" />
     <Compile Include="DataModels\HertzPrograms.cs" />
     <Compile Include="DataModels\Member.cs" />
     <Compile Include="DataModels\MemberDetails.cs" />
     <Compile Include="DataModels\MemberPreferences.cs" />
+    <Compile Include="DataModels\MemberPromotion.cs" />
     <Compile Include="DataModels\PointEvent.cs" />
     <Compile Include="DataModels\PointTransaction.cs" />
+    <Compile Include="DataModels\Promotion.cs" />
     <Compile Include="DataModels\TxnHeader.cs" />
     <Compile Include="DataModels\VirtualCard.cs" />
     <Compile Include="Initializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\BonusTestData\EUSchneider3x2019Bonus.cs" />
+    <Compile Include="Tests\BonusTestData\OngoingEMEABirthdayActivity.cs" />
+    <Compile Include="Tests\BonusTestData\TopGolf_2019_GPR2XBonus.cs" />
+    <Compile Include="Tests\BonusTestData\VisaInfinite10RGBonus.cs" />
+    <Compile Include="Tests\SOAP\AddMemberPromotion.cs" />
     <Compile Include="Tests\SOAP\AddMemberTests.cs" />
     <Compile Include="Tests\SOAP\Bonuses.cs" />
     <Compile Include="Tests\SOAP\GetMemberTests.cs" />
@@ -75,7 +83,7 @@
       <Version>1.0.0.2</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Utilities">
-      <Version>1.0.0.7</Version>
+      <Version>1.0.0.10</Version>
     </PackageReference>
     <PackageReference Include="NUnit">
       <Version>3.12.0</Version>

@@ -116,28 +116,6 @@ namespace HertzNetFramework.DataModels
                 return MemberPreferences;
             }
         }
-        public Member AddRandomTransaction(decimal? vckey = null)
-        {
-            VirtualCard memberCard;
-            if (vckey != null)
-                memberCard = this.VirtualCards.Find(x => x.VCKEY == vckey.Value);
-            else memberCard = this.VirtualCards.FirstOrDefault();
-
-            memberCard.TxnHeaders.Add(TxnHeader.Generate(memberCard.LOYALTYIDNUMBER,
-                                                         checkInDate: DateTime.Now.Comparable(),
-                                                         checkOutDate: DateTime.Now.AddDays(-1).Comparable()));
-            return this;
-        }
-        public Member AddTransaction(TxnHeader txn, decimal? vckey = null)
-        {
-            VirtualCard memberCard;
-            if (vckey != null)
-                memberCard = this.VirtualCards.Find(x => x.VCKEY == vckey.Value);
-            else memberCard = this.VirtualCards.FirstOrDefault();
-
-            memberCard.TxnHeaders.Add(txn);
-            return this;
-        }
 
         public static Member GenerateRandom(MemberStyle memberStyle = MemberStyle.PreProjectOne, IHertzProgram program = null)
         {
@@ -167,14 +145,14 @@ namespace HertzNetFramework.DataModels
             if(memberStyle == MemberStyle.PreProjectOne)
             {
                 VirtualCard virtualCard = VirtualCard.Generate(member);
-                virtualCard.MemberDetails.Add(DataModels.MemberDetails.GenerateMemberDetails(member));
+                virtualCard.MemberDetails.Add(DataModels.MemberDetails.GenerateMemberDetails(member, program));
                 virtualCard.MemberPreferences.Add(DataModels.MemberPreferences.Generate());
                 member.VirtualCards.Add(virtualCard);
                 member.ALTERNATEID = virtualCard.LOYALTYIDNUMBER;
             }
             else if(memberStyle == MemberStyle.ProjectOne)
             {
-                member.MemberDetails.Add(DataModels.MemberDetails.GenerateMemberDetails(member));
+                member.MemberDetails.Add(DataModels.MemberDetails.GenerateMemberDetails(member, program));
                 member.MemberPreferences.Add(DataModels.MemberPreferences.Generate());
                 VirtualCard vc = VirtualCard.Generate(member);
                 member.VirtualCards.Add(vc);
@@ -322,6 +300,64 @@ namespace HertzNetFramework.DataModels
                 }
             }
         }
+        public Member AddRandomTransaction(decimal? vckey = null)
+        {
+            VirtualCard memberCard;
+            if (vckey != null)
+                memberCard = this.VirtualCards.Find(x => x.VCKEY == vckey.Value);
+            else memberCard = this.VirtualCards.FirstOrDefault();
+
+            memberCard.TxnHeaders.Add(TxnHeader.Generate(memberCard.LOYALTYIDNUMBER,
+                                                         checkInDate: DateTime.Now.Comparable(),
+                                                         checkOutDate: DateTime.Now.AddDays(-1).Comparable()));
+            return this;
+        }
+        public Member AddTransaction(TxnHeader txn, decimal? vckey = null)
+        {
+            VirtualCard memberCard;
+            if (vckey != null)
+                memberCard = this.VirtualCards.Find(x => x.VCKEY == vckey.Value);
+            else memberCard = this.VirtualCards.FirstOrDefault();
+
+            memberCard.TxnHeaders.Add(txn);
+            return this;
+        }
+        public MemberPromotion AddPromotion(string memberIdentity, string promotionCode, string programCode, string certificateNumber,
+                                    bool? returnDefinition, string language, string channel, bool? returnAttributes)
+        {
+            MemberPromotion memberPromotionOut = new MemberPromotion();
+
+
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    using (LWIntegrationSvcClientManager client = new LWIntegrationSvcClientManager(EnvironmentManager.Get.SOAPServiceURL, "CDIS", true, string.Empty))
+                    {
+                        var lwMemberPromotion = client.AddMemberPromotion(memberIdentity, promotionCode, programCode, certificateNumber, returnDefinition, language, channel, returnAttributes, String.Empty, out double time);
+                        TestManager.Instance.AddAttachment<TestStep>(MethodBase.GetCurrentMethod().Name, capture.Output, Attachment.Type.Text);
+                        if (lwMemberPromotion != null)
+                        {
+                            memberPromotionOut = DataConverter.ConvertTo<MemberPromotion>(lwMemberPromotion);
+                            if (lwMemberPromotion.PromotionDefinition != null)
+                                memberPromotionOut.PromotionDefinition = DataConverter.ConvertTo<Promotion>(lwMemberPromotion.PromotionDefinition);
+                        }
+                        return memberPromotionOut;
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    TestManager.Instance.AddAttachment<TestStep>(MethodBase.GetCurrentMethod().Name, capture.Output, Attachment.Type.Text);
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    TestManager.Instance.AddAttachment<TestStep>(MethodBase.GetCurrentMethod().Name, capture.Output, Attachment.Type.Text);
+                    throw new MemberException($"Unhandled exception throw in {MethodBase.GetCurrentMethod().Name}", ex.Message);
+                }
+            }
+        }
+
         #endregion
 
         #region LoyaltyWare DLL Data Conversion

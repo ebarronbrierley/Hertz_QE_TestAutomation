@@ -7,7 +7,7 @@ namespace HertzNetFramework.DataModels
 {
     public class MemberDetails
     {
-        public static readonly string[] BaseVerify = new string[] { };
+        public static readonly string[] BaseVerify = new string[] { "A_CITY", "A_STATEORPROVINCE", "A_ZIPORPOSTALCODE", "A_COUNTRY", "A_TIERCODE", "A_MEMBERSTATUSCODE", "A_LANGUAGEPREFERENCE", "A_CONTACTNAME", "", "" };
         public static readonly string TableName = "ATS_MEMBERDETAILS";
 
         #region Properties
@@ -25,11 +25,11 @@ namespace HertzNetFramework.DataModels
         public string A_ZIPORPOSTALCODE { get; set; }
         [ModelAttribute("Country")]
         public string A_COUNTRY { get; set; }
-        [ModelAttribute("TierCode")]
+        [ModelAttribute("TierCode", ReportOption.Print)]
         public string A_TIERCODE { get; set; }
         [ModelAttribute("MobilePhone")]
         public string A_MOBILEPHONE { get; set; }
-        [ModelAttribute("MemberStatusCode")]
+        [ModelAttribute("MemberStatusCode", ReportOption.Print)]
         public long? A_MEMBERSTATUSCODE { get; set; }
         [ModelAttribute("EnrollDate")]
         public DateTime? A_ENROLLDATE { get; set; }
@@ -51,11 +51,11 @@ namespace HertzNetFramework.DataModels
         public short? A_WELCOMEEMAILSENTFLAG { get; set; }
         [ModelAttribute("MemberActionIndicator")]
         public string A_MEMBERACTIONINDICATOR { get; set; }
-        [ModelAttribute("HODIndicator")]
+        [ModelAttribute("HODIndicator", ReportOption.Print)]
         public string A_HODINDICATOR { get; set; }
         [ModelAttribute("MembershipPurchseDate")]
         public DateTime? A_MEMBERSHIPPURCHSEDATE { get; set; }
-        [ModelAttribute("EarningPreference")]
+        [ModelAttribute("EarningPreference", ReportOption.Print)]
         public string A_EARNINGPREFERENCE { get; set; }
         [ModelAttribute("OtherAddrThree")]
         public string A_OTHERADDRTHREE { get; set; }
@@ -71,7 +71,7 @@ namespace HertzNetFramework.DataModels
         public string A_OTHEREMAIL { get; set; }
         [ModelAttribute("EnrolledEmailSentFlag")]
         public short? A_ENROLLEDEMAILSENTFLAG { get; set; }
-        [ModelAttribute("CDPNumber")]
+        [ModelAttribute("CDPNumber", ReportOption.Print)]
         public string A_CDPNUMBER { get; set; }
         [ModelAttribute("CDPName")]
         public string A_CDPNAME { get; set; }
@@ -145,8 +145,11 @@ namespace HertzNetFramework.DataModels
         public short? A_SMSDBLOPTINCOMPLETE { get; set; }
         [ModelAttribute("MobilePhoneCountryCode")]
         public long? A_MOBILEPHONECOUNTRYCODE { get; set; }
+        [ModelAttribute("PreviousMktgProgramID")]
         public string A_PREVIOUSMKTGPROGRAMID { get; set; }
+        [ModelAttribute("PreviousTierCode")]
         public string A_PREVIOUSTIERCODE { get; set; }
+        [ModelAttribute("PreviousTierEndDate")]
         public DateTime? A_PREVIOUSTIERENDDATE { get; set; }
         [ModelAttribute("EmailUpdateDate", check: EqualityCheck.Skip)]
         public DateTime? A_EMAILUPDATEDATE { get; set; }
@@ -158,6 +161,7 @@ namespace HertzNetFramework.DataModels
         public DateTime? A_LASTREDEMPTIONDATE { get; set; }
         public DateTime LAST_DML_DATE { get; set; }
         public decimal A_IPCODE { get; set; }
+        [ModelAttribute("HertzCustomerID", ReportOption.Print)]
         public string A_HERTZCUSTOMERID { get; set; }
         #endregion
 

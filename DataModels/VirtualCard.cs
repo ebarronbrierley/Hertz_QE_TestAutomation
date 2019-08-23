@@ -14,25 +14,25 @@ namespace HertzNetFramework.DataModels
         public static readonly string TableName = "LW_VIRTUALCARD";
         public static readonly string[] BaseVerify = new string[] { "" };
 
-        [ModelAttribute("VcKey")]
+        [ModelAttribute("VcKey", ReportOption.Print)]
         public decimal VCKEY { get; set; }
-        [ModelAttribute("LoyaltyIdNumber")]
+        [ModelAttribute("LoyaltyIdNumber", ReportOption.Print)]
         public string LOYALTYIDNUMBER { get; set; }
-        [ModelAttribute("IpCode")]
+        [ModelAttribute("IpCode", ReportOption.Print)]
         public decimal IPCODE { get; set; }
         public decimal? LINKKEY { get; set; }
         [ModelAttribute("DateIssued", check: EqualityCheck.Skip)]
         public DateTime DATEISSUED { get; set; }
         [ModelAttribute("DateRegistered", check: EqualityCheck.Skip)]
         public DateTime DATEREGISTERED { get; set; }
-        [ModelAttribute("Status")]
+        [ModelAttribute("Status", ReportOption.Print)]
         public long STATUS { get; set; }
         public long? NEWSTATUS { get; set; }
         public DateTime? NEWSTATUSEFFECTIVEDATE { get; set; }
         public string STATUSCHANGEREASON { get; set; }
-        [ModelAttribute("IsPrimary")]
+        [ModelAttribute("IsPrimary", ReportOption.Print)]
         public short ISPRIMARY { get; set; }
-        [ModelAttribute("CardType")]
+        [ModelAttribute("CardType", ReportOption.Print)]
         public decimal CARDTYPE { get; set; }
         public string CHANGEDBY { get; set; }
         public DateTime CREATEDATE { get; set; }

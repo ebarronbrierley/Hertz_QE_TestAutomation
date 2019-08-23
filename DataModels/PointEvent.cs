@@ -13,8 +13,11 @@ namespace HertzNetFramework.DataModels
         public static readonly string TableName = "LW_POINTEVENT";
         private static readonly string dbUser = "bp_htz";
 
+        [ModelAttribute("UPDATEDATE", ReportOption.Print)]
         public DateTime? UPDATEDATE { get; set; }
+        [ModelAttribute("POINTEVENTID", ReportOption.Print)]
         public decimal POINTEVENTID { get; set; }
+        [ModelAttribute("NAME", ReportOption.Print)]
         public string NAME { get; set; }
         public string DESCRIPTION { get; set; }
         public decimal? DEFAULTPOINTS { get; set; }

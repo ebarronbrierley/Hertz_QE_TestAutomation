@@ -11,6 +11,7 @@ using Brierley.TestAutomation.Core.Database;
 using System.Reflection;
 using System.Collections;
 using System.Linq.Expressions;
+using Brierley.TestAutomation.Core.Utilities;
 
 namespace HertzNetFramework.DataModels
 {
@@ -19,9 +20,13 @@ namespace HertzNetFramework.DataModels
         public static readonly string TableName = "lw_pointtransaction";
         private static readonly string dbUser = "bp_htz";
 
+        [ModelAttribute("POINTTRANSACTIONID", ReportOption.Print)]
         public decimal POINTTRANSACTIONID { get; set; }
+        [ModelAttribute("VCKEY", ReportOption.Print)]
         public decimal VCKEY { get; set; }
+        [ModelAttribute("POINTTYPEID", ReportOption.Print)]
         public decimal POINTTYPEID { get; set; }
+        [ModelAttribute("POINTEVENTID", ReportOption.Print)]
         public decimal POINTEVENTID { get; set; }
         public long TRANSACTIONTYPE { get; set; }
         public DateTime TRANSACTIONDATE { get; set; }
@@ -39,8 +44,11 @@ namespace HertzNetFramework.DataModels
         public DateTime CREATEDATE { get; set; }
         public DateTime? UPDATEDATE { get; set; }
         public decimal? LAST_DML_ID { get; set; }
+        [ModelAttribute("POINTS", ReportOption.Print)]
         public decimal POINTS { get; set; }
+        [ModelAttribute("POINTSCONSUMED", ReportOption.Print)]
         public decimal POINTSCONSUMED { get; set; }
+        [ModelAttribute("POINTSONHOLD", ReportOption.Print)]
         public decimal POINTSONHOLD { get; set; }
 
         public static IEnumerable<PointTransaction> GetFromDB(IDatabase db, decimal vckey)
