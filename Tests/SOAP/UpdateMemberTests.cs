@@ -73,7 +73,7 @@ namespace HertzNetFramework.Tests.SOAP
             }
             catch(LWServiceException ex)
             {
-                BPTest.Fail<TestStep>(ex.Message, new string[] { $"Error Code: {ex.ErrorCode}", "Error Message: {ex.Message}" });
+                BPTest.Fail<TestStep>(ex.Message, new string[] { $"Error Code: {ex.ErrorCode}", $"Error Message: {ex.Message}" });
                 Assert.Fail();
             }
             catch (AssertModelEqualityException ex)

@@ -50,6 +50,11 @@ namespace HertzNetFramework.Tests.SOAP
                 AssertModels.AreEqualWithAttribute(dbMember.GetMemberPreferences(memberStyle).First(), getMember.GetMemberPreferences(memberStyle).First());
                 BPTest.Pass<TestStep>("API Member preferences created matches member preferences in database");
             }
+            catch (LWServiceException ex)
+            {
+                BPTest.Fail<TestStep>(ex.Message, new[] { $"Error Code: {ex.ErrorCode}", $"Error Message: {ex.ErrorMessage}" });
+                Assert.Fail();
+            }
             catch (AssertModelEqualityException ex)
             {
                 BPTest.Fail<TestStep>(ex.Message, ex.ComparisonFailures);

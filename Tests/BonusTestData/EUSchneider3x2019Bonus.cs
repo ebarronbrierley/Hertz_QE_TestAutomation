@@ -20,7 +20,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        RSDNCTRYCD: "BE", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
                                            new ExpectedPointEvent("GPRTierBonus_FS",80M*GPR.Tier.FiveStar.EarningRateModifier),
-                                           new ExpectedPointEvent("EUSchneider3x2019BonusActivity",80M*2) }
+                                           new ExpectedPointEvent("EUSchneider3x2019BonusActivity",80M*2) },
+                new string[] { }
             },
             new object[]
             {
@@ -33,7 +34,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        CDP: 830063M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "BE", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("EUSchneider3x2019BonusActivity",80M*2) }
+                                           new ExpectedPointEvent("EUSchneider3x2019BonusActivity",80M*2) },
+                new string[] { }
             },
             new object[]
             {
@@ -47,7 +49,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        RSDNCTRYCD: "BE", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
                                            new ExpectedPointEvent("GPRTierBonus_PC_PL",80M*GPR.Tier.PresidentsCircle.EarningRateModifier),
-                                           new ExpectedPointEvent("EUSchneider3x2019BonusActivity",80M*2) }
+                                           new ExpectedPointEvent("EUSchneider3x2019BonusActivity",80M*2) },
+                new string[] { }
             }
         };
     }

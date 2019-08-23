@@ -19,7 +19,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -33,7 +34,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
                                            new ExpectedPointEvent("GPRTierBonus_FS",80M*GPR.Tier.FiveStar.EarningRateModifier),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -47,7 +49,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
                                            new ExpectedPointEvent("GPRTierBonus_PC_PL",80M*GPR.Tier.PresidentsCircle.EarningRateModifier),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -61,7 +64,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
                                            new ExpectedPointEvent("GPRTierBonus_PC_PL",80M*GPR.Tier.Platinum.EarningRateModifier),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -75,7 +79,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
                                            new ExpectedPointEvent("GPRTierBonus_PC_PL",80M*GPR.Tier.PlatinumSelect.EarningRateModifier),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -89,7 +94,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
                                            new ExpectedPointEvent("GPRTierBonus_PC_PL",80M*GPR.Tier.PlatinumVIP.EarningRateModifier),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -102,7 +108,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "CA", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -115,7 +122,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "PR", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -128,7 +136,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "VI", HODIndicator: 0, qualifyingAmount: 80M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
         };
         static object[] NegativeScenarios =
@@ -143,7 +152,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        bookDate:DateTime.Now.AddDays(-2).Comparable(),
                                        CDP: 1234567M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -155,7 +165,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        bookDate:DateTime.Now.AddDays(-2).Comparable(),
                                        CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "BE", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -167,7 +178,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        bookDate:DateTime.Now.AddDays(-2).Comparable(),
                                        CDP: 2152921M, program: HertzProgram.DollarExpressRenters,
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             },
             new object[]
             {
@@ -179,7 +191,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        bookDate:DateTime.Now.AddDays(-2).Comparable(),
                                        CDP: 2152921M, program: HertzProgram.ThriftyBlueChip,
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) }
+                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
+                new string[] { }
             }
 
         };

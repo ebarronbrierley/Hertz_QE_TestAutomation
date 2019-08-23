@@ -46,6 +46,11 @@ namespace HertzNetFramework.Tests.SOAP
                 BPTest.Pass<TestStep>("API Member VirtualCard matches database member VirtualCard");
 
             }
+            catch(LWServiceException ex)
+            {
+                BPTest.Fail<TestStep>(ex.Message, new[] { $"Error Code: {ex.ErrorCode}", $"Error Message: {ex.ErrorMessage}" });
+                Assert.Fail();
+            }
             catch (AssertModelEqualityException ex)
             {
                 BPTest.Fail<TestStep>(ex.Message, ex.ComparisonFailures);

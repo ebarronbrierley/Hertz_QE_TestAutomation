@@ -19,8 +19,9 @@ namespace HertzNetFramework.Tests.SOAP
         [Category("Bonus")]
         //[TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")]
         //[TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
-        [TestCaseSource(typeof(VisaInfinite10RGBonus), "PositiveScenarios")]
-        public void Bonus_Positive(string name, MemberStyle memberStyle, Member member, TxnHeader transaction, ExpectedPointEvent[] expectedPointEvents)
+        //[TestCaseSource(typeof(VisaInfinite10RGBonus), "PositiveScenarios")]OngoingEMEABirthdayActivity
+        [TestCaseSource(typeof(OngoingEMEABirthdayActivity), "PositiveScenarios")]
+        public void Bonus_Positive(string name, MemberStyle memberStyle, Member member, TxnHeader transaction, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes = null)
         {
             try
             {
@@ -36,6 +37,18 @@ namespace HertzNetFramework.Tests.SOAP
 
                 var memberVCKEY = memberOut.VirtualCards.First().VCKEY;
                 var memberLID = memberOut.VirtualCards.First().LOYALTYIDNUMBER;
+
+                if (requiredPromotionCodes != null)
+                {
+                    foreach (string promoCode in requiredPromotionCodes)
+                    {
+                        BPTest.Start<TestStep>($"Make AddMemberPromotion call to add required promotion {promoCode} to member", "AddMemberPromotion call should return MemberPromotion object");
+                        MemberPromotion memberPromo = memberOut.AddPromotion(memberLID, promoCode, null, null, false, null, null, false);
+                        Assert.NotNull(memberPromo, "Expected AddMemberPromotion to return MemberPromotion object, but returned object was null");
+                        BPTest.Pass<TestStep>("AddMemberPromotion call returned MemberPromotion object", memberPromo.ReportDetail());
+                    }
+                }
+
                 transaction.A_LYLTYMEMBERNUM = memberLID;
 
                 BPTest.Start<TestStep>($"Add random transaction to members virtual card with VCKEY = {memberVCKEY}", "Transaction should be added to members virtual card");
@@ -103,8 +116,9 @@ namespace HertzNetFramework.Tests.SOAP
         [Category("Bonus")]
         //[TestCaseSource(typeof(EUSchneider3x2019Bonus), "NegativeScenarios")]
         //[TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "NegativeScenarios")]
-        [TestCaseSource(typeof(VisaInfinite10RGBonus), "NegativeScenarios")]
-        public void Bonus_Negative(string name, MemberStyle memberStyle, Member member, TxnHeader transaction, ExpectedPointEvent[] pointEventsNotPresent)
+        //[TestCaseSource(typeof(VisaInfinite10RGBonus), "NegativeScenarios")]
+        [TestCaseSource(typeof(OngoingEMEABirthdayActivity), "NegativeScenarios")]
+        public void Bonus_Negative(string name, MemberStyle memberStyle, Member member, TxnHeader transaction, ExpectedPointEvent[] pointEventsNotPresent, string[] requiredPromotionCodes = null)
         {
             try
             {
@@ -120,6 +134,18 @@ namespace HertzNetFramework.Tests.SOAP
 
                 var memberVCKEY = memberOut.VirtualCards.First().VCKEY;
                 var memberLID = memberOut.VirtualCards.First().LOYALTYIDNUMBER;
+
+                if (requiredPromotionCodes != null)
+                {
+                    foreach (string promoCode in requiredPromotionCodes)
+                    {
+                        BPTest.Start<TestStep>($"Make AddMemberPromotion call to add required promotion {promoCode} to member", "AddMemberPromotion call should return MemberPromotion object");
+                        MemberPromotion memberPromo = memberOut.AddPromotion(memberLID, promoCode, null, null, false, null, null, false);
+                        Assert.NotNull(memberPromo, "Expected AddMemberPromotion to return MemberPromotion object, but returned object was null");
+                        BPTest.Pass<TestStep>("AddMemberPromotion call returned MemberPromotion object", memberPromo.ReportDetail());
+                    }
+                }
+
                 transaction.A_LYLTYMEMBERNUM = memberLID;
 
                 BPTest.Start<TestStep>($"Add random transaction to members virtual card with VCKEY = {memberVCKEY}", "Transaction should be added to members virtual card");

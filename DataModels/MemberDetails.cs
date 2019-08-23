@@ -161,7 +161,7 @@ namespace HertzNetFramework.DataModels
         public DateTime? A_LASTREDEMPTIONDATE { get; set; }
         public DateTime LAST_DML_DATE { get; set; }
         public decimal A_IPCODE { get; set; }
-        [ModelAttribute("HertzCustomerID", ReportOption.Print)]
+        [ModelAttribute("HertzCustomerID", ReportOption.Print, check: EqualityCheck.Skip)]
         public string A_HERTZCUSTOMERID { get; set; }
         #endregion
 

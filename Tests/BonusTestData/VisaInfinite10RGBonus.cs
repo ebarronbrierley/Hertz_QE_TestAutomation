@@ -19,7 +19,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        CDP: 2150933M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 10M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 10M),
-                                           new ExpectedPointEvent("VisaInfinite10RGBonusActivity",10*0.1M) }
+                                           new ExpectedPointEvent("VisaInfinite10RGBonusActivity",10*0.1M) },
+                new string[] { }
             },
             new object[]
             {
@@ -32,7 +33,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        CDP: 2150933M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "BE", HODIndicator: 0, qualifyingAmount: 10M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 10M),
-                                           new ExpectedPointEvent("VisaInfinite10RGBonusActivity",10*0.1M) }
+                                           new ExpectedPointEvent("VisaInfinite10RGBonusActivity",10*0.1M) },
+                new string[] { }
             },
             new object[]
             {
@@ -45,7 +47,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        CDP: 2150933M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "GU", HODIndicator: 0, qualifyingAmount: 10M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 10M),
-                                           new ExpectedPointEvent("VisaInfinite10RGBonusActivity",10*0.1M) }
+                                           new ExpectedPointEvent("VisaInfinite10RGBonusActivity",10*0.1M) },
+                new string[] { }
             },
             new object[]
             {
@@ -58,7 +61,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        CDP: 2150933M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "EC", HODIndicator: 0, qualifyingAmount: 10M),
                 new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 10M),
-                                           new ExpectedPointEvent("VisaInfinite10RGBonusActivity",10*0.1M) }
+                                           new ExpectedPointEvent("VisaInfinite10RGBonusActivity",10*0.1M) },
+                new string[] { }
             }
         };
         static object[] NegativeScenarios =
@@ -73,7 +77,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        bookDate:DateTime.Now.AddDays(-2).Comparable(),
                                        CDP: 2150933M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.Platinum.Code,"SpecificTier"),
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) }
+                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) },
+                new string[] { }
             },
             new object[]
             {
@@ -85,7 +90,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        bookDate:DateTime.Now.AddDays(-2).Comparable(),
                                        CDP: 1234567M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) }
+                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) },
+                new string[] { }
             },
             new object[]
             {
@@ -97,7 +103,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        bookDate:DateTime.Now.AddDays(-2).Comparable(),
                                        CDP: 2150933M, program: HertzProgram.DollarExpressRenters,
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) }
+                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) },
+                new string[] { }
             },
             new object[]
             {
@@ -109,7 +116,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                                        bookDate:DateTime.Now.AddDays(-2).Comparable(),
                                        CDP: 2150933M, program: HertzProgram.ThriftyBlueChip,
                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) }
+                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) },
+                new string[] { }
             }
         };
     }

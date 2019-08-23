@@ -12,11 +12,12 @@ namespace HertzNetFramework
     public class BrierleyTestFixture
     {
         public TestManager BPTest = TestManager.Instance;
-        public OracleDB Database = new OracleDB(EnvironmentManager.Get.OracleConnection);
+        public OracleDB Database = null;
 
         [OneTimeSetUp]
         public void BeforeSuite()
         {
+            Database = new OracleDB(EnvironmentManager.Get.OracleConnection);
             BPTest.Start<TestSuite>(TestContext.CurrentContext.Test.ClassName);
         }
         [SetUp]
