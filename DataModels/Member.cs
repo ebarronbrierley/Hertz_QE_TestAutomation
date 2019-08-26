@@ -116,7 +116,14 @@ namespace HertzNetFramework.DataModels
                 return MemberPreferences;
             }
         }
-
+        public Member MakeVirtualCardLIDsUnique(IDatabase database)
+        {
+            foreach(VirtualCard vc in this.VirtualCards)
+            {
+                vc.LOYALTYIDNUMBER = GetUnusedLoyaltyId(database);
+            }
+            return this;
+        }
         public static Member GenerateRandom(MemberStyle memberStyle = MemberStyle.PreProjectOne, IHertzProgram program = null)
         {
             if (program == null) program = HertzProgram.GoldPointsRewards;
@@ -162,6 +169,21 @@ namespace HertzNetFramework.DataModels
         }
 
         #region Retrieve Members from DB
+        public static string GetUnusedLoyaltyId(IDatabase db)
+        {
+            string query = "select * from bp_htz.lw_virtualcard  WHERE REGEXP_LIKE(loyaltyidnumber, '^[[:digit:]]+$') and Length(loyaltyidnumber) = 13 order by to_number(loyaltyidnumber) desc";
+            Hashtable result = db.QuerySingleRow(query);
+            try
+            {
+                ulong lastLID = Convert.ToUInt64(result["LOYALTYIDNUMBER"]);
+                lastLID += 1;
+                return lastLID.ToString();
+            }
+            catch(Exception ex)
+            {
+                return StrongRandom.NumericString(13);
+            }
+        }
         public static Member GetFromDB(IDatabase db, decimal ipcode, MemberStyle memberStyle = MemberStyle.PreProjectOne)
         {
             string query = $"select * from {dbUser}.{TableName} where IPCODE = {ipcode}";

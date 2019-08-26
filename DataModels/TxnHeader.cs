@@ -200,7 +200,7 @@ namespace HertzNetFramework.DataModels
         public static TxnHeader Generate(string loyaltyId,  
                                             DateTime? checkInDate = null, DateTime? checkOutDate = null, DateTime? bookDate = null, 
                                             decimal? CDP = null, IHertzProgram program = null, short? HODIndicator = null, string RSDNCTRYCD = "US",
-                                            decimal? qualifyingAmount = null)
+                                            decimal? qualifyingAmount = null, string contractTypeCode = null, decimal? contractNumber = null, string sacCode = null)
         {
             if (program == null) program = HertzProgram.GoldPointsRewards;
 
@@ -262,7 +262,7 @@ namespace HertzNetFramework.DataModels
                 A_RTCATCD = null,
                 A_RTCLSNCD = null,
                 A_RTFMLYCD = null,
-                A_SACCD = "N",
+                A_SACCD = sacCode ?? "N",
                 A_RSDNCTRYCD = RSDNCTRYCD,
                 A_GOLDRNTALIND = "Y",
                 A_TXNDATE = checkInDate ?? DateTime.Now.Comparable(),
@@ -271,7 +271,7 @@ namespace HertzNetFramework.DataModels
                 A_TRANSTYPE = program.A_TRANSTYPE,
                 A_RNTINGCTRYCRNCYUSDEXCHRT = 1M,
                 A_CORPDISCPRGID = CDP ?? Convert.ToDecimal(StrongRandom.Next(0, 9)),
-                A_CONTRACTTYPECD = StrongRandom.NumericString(3),
+                A_CONTRACTTYPECD = contractTypeCode ?? StrongRandom.NumericString(3),
                 A_CONTRACTNUM = Convert.ToDecimal(StrongRandom.Next(1, 999999)),
                 A_BRANDID = null,
                 A_CREDITCARDID = null,
@@ -341,7 +341,7 @@ namespace HertzNetFramework.DataModels
         }
         private static void rollSection2()
         {
-            if (current.section2[section2MaxSize] < section2Max) current.section2[2] += 1;
+            if (current.section2[section2MaxSize-1] < section2Max) current.section2[2] += 1;
             else
             {
                 current.section2[2] = 0;

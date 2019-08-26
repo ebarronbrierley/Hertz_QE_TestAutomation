@@ -13,19 +13,22 @@ using System.Threading;
 namespace HertzNetFramework.Tests.SOAP
 {
     [TestFixture]
-    public class Bonuses : BrierleyTestFixture
+    public partial class Bonuses : BrierleyTestFixture
     {
         [Category("Bonus_Positive")]
         [Category("Bonus")]
         //[TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")]
         //[TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
         //[TestCaseSource(typeof(VisaInfinite10RGBonus), "PositiveScenarios")]OngoingEMEABirthdayActivity
-        [TestCaseSource(typeof(OngoingEMEABirthdayActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(OngoingEMEABirthdayActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(HorizonCardPointsActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(ACIActivation800Activity), "PositiveScenarios")]
+        [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
         public void Bonus_Positive(string name, MemberStyle memberStyle, Member member, TxnHeader transaction, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes = null)
         {
             try
             {
-                Member createMember = member;
+                Member createMember = member.MakeVirtualCardLIDsUnique(Database);
                 BPTest.Start<TestStep>($"Make AddMember Call for {memberStyle} Member with {name}", "Member should be added successfully and member object should be returned");
                 Member memberOut = Member.AddMember(createMember);
                 Assert.IsNotNull(memberOut, "Expected populated member object, but member object returned was null");
@@ -117,7 +120,9 @@ namespace HertzNetFramework.Tests.SOAP
         //[TestCaseSource(typeof(EUSchneider3x2019Bonus), "NegativeScenarios")]
         //[TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "NegativeScenarios")]
         //[TestCaseSource(typeof(VisaInfinite10RGBonus), "NegativeScenarios")]
-        [TestCaseSource(typeof(OngoingEMEABirthdayActivity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(OngoingEMEABirthdayActivity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(HorizonCardPointsActivity), "NegativeScenarios")]
+        [TestCaseSource(typeof(ACIActivation800Activity), "NegativeScenarios")]
         public void Bonus_Negative(string name, MemberStyle memberStyle, Member member, TxnHeader transaction, ExpectedPointEvent[] pointEventsNotPresent, string[] requiredPromotionCodes = null)
         {
             try
@@ -170,16 +175,16 @@ namespace HertzNetFramework.Tests.SOAP
                 Assert.AreEqual(memberVCKEY, dbTxn.First().A_VCKEY, "VCKEY does not match expected");
                 BPTest.Pass<TestStep>("TxnHeader from database matches expected TxnHeader", dbTxn.ReportDetail());
 
-                BPTest.Start<TestStep>($"Verify point transaction(s) exist for member VCKEY = {memberVCKEY}", "Point transaction(s) should exist for member");
+                BPTest.Start<TestStep>($"Verify point transaction(s) for member VCKEY = {memberVCKEY}", "Point transaction(s) should be found for member");
                 IEnumerable<PointTransaction> ptTransactions = PointTransaction.GetFromDB(Database, memberVCKEY);
                 Assert.NotNull(ptTransactions, "Expected database query to return point transactions");
-                Assert.IsTrue(ptTransactions.Count() >= 1, "Expected at least one point transaction to be found");
-                BPTest.Pass<TestStep>("Point event(s) exist for member", ptTransactions.ReportDetail());
-
+                BPTest.Pass<TestStep>("Point event(s) returned for member", ptTransactions.ReportDetail());
+                
                 BPTest.Start<TestStep>($"Verify point event(s) {String.Join(",", pointEventsNotPresent.Select(x => x.PointEventName))} are not present for member", "Point transaction should not contain point event(s)");
-                IEnumerable<PointEvent> pointEvents = PointEvent.GetFromDB(Database, ptTransactions.Select(x => x.POINTEVENTID).ToArray());
+                IEnumerable<PointEvent> pointEvents = new List<PointEvent>();
+                if(ptTransactions.Count() > 0) pointEvents = PointEvent.GetFromDB(Database, ptTransactions.Select(x => x.POINTEVENTID).ToArray());
                 List<string> pointEventNames = pointEvents.Select(x => x.NAME).ToList();
-                Assert.IsTrue(pointEventNames.Intersect(pointEventsNotPresent.Select(x => x.PointEventName)).Count() == 0, $"{String.Join(",",pointEventNames.Intersect(pointEventsNotPresent.Select(x => x.PointEventName)))} should not be present for member");
+                Assert.IsTrue(pointEventNames.Intersect(pointEventsNotPresent.Select(x => x.PointEventName)).Count() == 0, $"{String.Join(",", pointEventNames.Intersect(pointEventsNotPresent.Select(x => x.PointEventName)))} should not be present for member");
                 BPTest.Pass<TestStep>("Point event(s) do not exist for member", pointEvents.ReportDetail());
 
             }
