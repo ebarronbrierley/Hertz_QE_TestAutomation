@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrierleyTestFixture.cs" />
+    <Compile Include="DataModels\Exceptions.cs" />
     <Compile Include="DataModels\ExpectedPointEvent.cs" />
     <Compile Include="DataModels\HertzPrograms.cs" />
     <Compile Include="DataModels\Member.cs" />

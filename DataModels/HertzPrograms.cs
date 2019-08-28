@@ -29,6 +29,8 @@ namespace HertzNetFramework.DataModels
         public string EarningPreference { get { return "N1"; } }
         public string A_FTPTNRNUM { get { return "ZE1"; } }
         public string A_RASRCCD { get { return "1"; } }
+        public IEnumerable<IHertzTier> Tiers { get { return new List<IHertzTier>() { Tier.RegularGold, Tier.FiveStar, Tier.PresidentsCircle,
+                                                                                     Tier.Platinum, Tier.PlatinumSelect, Tier.PlatinumVIP }; } }
 
         public class Tier
         {
@@ -42,19 +44,22 @@ namespace HertzNetFramework.DataModels
     }
     public class Thrifty:IHertzProgram
     {
-        public string SpecificTier { get { return null; } }
+        public string SpecificTier { get { return null; } set { ; } }
         public string A_TRANSTYPE { get { return "T"; } }
         public string EarningPreference { get { return "BC"; } }
         public string A_FTPTNRNUM { get { return "BC1"; } }
         public string A_RASRCCD { get { return "2"; } }
+        public IEnumerable<IHertzTier> Tiers { get { return new List<IHertzTier>(); } }
+        
     }
     public class Dollar:IHertzProgram
     {
-        public string SpecificTier { get { return null; } }
+        public string SpecificTier { get { return null; } set {; } }
         public string A_TRANSTYPE { get { return "D"; } }
         public string EarningPreference { get { return "DX"; } }
         public string A_FTPTNRNUM { get { return "RR1"; } }
         public string A_RASRCCD { get { return "3"; } }
+        public IEnumerable<IHertzTier> Tiers { get { return new List<IHertzTier>(); } }
     }
     public class HertzTier : IHertzTier
     {
@@ -72,11 +77,12 @@ namespace HertzNetFramework.DataModels
 
     public interface IHertzProgram
     {
-        string SpecificTier { get; }
+        string SpecificTier { get; set; }
         string EarningPreference { get; }
         string A_FTPTNRNUM { get; }
         string A_RASRCCD { get; }
         string A_TRANSTYPE { get; }
+        IEnumerable<IHertzTier> Tiers { get; }
     }
     public interface IHertzTier
     {
