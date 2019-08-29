@@ -273,7 +273,7 @@ namespace HertzNetFramework.DataModels
                 A_RNTINGCTRYCRNCYUSDEXCHRT = 1M,
                 A_CORPDISCPRGID = CDP ?? Convert.ToDecimal(StrongRandom.Next(0, 9)),
                 A_CONTRACTTYPECD = contractTypeCode ?? StrongRandom.NumericString(3),
-                A_CONTRACTNUM = Convert.ToDecimal(StrongRandom.Next(1, 999999)),
+                A_CONTRACTNUM = contractNumber ?? Convert.ToDecimal(StrongRandom.Next(1, 999999)),
                 A_BRANDID = null,
                 A_CREDITCARDID = null,
                 A_TXNMASKID = null,

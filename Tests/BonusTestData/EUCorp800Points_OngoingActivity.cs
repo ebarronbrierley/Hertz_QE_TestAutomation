@@ -8,39 +8,38 @@ using NUnit.Framework;
 
 namespace HertzNetFramework.Tests.BonusTestData
 {
-    public class CorpNewMember550PointsOngoingActivity
+    public class EUCorp800Points_OngoingActivity
     {
-        public const string PointEventName = "CorpNewMember550PointsOngoingActivity";
+        public static readonly DateTime StartDate = DateTime.Parse("01/01/2017");
+        public static readonly DateTime EndDate = DateTime.Parse("08/01/2099");
+
+        public const string PointEventName = "EUCorp800Points_OngoingActivity";
         public const string ContractTypeCode = "COMM";
         public const decimal PointEventAmount = 550M;
         public const decimal BaseTxnAmount = 25M;
-        public static readonly string[] ValidAcquisitionMethodTypeCodes = new string[] { "1898", "12091", "1882", "1627", "6730" };
-        public static readonly string[] ValidRSDNCTRYCDs = new string[] { "US", "BM", "CA", "MX", "AS", "GU", "MP", "PR", "VI",
-                                                                          "BE", "FR", "DE", "IT", "LU", "NL", "ES", "CH", "GB", "IE", "SE", "NO", "DK", "FI", "PT",
-                                                                          "AI", "AW", "BB", "BS", "VG", "KY","DM","DO","GD","GP","HT","JM","MQ","MS","AN","SM","KN","LC","VC","TT","TC",
-                                                                          "AR","BO","BR","BZ","CL","CO","CR","EC","FK","GF","GT","GY","HN","NI","PA","PE","PY","SR","SV","UY","VE",
+        public static readonly decimal[] ValidCDPs = new decimal[] { 841369M, 843852M, 843853M, 843854M, 843855M, 843859M, 843860M };
+        public static readonly string[] ValidRSDNCTRYCDs = new string[] { "BE", "FR", "DE", "IT", "LU", "NL", "ES", "CH", "GB", "IE", "SE", "NO", "DK", "FI", 
                                                                           "AU","NZ","PW","CN","SG","JP","KR" };
         public static readonly string[] ValidCHKWORLDWIDECTRYCDs = new string[] {"US", "CA", "PR", "VI",
-                                                                                 "BE", "FR", "DE", "IT", "LU", "NL","ES","CH","GB","IE","SE","NO", "DK","FI",
+                                                                                 "BE", "FR", "DE", "IT", "LU", "NL","ES","CH","GB","IE","SE","NO", "DK","FI", 
                                                                                  "BR",
-                                                                                 "AU","NZ"};
-        
+                                                                                 "AU","NZ", "PW"};
+
         public static readonly IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
         public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle };
-        public static TimeSpan ValidRentalLength = TimeSpan.FromDays(1);
-        public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent("CorpNewMemberTriplePoints_OngoingActivity", BaseTxnAmount*2),
-                                                                                            new ExpectedPointEvent("CorpNewMember550PointsOngoingActivity", PointEventAmount) };
-        
+        public static TimeSpan ValidRentalLength = TimeSpan.FromDays(2);
+        public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent(PointEventName, PointEventAmount) };
+
         public static IEnumerable PositiveScenarios
         {
             get
             {
-                foreach (string acquisitionMethod in ValidAcquisitionMethodTypeCodes)
+                foreach (decimal validCDP in ValidCDPs)
                 {
                     yield return new TestCaseData(
                         Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
                                                                                      .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
-                                                                                     .Set(ValidAcquisitionMethodTypeCodes[0], "MemberDetails.A_ACQUISITIONMETHODTYPECODE")
+                                                                                     .Set(validCDP, "MemberDetails.A_CDPNUMBER")
                         ,
                         new TxnHeader[] {
                             TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
@@ -48,11 +47,11 @@ namespace HertzNetFramework.Tests.BonusTestData
                                         bookDate:DateTime.Now.Comparable(),
                                         program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"),
                                         RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount,
-                                        contractTypeCode: ContractTypeCode, checkoutWorldWideISO: ValidCHKWORLDWIDECTRYCDs[0])
+                                        contractTypeCode: ContractTypeCode, CDP: validCDP, checkoutWorldWideISO: ValidCHKWORLDWIDECTRYCDs[0])
                         },
                         ExpectedPointEvents,
                         new string[] { }
-                    ).SetName($"{PointEventName}. EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, AcquistionMethodTypeCode = {acquisitionMethod}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, WWISOCTRYCODE = {ValidCHKWORLDWIDECTRYCDs[0]}")
+                    ).SetName($"{PointEventName}. CDP = {validCDP}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, CHKOUTWORLDWIDERGNCTRYISO = {ValidCHKWORLDWIDECTRYCDs[0]}")
                      .SetCategory(BonusTestCategory.Regression)
                      .SetCategory(BonusTestCategory.Positive)
                      .SetCategory(BonusTestCategory.Smoke);
@@ -62,19 +61,19 @@ namespace HertzNetFramework.Tests.BonusTestData
                     yield return new TestCaseData(
                         Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
                                                                                      .Set(rsdnCtryCode, "MemberDetails.A_COUNTRY")
-                                                                                     .Set(ValidAcquisitionMethodTypeCodes[0], "MemberDetails.A_ACQUISITIONMETHODTYPECODE")
+                                                                                     .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
                         ,
                         new TxnHeader[] {
                             TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                         checkOutDate:DateTime.Now.Comparable(),
                                         bookDate:DateTime.Now.Comparable(),
                                         program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"),
-                                        RSDNCTRYCD: rsdnCtryCode, HODIndicator: 0, qualifyingAmount: BaseTxnAmount,
-                                        contractTypeCode: ContractTypeCode, checkoutWorldWideISO: ValidCHKWORLDWIDECTRYCDs[0])
+                                        RSDNCTRYCD: rsdnCtryCode, HODIndicator: 0, qualifyingAmount: BaseTxnAmount, sacCode: "Y",
+                                        contractTypeCode: ContractTypeCode, CDP: ValidCDPs[0], checkoutWorldWideISO: ValidCHKWORLDWIDECTRYCDs[0])
                         },
                         ExpectedPointEvents,
                         new string[] { }
-                    ).SetName($"{PointEventName}. EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, AcquistionMethodTypeCode = {ValidAcquisitionMethodTypeCodes[0]}, RSDNCTRYCODE = {rsdnCtryCode}, WWISOCTRYCODE = {ValidCHKWORLDWIDECTRYCDs[0]}")
+                    ).SetName($"{PointEventName}. EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCODE = {rsdnCtryCode}, WWISOCTRYCODE = {ValidCHKWORLDWIDECTRYCDs[0]}")
                      .SetCategory(BonusTestCategory.Regression)
                      .SetCategory(BonusTestCategory.Positive);
                 }
@@ -83,19 +82,18 @@ namespace HertzNetFramework.Tests.BonusTestData
                     yield return new TestCaseData(
                         Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
                                                                                      .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
-                                                                                     .Set(ValidAcquisitionMethodTypeCodes[0], "MemberDetails.A_ACQUISITIONMETHODTYPECODE")
                         ,
                         new TxnHeader[] {
                             TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                         checkOutDate:DateTime.Now.Comparable(),
                                         bookDate:DateTime.Now.Comparable(),
                                         program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"),
-                                        RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount,
-                                        contractTypeCode: ContractTypeCode, checkoutWorldWideISO: wwCheckout)
+                                        RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount, sacCode: "Y",
+                                        contractTypeCode: ContractTypeCode, CDP: ValidCDPs[0], checkoutWorldWideISO: wwCheckout)
                         },
                         ExpectedPointEvents,
                         new string[] { }
-                    ).SetName($"{PointEventName}. EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, AcquistionMethodTypeCode = {ValidAcquisitionMethodTypeCodes[0]}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, WWISOCTRYCODE = {wwCheckout}")
+                    ).SetName($"{PointEventName}. CHKOUTWORLDWIDERGNCTRYISO = {wwCheckout}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
                      .SetCategory(BonusTestCategory.Regression)
                      .SetCategory(BonusTestCategory.Positive);
                 }
@@ -103,23 +101,23 @@ namespace HertzNetFramework.Tests.BonusTestData
                 {
                     foreach (IHertzTier validTier in validProgram.Tiers)
                     {
-                        if (!ValidTiers.ToList().Any(x=>x.Name.Equals(validTier.Name))) continue;
+                        if (!ValidTiers.ToList().Any(x => x.Name.Equals(validTier.Name))) continue;
                         yield return new TestCaseData(
                             Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
                                                                                             .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
-                                                                                            .Set(ValidAcquisitionMethodTypeCodes[0], "MemberDetails.A_ACQUISITIONMETHODTYPECODE")
+                                                                                            .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
                             ,
                             new TxnHeader[] {
                                     TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                     checkOutDate:DateTime.Now.Comparable(),
                                     bookDate:DateTime.Now.Comparable(),
                                     program: validProgram.Set(validTier.Code,"SpecificTier"),
-                                    RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount,
-                                    contractTypeCode: ContractTypeCode, checkoutWorldWideISO: ValidCHKWORLDWIDECTRYCDs[0])
+                                    RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount, sacCode: "Y",
+                                    contractTypeCode: ContractTypeCode, CDP:ValidCDPs[0], checkoutWorldWideISO: ValidCHKWORLDWIDECTRYCDs[0])
                             },
                             ExpectedPointEvents,
                             new string[] { }
-                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, Tier={validTier.Code}, AcquistionMethodTypeCode = {ValidAcquisitionMethodTypeCodes[0]}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, WWISOCTRYCODE = {ValidCHKWORLDWIDECTRYCDs[0]}")
+                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, Tier={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, CHKOUTWORLDWIDERGNCTRYISO = {ValidCHKWORLDWIDECTRYCDs[0]}")
                          .SetCategory(BonusTestCategory.Regression)
                          .SetCategory(BonusTestCategory.Positive)
                          .SetCategory(BonusTestCategory.Smoke);

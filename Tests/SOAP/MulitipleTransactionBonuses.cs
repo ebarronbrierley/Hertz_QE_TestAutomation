@@ -18,11 +18,15 @@ namespace HertzNetFramework.Tests.SOAP
         [Category("Bonus_Positive")]
         [Category("Bonus")]
         [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
+        [TestCaseSource(typeof(Corp550Points_2016Activity), "PositiveScenarios")]
         [TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")] 
         [TestCaseSource(typeof(GPRAAABonusActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(ACIActivation800Activity), "PositiveScenarios")]
         [TestCaseSource(typeof(HorizonCardPointsActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(OngoingEMEABirthdayActivity),"PositiveScenarios")]
+        [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
+        [TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "PositiveScenarios")]
+        [TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "PositiveScenarios")]
         public void MultiTransaction_Bonus_Positive(Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes)
         {
             try

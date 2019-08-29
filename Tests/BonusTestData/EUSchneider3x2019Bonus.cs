@@ -42,7 +42,6 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static TimeSpan ValidBookingDate = TimeSpan.FromDays(-8);
         public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent("EUSchneider3x2019BonusActivity", BaseTxnAmount*2) };
 
-
         public static IEnumerable PositiveScenarios
         {
             get
