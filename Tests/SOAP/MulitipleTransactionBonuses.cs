@@ -15,12 +15,14 @@ namespace HertzNetFramework.Tests.SOAP
     [TestFixture]
     public partial class Bonuses : BrierleyTestFixture
     {
-
         [Category("Bonus_Positive")]
         [Category("Bonus")]
         [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")] 
         [TestCaseSource(typeof(GPRAAABonusActivity), "PositiveScenarios")]
+        [TestCaseSource(typeof(ACIActivation800Activity), "PositiveScenarios")]
+        [TestCaseSource(typeof(HorizonCardPointsActivity), "PositiveScenarios")]
+        [TestCaseSource(typeof(OngoingEMEABirthdayActivity),"PositiveScenarios")]
         public void MultiTransaction_Bonus_Positive(Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes)
         {
             try
@@ -64,6 +66,7 @@ namespace HertzNetFramework.Tests.SOAP
                 Assert.IsNotNull(updatedMember, "Expected non null Member object to be returned");
                 BPTest.Pass<TestStep>("Member object returned from UpdateMember API call", updatedMember.ReportDetail());
                 memberOut = updatedMember;
+
                 Thread.Sleep(1000);
 
 

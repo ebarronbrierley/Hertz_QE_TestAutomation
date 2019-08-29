@@ -53,7 +53,9 @@ namespace HertzNetFramework.Tests.BonusTestData
                         ExpectedPointEvents,
                         new string[] { }
                     ).SetName($"{PointEventName}. EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, AcquistionMethodTypeCode = {acquisitionMethod}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, WWISOCTRYCODE = {ValidCHKWORLDWIDECTRYCDs[0]}")
-                     .SetCategory("Bonus_Regression,Regression");
+                     .SetCategory(BonusTestCategory.Regression)
+                     .SetCategory(BonusTestCategory.Positive)
+                     .SetCategory(BonusTestCategory.Smoke);
                 }
                 foreach (string rsdnCtryCode in ValidRSDNCTRYCDs)
                 {
@@ -73,7 +75,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                         ExpectedPointEvents,
                         new string[] { }
                     ).SetName($"{PointEventName}. EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, AcquistionMethodTypeCode = {ValidAcquisitionMethodTypeCodes[0]}, RSDNCTRYCODE = {rsdnCtryCode}, WWISOCTRYCODE = {ValidCHKWORLDWIDECTRYCDs[0]}")
-                     .SetCategory("Bonus_Regression,Regression");
+                     .SetCategory(BonusTestCategory.Regression)
+                     .SetCategory(BonusTestCategory.Positive);
                 }
                 foreach (string wwCheckout in ValidCHKWORLDWIDECTRYCDs)
                 {
@@ -93,7 +96,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                         ExpectedPointEvents,
                         new string[] { }
                     ).SetName($"{PointEventName}. EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, AcquistionMethodTypeCode = {ValidAcquisitionMethodTypeCodes[0]}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, WWISOCTRYCODE = {wwCheckout}")
-                     .SetCategory("Bonus_Regression,Regression");
+                     .SetCategory(BonusTestCategory.Regression)
+                     .SetCategory(BonusTestCategory.Positive);
                 }
                 foreach (IHertzProgram validProgram in ValidPrograms)
                 {
@@ -116,7 +120,9 @@ namespace HertzNetFramework.Tests.BonusTestData
                             ExpectedPointEvents,
                             new string[] { }
                         ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, Tier={validTier.Code}, AcquistionMethodTypeCode = {ValidAcquisitionMethodTypeCodes[0]}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, WWISOCTRYCODE = {ValidCHKWORLDWIDECTRYCDs[0]}")
-                         .SetCategory("Bonus_Regression,Regression,Bonus_Smoke");
+                         .SetCategory(BonusTestCategory.Regression)
+                         .SetCategory(BonusTestCategory.Positive)
+                         .SetCategory(BonusTestCategory.Smoke);
                     }
                 }
         }

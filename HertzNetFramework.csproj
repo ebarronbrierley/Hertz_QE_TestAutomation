@@ -61,6 +61,7 @@
     <Compile Include="Initializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\BonusTestData\ACIActivation800Activity.cs" />
+    <Compile Include="Tests\BonusTestData\BonusTestCategory.cs" />
     <Compile Include="Tests\BonusTestData\CorpNewMember550PointsOngoingActivity.cs" />
     <Compile Include="Tests\BonusTestData\EUSchneider3x2019Bonus.cs" />
     <Compile Include="Tests\BonusTestData\GPRAAABonusActivity.cs" />

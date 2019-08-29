@@ -15,6 +15,7 @@ namespace HertzNetFramework.Tests.SOAP
     [TestFixture]
     public partial class Bonuses : BrierleyTestFixture
     {
+        
         [Category("Bonus_Positive")]
         [Category("Bonus")]
         //[TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")]
