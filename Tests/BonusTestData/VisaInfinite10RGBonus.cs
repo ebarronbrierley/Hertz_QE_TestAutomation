@@ -101,61 +101,12 @@ namespace HertzNetFramework.Tests.BonusTestData
             }
         }
 
-      
-        static object[] NegativeScenarios =
+        public static IEnumerable NegativeScenarios
         {
-            new object[]
+            get
             {
-                "VisaInfinite10RGBonus [GPR Platinum] CDP = 2150933, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.Platinum.Code,"SpecificTier")).Set(2150933M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2150933M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.Platinum.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "VisaInfinite10RGBonus [GPR Regular Gold] Invalid CDP = 1234567, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier")).Set(1234567M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 1234567M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "VisaInfinite10RGBonus [Dollar (DX)] CDP = 2150933, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.DollarExpressRenters).Set(2150933M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2150933M, program: HertzProgram.DollarExpressRenters,
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "VisaInfinite10RGBonus [Thrifty (BC)] CDP = 2150933, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.ThriftyBlueChip).Set(2150933M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2150933M, program: HertzProgram.ThriftyBlueChip,
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("VisaInfinite10RGBonusActivity", 80*0.1M) },
-                new string[] { }
+                yield return new TestCaseData();
             }
-        };
+        }
     }
 }

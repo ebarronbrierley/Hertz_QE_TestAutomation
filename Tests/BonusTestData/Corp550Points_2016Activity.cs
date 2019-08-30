@@ -124,5 +124,13 @@ namespace HertzNetFramework.Tests.BonusTestData
                 }
             }
         }
+
+        public static IEnumerable NegativeScenarios
+        {
+            get
+            {
+                yield return new TestCaseData();
+            }
+        }
     }
 }

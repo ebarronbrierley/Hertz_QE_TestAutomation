@@ -75,7 +75,7 @@
     <Compile Include="Tests\SOAP\AddMemberPromotion.cs" />
     <Compile Include="Tests\SOAP\AddMemberTests.cs" />
     <Compile Include="Tests\SOAP\GetMemberTests.cs" />
-    <Compile Include="Tests\SOAP\MulitipleTransactionBonuses.cs" />
+    <Compile Include="Tests\SOAP\RealTime_Bonuses.cs" />
     <Compile Include="Tests\SOAP\UpdateMemberTests.cs" />
   </ItemGroup>
   <ItemGroup>

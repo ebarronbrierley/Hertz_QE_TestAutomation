@@ -8,6 +8,9 @@ namespace HertzNetFramework.DataModels
 {
     public class HertzProgram
     {
+        public IEnumerable<IHertzProgram> Programs { get { yield return DollarExpressRenters;
+                                                           yield return GoldPointsRewards;
+                                                           yield return ThriftyBlueChip;  } }
         public static IHertzProgram GoldPointsRewards
         {
             get { return new GPR(); }

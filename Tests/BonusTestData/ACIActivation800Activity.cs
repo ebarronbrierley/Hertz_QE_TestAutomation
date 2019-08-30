@@ -109,5 +109,67 @@ namespace HertzNetFramework.Tests.BonusTestData
             }
         }
 
+
+
+
+        public static IHertzProgram[] InvalidPrograms = new IHertzProgram[]{ HertzProgram.DollarExpressRenters, HertzProgram.ThriftyBlueChip };
+        public static decimal[] InvalidCDPs = new decimal[] { 1234567M };
+        public static decimal[] InvalidBaseTxnAmount = new decimal[] { 10M, 24M };
+        public static IEnumerable NegativeScenarios
+        {
+            get
+            {
+                foreach (IHertzProgram invalidProgram in InvalidPrograms)
+                {
+                    yield return new TestCaseData(
+                        Member.GenerateRandom(MemberStyle.ProjectOne, invalidProgram)
+                                                                                              .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
+                                                                                              .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
+                                                                                              .Set(ValidContractSegment, "MemberDetails.A_CONTRACTSEGMENTTYPE")
+                            ,
+                            new TxnHeader[] {
+                            TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                            checkOutDate:DateTime.Now.Comparable(),
+                            bookDate:DateTime.Now.Comparable(),
+                            program: invalidProgram, CDP: ValidCDPs[0],
+                            RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount,
+                            contractTypeCode: ValidContractTypeCode)
+                            },
+                            ExpectedPointEvents,
+                            new string[] { }
+                        ).SetName($"{PointEventName}. Invalid EarningPref={invalidProgram.EarningPreference}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                            .SetCategory(BonusTestCategory.Regression)
+                            .SetCategory(BonusTestCategory.Negative)
+                            .SetCategory(BonusTestCategory.Smoke);
+                }
+                foreach (decimal invalidCDP in InvalidCDPs)
+                {
+                    yield return new TestCaseData(
+                                Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
+                                                                                              .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
+                                                                                              .Set(invalidCDP, "MemberDetails.A_CDPNUMBER")
+                                                                                              .Set(ValidContractSegment, "MemberDetails.A_CONTRACTSEGMENTTYPE")
+                                ,
+                                new TxnHeader[] {
+                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                checkOutDate:DateTime.Now.Comparable(),
+                                bookDate:DateTime.Now.Comparable(),
+                                program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: invalidCDP,
+                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount,
+                                contractTypeCode: ValidContractTypeCode)
+                                },
+                                ExpectedPointEvents,
+                                new string[] { }
+                            ).SetName($"{PointEventName}. Invalid CDP = {invalidCDP}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                             .SetCategory(BonusTestCategory.Regression)
+                             .SetCategory(BonusTestCategory.Positive)
+                             .SetCategory(BonusTestCategory.Smoke);
+                }
+                foreach(decimal invalidTxnAmount in InvalidBaseTxnAmount)
+                {
+
+                }
+            }
+        }
     }
 }

@@ -133,20 +133,30 @@ namespace HertzNetFramework.Tests.SOAP
 
         [Category("Bonus_Negative")]
         [Category("Bonus")]
+        [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "NegativeScenarios")]
+        [TestCaseSource(typeof(Corp550Points_2016Activity), "NegativeScenarios")]
+        [TestCaseSource(typeof(EUSchneider3x2019Bonus), "NegativeScenarios")]
         [TestCaseSource(typeof(GPRAAABonusActivity), "NegativeScenarios")]
-        public void RealTime_Bonus_Negative(string name, MemberStyle memberStyle, Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes = null)
+        [TestCaseSource(typeof(ACIActivation800Activity), "NegativeScenarios")]
+        [TestCaseSource(typeof(HorizonCardPointsActivity), "NegativeScenarios")]
+        [TestCaseSource(typeof(OngoingEMEABirthdayActivity), "NegativeScenarios")]
+        [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "NegativeScenarios")]
+        [TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "NegativeScenarios")]
+        [TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "NegativeScenarios")]
+        [TestCaseSource(typeof(LapsedOnGoingActivity), "NegativeScenarios")]
+        public void RealTime_Bonus_Negative(Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes = null)
         {
             try
             {
                 Member createMember = member.MakeVirtualCardLIDsUnique(Database);
-                BPTest.Start<TestStep>($"Make AddMember Call for {memberStyle} Member with {name}", "Member should be added successfully and member object should be returned");
+                BPTest.Start<TestStep>($"Make AddMember Call for {member.Style} Member", "Member should be added successfully and member object should be returned");
                 Member memberOut = Member.AddMember(createMember);
                 Assert.IsNotNull(memberOut, "Expected populated member object, but member object returned was null");
                 BPTest.Pass<TestStep>("Member was added successfully and member object was returned", memberOut.ReportDetail());
 
                 BPTest.Start<TestStep>($"Verify MemberDetails in AddMember output against member details passed", "API MemberDetails should match passed MemberDetails");
-                AssertModels.AreEqualWithAttribute(createMember.GetMemberDetails(memberStyle).First(), memberOut.GetMemberDetails(memberStyle).First());
-                BPTest.Pass<TestStep>("API MemberDetails match passed MemberDetails", memberOut.GetMemberDetails(memberStyle).ReportDetail());
+                AssertModels.AreEqualWithAttribute(createMember.GetMemberDetails(member.Style).First(), memberOut.GetMemberDetails(member.Style).First());
+                BPTest.Pass<TestStep>("API MemberDetails match passed MemberDetails", memberOut.GetMemberDetails(member.Style).ReportDetail());
 
                 var memberVCKEY = memberOut.VirtualCards.First().VCKEY;
                 var memberLID = memberOut.VirtualCards.First().LOYALTYIDNUMBER;
