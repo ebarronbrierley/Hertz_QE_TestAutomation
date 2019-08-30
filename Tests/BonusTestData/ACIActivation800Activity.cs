@@ -1,62 +1,53 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Brierley.TestAutomation.Core.Utilities;
 using HertzNetFramework.DataModels;
+using NUnit.Framework;
 
 namespace HertzNetFramework.Tests.BonusTestData
 {
     public class ACIActivation800Activity
     {
-        static object[] PositiveScenarios =
+        public static readonly decimal[] ValidCDPs = new decimal[] { 664920M, 664924M };
+        public static readonly string[] ValidRSDNCTRYCDs = new string[] { "US", "BM", "CA", "MX", "AS", "GU", "MP", "PR", "VI",
+                                                                        "BE","FR","DE","IT","LU","NL","ES","CH","GB","IE",
+                                                                        "AI","AW","BB","BS","VG","KY","DM","DO","GD","GP","HT","JM","MQ","MS","AN","SM","KN","LC","VC","TT","TC",
+                                                                        "AR","BO","BR","BZ","CL","CO","CR","EC","FK","GF","GT","GY","HN","NI","PA","PE","PY","SR","SV","UY","VE",
+                                                                        "AU","NZ","PW"};
+        public const string PointEventName = "ACIActivation800Activity";
+        public const decimal PointEventAmount = 800M;
+        public const string ValidFTPTNRNUM = "ZE1";
+        public static IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
+        public static IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle, GPR.Tier.Platinum };
+        public const decimal ValidMinimumAmount = 25M;
+        public static readonly DateTime ValidStartDate = DateTime.Parse("08/01/2018");
+        public static readonly DateTime EndTime = DateTime.Parse("08/01/2099");
+
+        public static IEnumerable PositiveScenarios
         {
-            new object[]
+            get
             {
-                "ACIActivation800Activity [GPR Regular Gold]  CDP = 664924, MemberDetails.A_COUNTRY = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"))
-                                                                                            .Set(664924M,"MemberDetails.A_CDPNUMBER")
-                                                                                            .Set("US","MemberDetails.A_COUNTRY"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(1).Comparable(),
-                                        bookDate:DateTime.Now.Comparable(),
-                                        program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 25M),
-                                            new ExpectedPointEvent("ACIActivation800Activity",800M) },
-                new string[]{ }
+                IHertzProgram program = ValidPrograms[0];
+                program.SpecificTier = ValidTiers[0].Code;
+                Member tcMember = Member.GenerateRandom(MemberStyle.ProjectOne, program)
+                                        .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY");
+
+                TxnHeader txn = TxnHeader.Generate("", ValidStartDate.AddDays(2), ValidStartDate.AddDays(1), ValidStartDate,
+                                                    CDP: ValidCDPs[0], program: program, HODIndicator: 0, RSDNCTRYCD: ValidRSDNCTRYCDs[0], qualifyingAmount: ValidMinimumAmount,
+                                                    contractTypeCode: null,contractNumber:null);
+                yield return new TestCaseData(
+                    tcMember,
+                    new TxnHeader[] { txn},
+                    new ExpectedPointEvent[] { new ExpectedPointEvent(PointEventName, PointEventAmount) },
+                    new string[] { }
+                    ).SetName($"{PointEventName} CDP={ValidCDPs[0]} RSDNCTRYCD={ValidRSDNCTRYCDs[0]} EarningPref={ValidPrograms[0].EarningPreference} Tier={ValidTiers[0].Code}");
             }
-        };
-        static object[] NegativeScenarios =
-        {
-            new object[]
-            {
-                "ACIActivation800Activity [GPR Regular Gold]  Invalid CDP = 1234567, MemberDetails.A_COUNTRY = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"))
-                                                                                            .Set(1234567M,"MemberDetails.A_CDPNUMBER")
-                                                                                            .Set("FR","MemberDetails.A_COUNTRY"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(1).Comparable(),
-                                        bookDate:DateTime.Now.Comparable(),
-                                        program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("ACIActivation800Activity",800M) },
-                new string[]{ }
-            },
-            new object[]
-            {
-                "ACIActivation800Activity [GPR Regular Gold] Invalid QualifyingAmount = $24 CDP = 664920, MemberDetails.A_COUNTRY = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"))
-                                                                                            .Set(664920M,"MemberDetails.A_CDPNUMBER")
-                                                                                            .Set("FR","MemberDetails.A_COUNTRY"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(1).Comparable(),
-                                        bookDate:DateTime.Now.Comparable(),
-                                        program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 24M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("ACIActivation800Activity",800M) },
-                new string[]{ }
-            }
-        };
+        }
+
+
+
+
     }
 }

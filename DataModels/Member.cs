@@ -82,7 +82,8 @@ namespace HertzNetFramework.DataModels
         [ModelAttribute("PreferredLanguage")]
         public string PREFERREDLANGUAGE { get; set; }
         #endregion
-        
+        public MemberStyle Style { get { return style; } }
+
         public List<MemberPreferences> MemberPreferences = new List<MemberPreferences>();
         public List<MemberDetails> MemberDetails = new List<MemberDetails>();
         public List<VirtualCard> VirtualCards = new List<VirtualCard>();
@@ -276,6 +277,7 @@ namespace HertzNetFramework.DataModels
                         foreach (var lwMemberOut in lwMembersOut)
                         {
                             Member memberOut = ConvertFromLWModel(lwMemberOut, style);
+                            memberOut.style = style;
                             membersOut.Add(memberOut);
                         }
                         return membersOut;
@@ -498,29 +500,5 @@ namespace HertzNetFramework.DataModels
             return lwMember;
         }
         #endregion
-    }
-    public class LWServiceException: Exception
-    {
-        [ModelAttribute("ErrorCode", ReportOption.Print)]
-        public int ErrorCode { get; private set; }
-        [ModelAttribute("ErrorMessage", ReportOption.Print)]
-        public string ErrorMessage { get; private set; }
-
-        public LWServiceException(string message, int errorCode)
-            :base(message)
-        {
-            this.ErrorCode = errorCode;
-            this.ErrorMessage = message;
-        }
-    }
-    public class MemberException : Exception
-    {
-        public string ErrorMessage { get; private set; }
-
-        public MemberException(string errorMessage, string exceptionMessage)
-            :base(exceptionMessage)
-        {
-            this.ErrorMessage = errorMessage;
-        }
     }
 }

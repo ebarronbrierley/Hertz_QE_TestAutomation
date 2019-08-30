@@ -23,7 +23,7 @@ namespace HertzNetFramework.Tests.SOAP
         //[TestCaseSource(typeof(OngoingEMEABirthdayActivity), "PositiveScenarios")]
         //[TestCaseSource(typeof(HorizonCardPointsActivity), "PositiveScenarios")]
         //[TestCaseSource(typeof(ACIActivation800Activity), "PositiveScenarios")]
-        [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
         public void Bonus_Positive(string name, MemberStyle memberStyle, Member member, TxnHeader transaction, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes = null)
         {
             try
