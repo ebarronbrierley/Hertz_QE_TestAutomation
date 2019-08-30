@@ -90,6 +90,32 @@ namespace HertzNetFramework.Tests.SOAP
                 Assert.Fail();
             }
         }
+
+        [Category("Api_Smoke")]
+        [Category("Api_Positive")]
+        [Category("AddMember")]
+        [Category("AddMember_Positive")]
+        [TestCaseSource("PositiveScenarios")]
+        public void CorpWinback(string name, MemberStyle memberStyle, Member member)
+        {
+            BPTest.Start<TestStep>("Step1");
+            Member fsmember= null;
+            int x = 1;
+            if (x == 1)
+            {
+                fsmember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("FG", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY");
+            }
+            else
+            {
+
+            }
+            Member.AddMember(fsmember);
+            Console.WriteLine(fsmember.VirtualCards[0].LOYALTYIDNUMBER);
+            BPTest.Pass<TestStep>("Step1");
+
+
+        }
+
         static object[] PositiveScenarios =
         {
             new object[]
@@ -97,25 +123,26 @@ namespace HertzNetFramework.Tests.SOAP
                 "EarningPreference = DX (Dollar Member), TierCode = empty string",
                 MemberStyle.ProjectOne,
                 Member.GenerateRandom(MemberStyle.ProjectOne).Set("DX","MemberDetails.A_EARNINGPREFERENCE").Set(null, "MemberDetails.A_TIERCODE")
-            },//EarningPreference = DX (Dollar Member), TierCode = empty string
-            new object[]
-            {
-                "EarningPreference = N1 (GoldPointsReward Member), TierCode = FG",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1","MemberDetails.A_EARNINGPREFERENCE").Set("FG", "MemberDetails.A_TIERCODE")
-            },//EarningPreference = N1 (GoldPointsReward Member), TierCode = FG
-            new object[]
-            {
-                "EarningPreference = N1 (GoldPointsReward Member), TierCode = PC",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1","MemberDetails.A_EARNINGPREFERENCE").Set("PC", "MemberDetails.A_TIERCODE")
-            },//EarningPreference = N1 (GoldPointsReward Member), TierCode = PC
-            new object[]
-            {
-                "EarningPreference = BC (Thrifty Member), TierCode = empty string",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne).Set("BC","MemberDetails.A_EARNINGPREFERENCE").Set(null, "MemberDetails.A_TIERCODE")
-            }//EarningPreference = BC (Thrifty Member), TierCode = empty string
+            }//EarningPreference = DX (Dollar Member), TierCode = empty string
+
+            //new object[]
+            //{
+            //    "EarningPreference = N1 (GoldPointsReward Member), TierCode = FG",
+            //    MemberStyle.ProjectOne,
+            //    Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1","MemberDetails.A_EARNINGPREFERENCE").Set("FG", "MemberDetails.A_TIERCODE")
+            //},//EarningPreference = N1 (GoldPointsReward Member), TierCode = FG
+            //new object[]
+            //{
+            //    "EarningPreference = N1 (GoldPointsReward Member), TierCode = PC",
+            //    MemberStyle.ProjectOne,
+            //    Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1","MemberDetails.A_EARNINGPREFERENCE").Set("PC", "MemberDetails.A_TIERCODE")
+            //},//EarningPreference = N1 (GoldPointsReward Member), TierCode = PC
+            //new object[]
+            //{
+            //    "EarningPreference = BC (Thrifty Member), TierCode = empty string",
+            //    MemberStyle.ProjectOne,
+            //    Member.GenerateRandom(MemberStyle.ProjectOne).Set("BC","MemberDetails.A_EARNINGPREFERENCE").Set(null, "MemberDetails.A_TIERCODE")
+            //}//EarningPreference = BC (Thrifty Member), TierCode = empty string
         };
         static object[] NegativeScenarios =
         {
