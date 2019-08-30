@@ -15,7 +15,7 @@ namespace HertzNetFramework.Tests.BonusTestData
 
         public const string PointEventName = "EUCorp800Points_OngoingActivity";
         public const string ContractTypeCode = "COMM";
-        public const decimal PointEventAmount = 550M;
+        public const decimal PointEventAmount = 800M;
         public const decimal BaseTxnAmount = 25M;
         public static readonly decimal[] ValidCDPs = new decimal[] { 841369M, 843852M, 843853M, 843854M, 843855M, 843859M, 843860M };
         public static readonly string[] ValidRSDNCTRYCDs = new string[] { "BE", "FR", "DE", "IT", "LU", "NL", "ES", "CH", "GB", "IE", "SE", "NO", "DK", "FI", 
