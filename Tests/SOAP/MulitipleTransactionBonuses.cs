@@ -13,7 +13,7 @@ using System.Threading;
 namespace HertzNetFramework.Tests.SOAP
 {
     [TestFixture]
-    public partial class Bonuses : BrierleyTestFixture
+    public class Bonuses : BrierleyTestFixture
     {
         [Category("Bonus_Positive")]
         [Category("Bonus")]
@@ -27,7 +27,8 @@ namespace HertzNetFramework.Tests.SOAP
         [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
         [TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "PositiveScenarios")]
-        public void MultiTransaction_Bonus_Positive(Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes)
+        [TestCaseSource(typeof(LapsedOnGoingActivity), "PositiveScenarios")]
+        public void RealTime_Bonus_Positive(Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes)
         {
             try
             {
@@ -133,7 +134,7 @@ namespace HertzNetFramework.Tests.SOAP
         [Category("Bonus_Negative")]
         [Category("Bonus")]
         [TestCaseSource(typeof(GPRAAABonusActivity), "NegativeScenarios")]
-        public void MultiTransaction_Bonus_Negative(string name, MemberStyle memberStyle, Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes = null)
+        public void RealTime_Bonus_Negative(string name, MemberStyle memberStyle, Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes = null)
         {
             try
             {

@@ -11,6 +11,7 @@ namespace HertzNetFramework.Tests.BonusTestData
     public class CorpNewMember550PointsOngoingActivity
     {
         public const string PointEventName = "CorpNewMember550PointsOngoingActivity";
+        public const string TriplePointEventName = "CorpNewMemberTriplePoints_OngoingActivity";
         public const string ContractTypeCode = "COMM";
         public const decimal PointEventAmount = 550M;
         public const decimal BaseTxnAmount = 25M;
@@ -28,8 +29,8 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static readonly IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
         public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle };
         public static TimeSpan ValidRentalLength = TimeSpan.FromDays(1);
-        public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent("CorpNewMemberTriplePoints_OngoingActivity", BaseTxnAmount*2),
-                                                                                            new ExpectedPointEvent("CorpNewMember550PointsOngoingActivity", PointEventAmount) };
+        public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent(TriplePointEventName, BaseTxnAmount*2),
+                                                                                            new ExpectedPointEvent(PointEventName, PointEventAmount) };
         
         public static IEnumerable PositiveScenarios
         {
