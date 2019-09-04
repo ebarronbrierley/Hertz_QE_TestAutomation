@@ -346,6 +346,16 @@ namespace HertzNetFramework.DataModels
             memberCard.TxnHeaders.Add(txn);
             return this;
         }
+        public Member RemoveTransaction(decimal? vckey = null)
+        {
+            VirtualCard memberCard;
+            if (vckey != null)
+                memberCard = this.VirtualCards.Find(x => x.VCKEY == vckey.Value);
+            else memberCard = this.VirtualCards.FirstOrDefault();
+
+            memberCard.TxnHeaders.Clear();
+            return this;
+        }
         public MemberPromotion AddPromotion(string memberIdentity, string promotionCode, string programCode, string certificateNumber,
                                     bool? returnDefinition, string language, string channel, bool? returnAttributes)
         {

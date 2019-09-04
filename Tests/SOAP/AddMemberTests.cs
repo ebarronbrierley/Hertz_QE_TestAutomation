@@ -98,20 +98,34 @@ namespace HertzNetFramework.Tests.SOAP
         [TestCaseSource("PositiveScenarios")]
         public void CorpWinback(string name, MemberStyle memberStyle, Member member)
         {
-            BPTest.Start<TestStep>("Step1");
-            Member fsmember= null;
-            int x = 1;
-            if (x == 1)
+            try
             {
-                fsmember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("FG", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY");
-            }
-            else
-            {
+                //BPTest.Start<TestStep>("Step 1: Generate and Add Member");
+                //Member fsmember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("FG", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY");
+                //Member.AddMember(fsmember);
+                //BPTest.Pass<TestStep>("Step 1 Passed");
+
+                BPTest.Start<TestStep>("Step 1: Update Member with Transaction");
+                IEnumerable<Member> getMembersOut = Member.GetMembers(MemberStyle.ProjectOne, new[] { "CardID" }, new[] { "43690953" }, null, null, string.Empty);
+                Member corpwinbackmember = getMembersOut.First<Member>();
+                string loyaltyid = "43690953";
+                DateTime checkInDt = new DateTime(2019, 9, 4);
+                DateTime checkOutDt = new DateTime(2019, 9, 3);
+                DateTime origBkDt = new DateTime(2019, 9, 3);
+                TxnHeader txnHeader = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 50, "AAAA", 246095, "N", "US", null);
+                corpwinbackmember.AddTransaction(txnHeader);
+                Member updatedMember = Member.UpdateMember(corpwinbackmember);
+                corpwinbackmember.RemoveTransaction();
+                TxnHeader txnHeader2 = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 50, "AAAA", 246095, "N", "US", null);
+                corpwinbackmember.AddTransaction(txnHeader2);
+                Member updatedMember2 = Member.UpdateMember(corpwinbackmember);
+                BPTest.Pass<TestStep>("Step 1 Passed");
 
             }
-            Member.AddMember(fsmember);
-            Console.WriteLine(fsmember.VirtualCards[0].LOYALTYIDNUMBER);
-            BPTest.Pass<TestStep>("Step1");
+            catch(Exception ex)
+            {
+                BPTest.Fail<TestStep>("Step2 Failed");
+            }
 
 
         }
