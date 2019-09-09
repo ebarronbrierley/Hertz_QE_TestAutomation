@@ -101,15 +101,15 @@ namespace HertzNetFramework.Tests.SOAP
             try
             {
                 BPTest.Start<TestStep>("Step 1: Generate and Add Member");
-                    Member corpwinbackmember = Member.GenerateRandom(MemberStyle.PreProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("RG", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY");
-                    Member memberOut = Member.AddMember(corpwinbackmember);
-                    Assert.IsNotNull(memberOut, "Expected populated member object, but member object returned was null");
+                Member corpwinbackmember = Member.GenerateRandom(MemberStyle.PreProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("RG", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY");
+                Member memberOut = Member.AddMember(corpwinbackmember);
+                Assert.IsNotNull(memberOut, "Expected populated member object, but member object returned was null");
                 BPTest.Pass<TestStep>("Step 1 Passed", memberOut.ReportDetail());
                 BPTest.Start<TestStep>("Step 2: Add Member Promotion");
-                    IEnumerable<Promotion> promos = Promotion.GetFromDB(Database, code: "GPRCorpWinback2_2019CurrentPCLapsingLapsedBonus");
-                    string loyaltyid = corpwinbackmember.GetLoyaltyID();
-                    string promocode = promos.First().CODE;
-                    MemberPromotion mempromo = corpwinbackmember.AddPromotion(loyaltyid, promocode, null, null, false, null, null, false);
+                IEnumerable<Promotion> promos = Promotion.GetFromDB(Database, code: "GPRCorpWinback2_2019CurrentPCLapsingLapsedBonus");
+                string loyaltyid = corpwinbackmember.GetLoyaltyID();
+                string promocode = promos.First().CODE;
+                MemberPromotion mempromo = corpwinbackmember.AddPromotion(loyaltyid, promocode, null, null, false, null, null, false);
                 BPTest.Pass<TestStep>("Step 2 Passed");
                 BPTest.Start<TestStep>("Step 3: Update Member with Transaction 6 Times");
                     //IEnumerable<Member> getMembersOut = Member.GetMembers(MemberStyle.ProjectOne, new[] { "CardID" }, new[] { "43690953" }, null, null, string.Empty);
