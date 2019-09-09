@@ -89,6 +89,10 @@ namespace HertzNetFramework.DataModels
         public List<VirtualCard> VirtualCards = new List<VirtualCard>();
         private MemberStyle style;
 
+        public string GetLoyaltyID()
+        {
+           return this.VirtualCards[0].LOYALTYIDNUMBER;
+        }
         public List<MemberDetails> GetMemberDetails(MemberStyle memberStyle)
         {
             if (memberStyle == MemberStyle.PreProjectOne)

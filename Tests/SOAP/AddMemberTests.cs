@@ -100,31 +100,41 @@ namespace HertzNetFramework.Tests.SOAP
         {
             try
             {
-                //BPTest.Start<TestStep>("Step 1: Generate and Add Member");
-                //Member fsmember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("FG", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY");
-                //Member.AddMember(fsmember);
-                //BPTest.Pass<TestStep>("Step 1 Passed");
+                BPTest.Start<TestStep>("Step 1: Generate and Add Member");
+                    Member corpwinbackmember = Member.GenerateRandom(MemberStyle.PreProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("RG", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY");
+                    Member memberOut = Member.AddMember(corpwinbackmember);
+                    Assert.IsNotNull(memberOut, "Expected populated member object, but member object returned was null");
+                BPTest.Pass<TestStep>("Step 1 Passed", memberOut.ReportDetail());
+                BPTest.Start<TestStep>("Step 2: Add Member Promotion");
+                    IEnumerable<Promotion> promos = Promotion.GetFromDB(Database, code: "GPRCorpWinback2_2019CurrentPCLapsingLapsedBonus");
+                    string loyaltyid = corpwinbackmember.GetLoyaltyID();
+                    string promocode = promos.First().CODE;
+                    MemberPromotion mempromo = corpwinbackmember.AddPromotion(loyaltyid, promocode, null, null, false, null, null, false);
+                BPTest.Pass<TestStep>("Step 2 Passed");
+                BPTest.Start<TestStep>("Step 3: Update Member with Transaction 6 Times");
+                    //IEnumerable<Member> getMembersOut = Member.GetMembers(MemberStyle.ProjectOne, new[] { "CardID" }, new[] { "43690953" }, null, null, string.Empty);
+                    //Member corpwinbackmember = getMembersOut.First<Member>();
+                    //string loyaltyid = "43690953";
+                    DateTime checkInDt = new DateTime(2019, 9, 4);
+                    DateTime checkOutDt = new DateTime(2019, 9, 3);
+                    DateTime origBkDt = new DateTime(2019, 9, 3);
+                    for(int x = 0; x < 6; x++)
+                    {
+                        TxnHeader txnHeader = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 50, "AAAA", 246095, "N", "US", null);
+                        corpwinbackmember.AddTransaction(txnHeader);
+                        Member updatedMember = Member.UpdateMember(corpwinbackmember);
+                        corpwinbackmember.RemoveTransaction();
+                    }
+                BPTest.Pass<TestStep>("Step 3 Passed");
 
-                BPTest.Start<TestStep>("Step 1: Update Member with Transaction");
-                IEnumerable<Member> getMembersOut = Member.GetMembers(MemberStyle.ProjectOne, new[] { "CardID" }, new[] { "43690953" }, null, null, string.Empty);
-                Member corpwinbackmember = getMembersOut.First<Member>();
-                string loyaltyid = "43690953";
-                DateTime checkInDt = new DateTime(2019, 9, 4);
-                DateTime checkOutDt = new DateTime(2019, 9, 3);
-                DateTime origBkDt = new DateTime(2019, 9, 3);
-                TxnHeader txnHeader = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 50, "AAAA", 246095, "N", "US", null);
-                corpwinbackmember.AddTransaction(txnHeader);
-                Member updatedMember = Member.UpdateMember(corpwinbackmember);
-                corpwinbackmember.RemoveTransaction();
-                TxnHeader txnHeader2 = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 50, "AAAA", 246095, "N", "US", null);
-                corpwinbackmember.AddTransaction(txnHeader2);
-                Member updatedMember2 = Member.UpdateMember(corpwinbackmember);
-                BPTest.Pass<TestStep>("Step 1 Passed");
-
+            }
+            catch(AssertModelEqualityException ex)
+            {
+                BPTest.Fail<TestStep>(ex.Message);
             }
             catch(Exception ex)
             {
-                BPTest.Fail<TestStep>("Step2 Failed");
+                BPTest.Fail<TestStep>(ex.Message);
             }
 
 
