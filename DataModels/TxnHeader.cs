@@ -195,6 +195,14 @@ namespace HertzNetFramework.DataModels
         public decimal? LAST_DML_ID { get; set; }
         [ModelAttribute("HODIndicator", ReportOption.Print)]
         public short? A_HODINDICATOR { get; set; }
+        [ModelAttribute("CHKOUTROWKEY")]
+        public string A_CHKOUTROWKEY { get; set; }
+        [ModelAttribute("CHKINROWKEY")]
+        public string A_CHKINROWKEY { get; set; }
+        [ModelAttribute("CHKINLOCATIONID")]
+        public string A_CHKINLOCATIONID { get; set; }
+        [ModelAttribute("CHKOUTLOCATIONID")]
+        public string A_CHKOUTLOCATIONID { get; set; }
         #endregion
 
         public static TxnHeader Generate(string loyaltyId,  
@@ -289,7 +297,11 @@ namespace HertzNetFramework.DataModels
                 A_TXNCHANNEL = StrongRandom.NumericString(2),
                 A_TXNORIGINALTXNROWKEY = null,
                 A_TXNCREDITSUSED = null,
-                A_HODINDICATOR = HODIndicator
+                A_HODINDICATOR = HODIndicator,
+                A_CHKINROWKEY = null,
+                A_CHKOUTROWKEY = null,
+                A_CHKINLOCATIONID = null,
+                A_CHKOUTLOCATIONID = null
             };
             return output;
         }

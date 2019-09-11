@@ -53,6 +53,7 @@
     <Compile Include="DataModels\MemberDetails.cs" />
     <Compile Include="DataModels\MemberPreferences.cs" />
     <Compile Include="DataModels\MemberPromotion.cs" />
+    <Compile Include="DataModels\OneClick.cs" />
     <Compile Include="DataModels\PointEvent.cs" />
     <Compile Include="DataModels\PointTransaction.cs" />
     <Compile Include="DataModels\Promotion.cs" />
