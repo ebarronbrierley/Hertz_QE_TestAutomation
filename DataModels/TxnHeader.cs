@@ -195,6 +195,14 @@ namespace HertzNetFramework.DataModels
         public decimal? LAST_DML_ID { get; set; }
         [ModelAttribute("HODIndicator", ReportOption.Print)]
         public short? A_HODINDICATOR { get; set; }
+        [ModelAttribute("CHKINROWKEY")]
+        public decimal? A_CHKINROWKEY { get; set; }
+        [ModelAttribute("CHKOUTROWKEY")]
+        public decimal? A_CHKOUTROWKEY { get; set; }
+        [ModelAttribute("CHKINLOCATIONID")]
+        public string A_CHKINLOCATIONID { get; set; }
+        [ModelAttribute("CHKOUTLOCATIONID")]
+        public string A_CHKOUTLOCATIONID { get; set; }
         #endregion
 
         public static TxnHeader Generate(string loyaltyId,  
