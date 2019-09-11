@@ -29,6 +29,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static readonly DateTime StartDate = DateTime.Parse("08/01/2018");
         public static readonly DateTime EndDate = DateTime.Parse("08/01/2099");
 
+
         public static IEnumerable PositiveScenarios
         {
             get

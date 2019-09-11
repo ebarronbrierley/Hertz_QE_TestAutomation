@@ -15,6 +15,9 @@ namespace HertzNetFramework.Tests.SOAP
     [TestFixture]
     public class Bonuses : BrierleyTestFixture
     {
+
+
+
         [Category("Bonus_Positive")]
         [Category("Bonus")]
         [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
@@ -30,6 +33,8 @@ namespace HertzNetFramework.Tests.SOAP
         [TestCaseSource(typeof(LapsedOnGoingActivity), "PositiveScenarios")]
         public void RealTime_Bonus_Positive(Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes)
         {
+
+            
             try
             {
                 Member createMember = member.MakeVirtualCardLIDsUnique(Database);

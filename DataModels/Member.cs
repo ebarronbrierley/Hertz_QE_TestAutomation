@@ -125,7 +125,7 @@ namespace HertzNetFramework.DataModels
             }
             return this;
         }
-        public static Member GenerateRandom(MemberStyle memberStyle = MemberStyle.PreProjectOne, IHertzProgram program = null)
+        public static Member GenerateRandom(MemberStyle memberStyle = MemberStyle.PreProjectOne, IHertzProgram program = null, IHertzTier tier = null)
         {
             if (program == null) program = HertzProgram.GoldPointsRewards;
 

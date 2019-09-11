@@ -32,6 +32,7 @@ namespace HertzNetFramework.DataModels
         public string EarningPreference { get { return "N1"; } }
         public string A_FTPTNRNUM { get { return "ZE1"; } }
         public string A_RASRCCD { get { return "1"; } }
+        public decimal CARDTYPE { get { return 0; } }
         public IEnumerable<IHertzTier> Tiers { get { return new List<IHertzTier>() { Tier.RegularGold, Tier.FiveStar, Tier.PresidentsCircle,
                                                                                      Tier.Platinum, Tier.PlatinumSelect, Tier.PlatinumVIP }; } }
 
@@ -52,6 +53,7 @@ namespace HertzNetFramework.DataModels
         public string EarningPreference { get { return "BC"; } }
         public string A_FTPTNRNUM { get { return "BC1"; } }
         public string A_RASRCCD { get { return "2"; } }
+        public decimal CARDTYPE { get { return 2; } }
         public IEnumerable<IHertzTier> Tiers { get { return new List<IHertzTier>(); } }
         
     }
@@ -62,6 +64,7 @@ namespace HertzNetFramework.DataModels
         public string EarningPreference { get { return "DX"; } }
         public string A_FTPTNRNUM { get { return "RR1"; } }
         public string A_RASRCCD { get { return "3"; } }
+        public decimal CARDTYPE { get { return 3; } }
         public IEnumerable<IHertzTier> Tiers { get { return new List<IHertzTier>(); } }
     }
     public class HertzTier : IHertzTier
@@ -85,6 +88,7 @@ namespace HertzNetFramework.DataModels
         string A_FTPTNRNUM { get; }
         string A_RASRCCD { get; }
         string A_TRANSTYPE { get; }
+        decimal CARDTYPE { get; }
         IEnumerable<IHertzTier> Tiers { get; }
     }
     public interface IHertzTier
