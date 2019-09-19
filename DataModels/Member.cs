@@ -202,12 +202,12 @@ namespace HertzNetFramework.DataModels
             query.Append($" mem.MEMBERSTATUS = {memberStatus}");
             if (!String.IsNullOrEmpty(earningPref)) query.Append($" and md.a_ipcode = mem.ipcode and md.a_earningpreference = '{earningPref}'");
             if (!String.IsNullOrEmpty(tierCode)) query.Append($" and md.a_ipcode = mem.ipcode and md.a_tiercode = '{tierCode}'");
-            if(hasTranscations.HasValue)
-            {
-                if (!hasTranscations.Value)
-                    query.Append($" and (select count(*) from {dbUser}.{DataModels.TxnHeader.TableName} where a_vckey = md.a_vckey) = 0");
-                else query.Append($" and (select count(*) from {dbUser}.{DataModels.TxnHeader.TableName} where a_vckey = md.a_vckey) > 1");
-            }
+            //if(hasTranscations.HasValue)
+            //{
+            //    if (!hasTranscations.Value)
+            //        query.Append($" and (select count(*) from {dbUser}.{DataModels.TxnHeader.TableName} where a_vckey = md.a_vckey) = 0");
+            //    else query.Append($" and (select count(*) from {dbUser}.{DataModels.TxnHeader.TableName} where a_vckey = md.a_vckey) > 1");
+            //}
             return popluateMemberFromQuery(db, memberStyle, query.ToString());
         }
         private static Member popluateMemberFromQuery(IDatabase db, MemberStyle memberStyle, string query)
@@ -430,7 +430,8 @@ namespace HertzNetFramework.DataModels
             foreach (var lwVirtualCard in lwVirtualCards)
             {
                 VirtualCard vc = DataConverter.ConvertTo<VirtualCard>(lwVirtualCard);
-                var lwTxnHeaders = lwMember.GetAttributeSets("TxnHeader");
+                var lwTxnHeaders = lwVirtualCard.GetAttributeSets("TxnHeader");
+                //  var lwTxnHeaders = lwMember.GetAttributeSets("TxnHeader");
                 foreach (var lwTxnHeader in lwTxnHeaders)
                     vc.TxnHeaders.Add(DataConverter.ConvertTo<TxnHeader>(lwTxnHeader));
 

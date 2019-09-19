@@ -119,14 +119,7 @@ namespace HertzNetFramework.Tests.SOAP
         };
         static object[] NegativeScenarios =
         {
-            new object[]
-            {
-                "ALTERNATEID = null",
-                 Member.GenerateRandom(MemberStyle.PreProjectOne).Set(null,"ALTERNATEID"),
-                 9994,
-                 "Empty Member/AlternateId in input Xml for Member lookup"
-            },//ALTERNATEID = null
-            new object[]
+           new object[]
             {
                 "VirtualCard.LoyaltyIdNumber = null",
                 Member.GenerateRandom(MemberStyle.PreProjectOne).Set(null,"VirtualCards.LOYALTYIDNUMBER"),
@@ -140,13 +133,7 @@ namespace HertzNetFramework.Tests.SOAP
                 9991,
                 "A member already exists",
             },//Existing VirutalCard.LoyaltyIdNumber = 00000200
-            new object[]
-            {
-                $"VirutalCard.MemberDetails = null",
-                Member.GenerateRandom(MemberStyle.PreProjectOne).Set(null,"VirtualCards.MemberDetails"),
-                9993,
-                "Unable to find node MemberDetails in <VirtualCard VcKey",
-            },//VirutalCard.MemberDetails = null
+     
             new object[]
             {
                 $"MemberDetails.TierCode = 'abcd'",
@@ -154,13 +141,7 @@ namespace HertzNetFramework.Tests.SOAP
                 2,
                 "Invalid tier code",
             },//MemberDetails.TierCode = 'abcd'
-            new object[]
-            {
-                $"VirtualCards.MemberDetails.A_MEMBERSTATUSCODE = 67",
-                Member.GenerateRandom(MemberStyle.PreProjectOne).Set(67,"VirtualCards.MemberDetails.A_MEMBERSTATUSCODE"),
-                20,
-                "Invalid status change",
-            },//VirtualCards.MemberDetails.A_MEMBERSTATUSCODE = 67
+   
             new object[]
             {
                 $"VirtualCards.MemberDetails.A_EARNINGPREFERENCE = 'notreal'",
