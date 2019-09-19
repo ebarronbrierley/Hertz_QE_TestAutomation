@@ -1,200 +1,108 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Brierley.TestAutomation.Core.Utilities;
 using HertzNetFramework.DataModels;
+using NUnit.Framework;
 
 namespace HertzNetFramework.Tests.BonusTestData
 {
     public class TopGolf_2019_GPR2XBonus
     {
-        static object[] PositiveScenarios =
-        {
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Regular Gold]  CDP = 2152921, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier")).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Five Star]  CDP = 2152921, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.FiveStar.Code,"SpecificTier")).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.FiveStar.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("GPRTierBonus_FS",80M*GPR.Tier.FiveStar.EarningRateModifier),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Presidents Circle]  CDP = 2152921, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.PresidentsCircle.Code,"SpecificTier")).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.PresidentsCircle.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("GPRTierBonus_PC_PL",80M*GPR.Tier.PresidentsCircle.EarningRateModifier),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Platinum] CDP = 2152921, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.Platinum.Code,"SpecificTier")).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.Platinum.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("GPRTierBonus_PC_PL",80M*GPR.Tier.Platinum.EarningRateModifier),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Platinum Select] CDP = 2152921, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumSelect.Code,"SpecificTier")).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumSelect.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("GPRTierBonus_PC_PL",80M*GPR.Tier.PlatinumSelect.EarningRateModifier),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Platinum VIP] CDP = 2152921, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumVIP.Code,"SpecificTier")).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumVIP.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("GPRTierBonus_PC_PL",80M*GPR.Tier.PlatinumVIP.EarningRateModifier),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Regular Gold] CDP = 2152921, Residence = US, Check Out Country = CA",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier")).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "CA", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Regular Gold] CDP = 2152921, Residence = US, Check Out Country = PR",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier")).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "PR", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Regular Gold] CDP = 2152921, Residence = US, Check Out Country = VI",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier")).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "VI", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 80M),
-                                           new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-        };
-        static object[] NegativeScenarios =
-        {
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Regular Gold] Invalid CDP = 1234567, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier")).Set(1234567M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 1234567M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [GPR Regular Gold] CDP = 2152921, Residence = BE, Check Out Country = BE",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier")).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                       RSDNCTRYCD: "BE", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [Dollar (DX)] CDP = 2152921, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.DollarExpressRenters).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.DollarExpressRenters,
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "TopGolf_2019_GPR2XBonus [Thrifty (BC)] CDP = 2152921, Residence = US, Check Out Country = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.ThriftyBlueChip).Set(2152921M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                       checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                       CDP: 2152921M, program: HertzProgram.ThriftyBlueChip,
-                                       RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 80M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("TopGolf_2019_GPR2XBonus",80M) },
-                new string[] { }
-            }
+        public const string PointEventName = "TopGolf_2019_GPR2XBonus";
+        public const decimal BaseTxnAmount = 25M;
+        public const decimal PointEventAmount = BaseTxnAmount;
+        public static readonly DateTime StartDate = DateTime.Parse("06/15/2019 12:00:01 AM");
+        public static readonly DateTime EndDate = DateTime.Parse("09/15/2019 12:00:00 AM");
 
-        };
+        public static readonly string[] ValidCHKOUTWORLDWIDERGNCTRYISO = new string[] { "US","CA","PR","VI" };
+        public static readonly decimal[] ValidCDPs = new decimal[] { 2152921M };
+        public static readonly IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
+        public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle, GPR.Tier.Platinum, GPR.Tier.PlatinumSelect, GPR.Tier.PlatinumVIP };
+        public static TimeSpan ValidRentalLength = TimeSpan.FromDays(1);
+        public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent(PointEventName, BaseTxnAmount) };
+
+
+        public static IEnumerable PositiveScenarios
+        {
+            get
+            {
+                foreach (string chkoutWW in ValidCHKOUTWORLDWIDERGNCTRYISO)
+                {
+                    yield return new TestCaseData(
+                        Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
+                                                                                      .Set(chkoutWW, "MemberDetails.A_COUNTRY")
+                                                                                      .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
+                        ,
+                        new TxnHeader[] {
+                            TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                        checkOutDate:DateTime.Now.Comparable(),
+                                        bookDate:DateTime.Now.Comparable(),
+                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                        RSDNCTRYCD: chkoutWW, HODIndicator: 0, qualifyingAmount: BaseTxnAmount)
+                        },
+                        ExpectedPointEvents,
+                        new string[] { }
+                    ).SetName($"{PointEventName}. CHKOUTWORLDWIDERGNCTRYISO = {chkoutWW}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}")
+                     .SetCategory(BonusTestCategory.Regression)
+                     .SetCategory(BonusTestCategory.Positive);
+                }
+                foreach (decimal validCDP in ValidCDPs)
+                {
+                    yield return new TestCaseData(
+                        Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
+                                                                                      .Set(ValidCHKOUTWORLDWIDERGNCTRYISO[0], "MemberDetails.A_COUNTRY")
+                                                                                      .Set(validCDP, "MemberDetails.A_CDPNUMBER")
+                        ,
+                        new TxnHeader[] {
+                            TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                        checkOutDate:DateTime.Now.Comparable(),
+                                        bookDate:DateTime.Now.Comparable(),
+                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: validCDP,
+                                        RSDNCTRYCD: ValidCHKOUTWORLDWIDERGNCTRYISO[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount)
+                        },
+                        ExpectedPointEvents,
+                        new string[] { }
+                    ).SetName($"{PointEventName}. CDP = {validCDP},  CHKOUTWORLDWIDERGNCTRYISO = {ValidCHKOUTWORLDWIDERGNCTRYISO[0]}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}")
+                     .SetCategory(BonusTestCategory.Regression)
+                     .SetCategory(BonusTestCategory.Positive);
+                }
+                foreach (IHertzProgram validProgram in ValidPrograms)
+                {
+                    foreach (IHertzTier validTier in validProgram.Tiers)
+                    {
+                        if (!ValidTiers.ToList().Any(x => x.Name.Equals(validTier.Name))) continue;
+
+                        yield return new TestCaseData(
+                            Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                                                                                          .Set(ValidCHKOUTWORLDWIDERGNCTRYISO[0], "MemberDetails.A_COUNTRY")
+                                                                                          .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
+                            ,
+                            new TxnHeader[] {
+                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                checkOutDate:DateTime.Now.Comparable(),
+                                bookDate:DateTime.Now.Comparable(),
+                                program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                RSDNCTRYCD: ValidCHKOUTWORLDWIDERGNCTRYISO[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount)
+                            },
+                            ExpectedPointEvents,
+                            new string[] { }
+                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidCHKOUTWORLDWIDERGNCTRYISO[0]}")
+                         .SetCategory(BonusTestCategory.Regression)
+                         .SetCategory(BonusTestCategory.Positive)
+                         .SetCategory(BonusTestCategory.Smoke);
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable NegativeScenarios
+        {
+            get
+            {
+                yield return new TestCaseData();
+            }
+        }
     }
 }

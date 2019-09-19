@@ -61,18 +61,21 @@
     <Compile Include="Initializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\BonusTestData\ACIActivation800Activity.cs" />
+    <Compile Include="Tests\BonusTestData\BonusTestCategory.cs" />
+    <Compile Include="Tests\BonusTestData\Corp550Points_2016Activity.cs" />
     <Compile Include="Tests\BonusTestData\CorpNewMember550PointsOngoingActivity.cs" />
+    <Compile Include="Tests\BonusTestData\EUCorp800Points_OngoingActivity.cs" />
     <Compile Include="Tests\BonusTestData\EUSchneider3x2019Bonus.cs" />
     <Compile Include="Tests\BonusTestData\GPRAAABonusActivity.cs" />
     <Compile Include="Tests\BonusTestData\HorizonCardPointsActivity.cs" />
+    <Compile Include="Tests\BonusTestData\LapsedOnGoingActivity.cs" />
     <Compile Include="Tests\BonusTestData\OngoingEMEABirthdayActivity.cs" />
     <Compile Include="Tests\BonusTestData\TopGolf_2019_GPR2XBonus.cs" />
     <Compile Include="Tests\BonusTestData\VisaInfinite10RGBonus.cs" />
     <Compile Include="Tests\SOAP\AddMemberPromotion.cs" />
     <Compile Include="Tests\SOAP\AddMemberTests.cs" />
-    <Compile Include="Tests\SOAP\Bonuses.cs" />
     <Compile Include="Tests\SOAP\GetMemberTests.cs" />
-    <Compile Include="Tests\SOAP\MulitipleTransactionBonuses.cs" />
+    <Compile Include="Tests\SOAP\RealTime_Bonuses.cs" />
     <Compile Include="Tests\SOAP\UpdateMemberTests.cs" />
   </ItemGroup>
   <ItemGroup>

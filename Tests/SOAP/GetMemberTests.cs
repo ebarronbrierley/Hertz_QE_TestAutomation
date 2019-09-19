@@ -19,7 +19,7 @@ namespace HertzNetFramework.Tests.SOAP
         [Test]
         public void GetMembers_Positive()
         {
-            MemberStyle memberStyle = MemberStyle.PreProjectOne;
+            MemberStyle memberStyle = MemberStyle.ProjectOne;
             string searchType = "CardID";
             string searchValue = String.Empty;
             try
@@ -32,7 +32,7 @@ namespace HertzNetFramework.Tests.SOAP
                 searchValue = dbMember.VirtualCards.First().LOYALTYIDNUMBER;
 
                 BPTest.Start<TestStep>($"Make GetMembers Call by SearchType = {searchType}, SearchValue = {searchValue}", "GetMembers should return one member");
-                IEnumerable<Member> getMembersOut = Member.GetMembers(MemberStyle.PreProjectOne, new[] { searchType }, new[] { searchValue }, null, null, String.Empty);
+                IEnumerable<Member> getMembersOut = Member.GetMembers(MemberStyle.ProjectOne, new[] { searchType }, new[] { searchValue }, null, null, String.Empty);
                 Assert.AreEqual(1, getMembersOut.Count());
                 BPTest.Pass<TestStep>("GetMembers returned one member", getMembersOut.ReportDetail());
 
@@ -74,7 +74,7 @@ namespace HertzNetFramework.Tests.SOAP
         [TestCaseSource("NegativeScenarios")]
         public void GetMembers_Negative(string name, string[] searchTypes, string[] searchValues, int? startIdx, int? batchSize, bool validSearchValue, int errorCode, string errorMessage)
         {
-            MemberStyle memberStyle = MemberStyle.PreProjectOne;
+            MemberStyle memberStyle = MemberStyle.ProjectOne;
 
             try
             {
