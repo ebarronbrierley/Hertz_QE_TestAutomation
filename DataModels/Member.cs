@@ -135,7 +135,7 @@ namespace HertzNetFramework.DataModels
 
             Member member = new Member()
             {
-                IPCODE = Convert.ToInt64(StrongRandom.NumericString(6)),
+                IPCODE = 0,
                 MEMBERCREATEDATE = DateTime.Now.AddDays(-1).Comparable(),
                 MEMBERCLOSEDATE = DateTime.Now.AddYears(20).Comparable(),
                 BIRTHDATE = DateTime.Now.AddYears(-20).Comparable(),

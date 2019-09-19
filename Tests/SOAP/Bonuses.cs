@@ -17,7 +17,8 @@ namespace HertzNetFramework.Tests.SOAP
     {
         [Category("Bonus_Positive")]
         [Category("Bonus")]
-        //[TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")]
+        [TestCaseSource(typeof(CorpWinback), "PositiveScenarios")]
+        [TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")]
         //[TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
         //[TestCaseSource(typeof(VisaInfinite10RGBonus), "PositiveScenarios")]OngoingEMEABirthdayActivity
         //[TestCaseSource(typeof(OngoingEMEABirthdayActivity), "PositiveScenarios")]
@@ -122,7 +123,7 @@ namespace HertzNetFramework.Tests.SOAP
         //[TestCaseSource(typeof(VisaInfinite10RGBonus), "NegativeScenarios")]
         //[TestCaseSource(typeof(OngoingEMEABirthdayActivity), "NegativeScenarios")]
         //[TestCaseSource(typeof(HorizonCardPointsActivity), "NegativeScenarios")]
-        [TestCaseSource(typeof(ACIActivation800Activity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(ACIActivation800Activity), "NegativeScenarios")]
         public void Bonus_Negative(string name, MemberStyle memberStyle, Member member, TxnHeader transaction, ExpectedPointEvent[] pointEventsNotPresent, string[] requiredPromotionCodes = null)
         {
             try
@@ -204,6 +205,8 @@ namespace HertzNetFramework.Tests.SOAP
                 Assert.Fail();
             }
         }
+
+        
     }
     
 

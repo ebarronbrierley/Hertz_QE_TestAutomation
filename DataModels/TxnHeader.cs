@@ -195,10 +195,10 @@ namespace HertzNetFramework.DataModels
         public decimal? LAST_DML_ID { get; set; }
         [ModelAttribute("HODIndicator", ReportOption.Print)]
         public short? A_HODINDICATOR { get; set; }
-        [ModelAttribute("CHKOUTROWKEY")]
-        public string A_CHKOUTROWKEY { get; set; }
         [ModelAttribute("CHKINROWKEY")]
-        public string A_CHKINROWKEY { get; set; }
+        public decimal? A_CHKINROWKEY { get; set; }
+        [ModelAttribute("CHKOUTROWKEY")]
+        public decimal? A_CHKOUTROWKEY { get; set; }
         [ModelAttribute("CHKINLOCATIONID")]
         public string A_CHKINLOCATIONID { get; set; }
         [ModelAttribute("CHKOUTLOCATIONID")]
