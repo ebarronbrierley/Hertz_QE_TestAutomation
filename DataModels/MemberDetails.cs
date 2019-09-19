@@ -165,7 +165,7 @@ namespace HertzNetFramework.DataModels
         public string A_HERTZCUSTOMERID { get; set; }
         #endregion
 
-        public static MemberDetails GenerateMemberDetails(Member member, IHertzProgram program = null)
+        public static MemberDetails GenerateMemberDetails(Member member, IHertzProgram program = null, IHertzTier tier = null)
         {
             if (program == null) program = HertzProgram.GoldPointsRewards;
 
@@ -176,7 +176,7 @@ namespace HertzNetFramework.DataModels
             details.A_NAMESUFFIX = member.NAMESUFFIX;
             details.A_PRIMARYPHONENUMBER = member.PRIMARYPHONENUMBER;
             details.A_SECONDARYEMAILADDRESS = null;
-            details.A_TIERCODE = program.SpecificTier;
+            details.A_TIERCODE = tier == null ? "" : tier.Code;
             details.A_ADDRESSLINEONE = "Hertz Dr";
             details.A_ADDRESSLINETWO = "APT " + StrongRandom.NumericString(4);
             details.A_ADDRESSLINETHREE = null;
@@ -202,7 +202,7 @@ namespace HertzNetFramework.DataModels
             details.A_PENDINGEMAILSENTFLAG = null;
             details.A_PURGEDCONTRACT = null;
             details.A_HODINDICATOR = null;
-            details.A_EARNINGPREFERENCE = program.EarningPreference;
+            details.A_EARNINGPREFERENCE = program == null ? "" : program.EarningPreference;
             details.A_OTHERADDRTHREE = null;
             details.A_ADDRESSTYPE = null;
             details.A_OTHERADDRESSTYPE = null;

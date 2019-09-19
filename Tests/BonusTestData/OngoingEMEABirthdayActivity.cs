@@ -1,153 +1,87 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Brierley.TestAutomation.Core.Utilities;
 using HertzNetFramework.DataModels;
-
+using NUnit.Framework;
 
 namespace HertzNetFramework.Tests.BonusTestData
 {
     public class OngoingEMEABirthdayActivity
     {
-        static object[] PositiveScenarios =
-        {
-            new object[]
-            {
-                "OngoingEMEABirthday [GPR Regular Gold]  CDP = 2150933, Residence = BE, Check Out Country = BE",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier")),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(1).Comparable(),
-                                        bookDate:DateTime.Now.Comparable(),
-                                        program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.RegularGold.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "BE", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 25M),
-                                            new ExpectedPointEvent("OngoingEMEABirthdayActivity",400M) },
-                new string[]{ "EMEA60DayBirthdayEM" }
-            },
-            new object[]
-            {
-                "OngoingEMEABirthday [GPR Presidents Circle]  CDP = 2150933, Residence = CN, Check Out Country = CN",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.PresidentsCircle.Code,"SpecificTier")),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(1).Comparable(),
-                                        bookDate:DateTime.Now.Comparable(),
-                                        program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.PresidentsCircle.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "CN", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 25M),
-                                            new ExpectedPointEvent("OngoingEMEABirthdayActivity",400M) },
-                new string[]{ "EMEA60DayBirthdayEM" }
-            },
-            new object[]
-            {
-                "OngoingEMEABirthday [GPR Platinum]  CDP = 2150933, Residence = FR, Check Out Country = FR",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.Platinum.Code,"SpecificTier")),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(1).Comparable(),
-                                        bookDate:DateTime.Now.Comparable(),
-                                        program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.Platinum.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "FR", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 25M),
-                                            new ExpectedPointEvent("OngoingEMEABirthdayActivity",400M) },
-                new string[]{ "EMEA60DayBirthdayEM" }
-            },
-            new object[]
-            {
-                "OngoingEMEABirthday [GPR Platinum Select]  CDP = 2150933, Residence = DK, Check Out Country = DK",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumSelect.Code,"SpecificTier")),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(59).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(58).Comparable(),
-                                        bookDate:DateTime.Now.Comparable(),
-                                        program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumSelect.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "BE", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 25M),
-                                            new ExpectedPointEvent("OngoingEMEABirthdayActivity",400M) },
-                new string[]{ "EMEA60DayBirthdayEM" }
-            },
-            new object[]
-            {
-                "OngoingEMEABirthday [GPR Platinum VIP]  CDP = 2150933, Residence = JP, Check Out Country = JP",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumVIP.Code,"SpecificTier")),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(21).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(20).Comparable(),
-                                        bookDate:DateTime.Now.Comparable(),
-                                        program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumVIP.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "JP", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("GPRGoldRental", 25M),
-                                            new ExpectedPointEvent("OngoingEMEABirthdayActivity",400M) },
-                new string[]{ "EMEA60DayBirthdayEM" }
-            }
-        };
+        public static readonly string[] ValidRSDNCTRYCDs = new string[] { "BE", "FR", "DE", "IT", "LU", "NL", "ES", "CH", "GB", "IE", "SE", "NO", "DK", "FI",
+                                                                          "CN", "JP", "SG", "KR"};
+        public const string PointEventName = "OngoingEMEABirthdayActivity";
+        public const decimal PointEventAmount = 400M;
+        public const string ValidFTPTNRNUM = "ZE1";
+        public static IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
+        public static IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle, GPR.Tier.Platinum, GPR.Tier.PlatinumSelect, GPR.Tier.PlatinumVIP };
+        public const decimal BaseTxnAmount = 25M;
+        public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent(PointEventName, PointEventAmount) };
+        public static TimeSpan ValidRentalLength = TimeSpan.FromDays(1);
+        public static TimeSpan ValidBookingDateFromEnroll = TimeSpan.FromDays(60);
+        public static readonly DateTime StartDate = DateTime.Parse("01/01/2018");
+        public static readonly DateTime EndDate = DateTime.Parse("01/01/2099");
 
-        static object[] NegativeScenarios =
+
+        public static IEnumerable PositiveScenarios
         {
-            new object[]
+            get
             {
-                "OngoingEMEABirthday [GPR Platinum] EMEA60DayBirthdayEM Promotion Code not added to member",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.Platinum.Code,"SpecificTier")).Set(2150933M,"MemberDetails.A_CDPNUMBER"),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(-2).Comparable(),
-                                        bookDate:DateTime.Now.AddDays(-2).Comparable(),
-                                        CDP: 2150933M, program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.Platinum.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("OngoingEMEABirthdayActivity", 400) },
-                new string[] { }
-            },
-            new object[]
-            {
-                "OngoingEMEABirthday [GPR Platinum VIP] 61 Days after promo applied,  CDP = 2150933, Residence = JP, Check Out Country = JP",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumVIP.Code,"SpecificTier")),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(62).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(61).Comparable(),
-                                        bookDate:DateTime.Now.AddDays(61).Comparable(),
-                                        program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumVIP.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "JP", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("OngoingEMEABirthdayActivity", 400M) },
-                new string[]{ "EMEA60DayBirthdayEM" }
-            },
-            new object[]
-            {
-                "OngoingEMEABirthday [GPR Platinum VIP] CDP = 2150933, Invalid RSDNCTRYCD = US",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumVIP.Code,"SpecificTier")),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(1).Comparable(),
-                                        bookDate:DateTime.Now.AddDays(1).Comparable(),
-                                        program: HertzProgram.GoldPointsRewards.Set(GPR.Tier.PlatinumVIP.Code,"SpecificTier"),
-                                        RSDNCTRYCD: "US", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("OngoingEMEABirthdayActivity", 400M) },
-                new string[]{ "EMEA60DayBirthdayEM" }
-            },
-            new object[]
-            {
-                "OngoingEMEABirthday Invalid Earning Preference [Dollar Express DX] CDP = 2150933, Residence = JP, Check Out Country = JP",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.DollarExpressRenters),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(1).Comparable(),
-                                        bookDate:DateTime.Now.AddDays(1).Comparable(),
-                                        program: HertzProgram.DollarExpressRenters,
-                                        RSDNCTRYCD: "JP", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("OngoingEMEABirthdayActivity", 400M) },
-                new string[]{ "EMEA60DayBirthdayEM" }
-            },
-            new object[]
-            {
-                "OngoingEMEABirthday Invalid Earning Preference [Thrifty Blue Chip BC] CDP = 2150933, Residence = JP, Check Out Country = JP",
-                MemberStyle.ProjectOne,
-                Member.GenerateRandom(MemberStyle.ProjectOne, HertzProgram.ThriftyBlueChip),
-                TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
-                                        checkOutDate:DateTime.Now.AddDays(1).Comparable(),
-                                        bookDate:DateTime.Now.AddDays(1).Comparable(),
-                                        program: HertzProgram.ThriftyBlueChip,
-                                        RSDNCTRYCD: "JP", HODIndicator: 0, qualifyingAmount: 25M),
-                new ExpectedPointEvent[] { new ExpectedPointEvent("OngoingEMEABirthdayActivity", 400M) },
-                new string[]{ "EMEA60DayBirthdayEM" }
+                foreach (IHertzProgram validProgram in ValidPrograms)
+                {
+                    foreach (IHertzTier validTier in validProgram.Tiers)
+                    {
+                        if (!ValidTiers.ToList().Any(x => x.Name.Equals(validTier.Name))) continue;
+
+                        yield return new TestCaseData(
+                            Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                                                                                          .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
+                            ,
+                            new TxnHeader[] {
+                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                checkOutDate:DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).Comparable(),
+                                bookDate:DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).Comparable(),
+                                program: validProgram.Set(validTier.Code,"SpecificTier"),
+                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount)
+                            },
+                            ExpectedPointEvents,
+                            new string[] { "EMEA60DayBirthdayEM" }
+                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, Tier={validTier.Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                         .SetCategory(BonusTestCategory.Regression)
+                         .SetCategory(BonusTestCategory.Positive)
+                         .SetCategory(BonusTestCategory.Smoke);
+                    }
+                }
+                foreach (string validRSDN in ValidRSDNCTRYCDs)
+                {
+                    yield return new TestCaseData(
+                            Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
+                                                                                          .Set(validRSDN, "MemberDetails.A_COUNTRY")
+                            ,
+                            new TxnHeader[] {
+                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                checkOutDate:DateTime.Now.Comparable(),
+                                bookDate:DateTime.Now.Comparable(),
+                                program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"),
+                                RSDNCTRYCD: validRSDN, HODIndicator: 0, qualifyingAmount: BaseTxnAmount)
+                            },
+                            ExpectedPointEvents,
+                            new string[] { "EMEA60DayBirthdayEM" }
+                        ).SetName($"{PointEventName}. RSDNCTRYCODE = {validRSDN}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}")
+                         .SetCategory(BonusTestCategory.Regression)
+                         .SetCategory(BonusTestCategory.Positive);
+                }
             }
-        };
+        }
+
+        public static IEnumerable NegativeScenarios
+        {
+            get
+            {
+                yield return new TestCaseData();
+            }
+        }
     }
 }

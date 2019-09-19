@@ -42,7 +42,6 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static TimeSpan ValidBookingDate = TimeSpan.FromDays(-8);
         public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent("EUSchneider3x2019BonusActivity", BaseTxnAmount*2) };
 
-
         public static IEnumerable PositiveScenarios
         {
             get
@@ -64,7 +63,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                         ExpectedPointEvents,
                         new string[] { }
                     ).SetName($"{PointEventName}. RSDNCTRYCODE = {rsdnCtry}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}")
-                     .SetCategory("Bonus_Regression,Regression");
+                     .SetCategory(BonusTestCategory.Regression)
+                     .SetCategory(BonusTestCategory.Positive);
                 }
                 foreach (decimal validCDP in ValidCDPs)
                 {
@@ -83,7 +83,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                         ExpectedPointEvents,
                         new string[] { }
                     ).SetName($"{PointEventName}. CDP = {validCDP},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}")
-                     .SetCategory("Bonus_Regression,Regression");
+                     .SetCategory(BonusTestCategory.Regression)
+                     .SetCategory(BonusTestCategory.Positive);
                 }
                 foreach (IHertzProgram validProgram in ValidPrograms)
                 {
@@ -106,9 +107,19 @@ namespace HertzNetFramework.Tests.BonusTestData
                             ExpectedPointEvents,
                             new string[] { }
                         ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
-                         .SetCategory("Bonus_Regression,Regression,Bonus_Smoke");
+                         .SetCategory(BonusTestCategory.Regression)
+                         .SetCategory(BonusTestCategory.Positive)
+                         .SetCategory(BonusTestCategory.Smoke);
                     }
                 }
+            }
+        }
+
+        public static IEnumerable NegativeScenarios
+        {
+            get
+            {
+                yield return new TestCaseData();
             }
         }
     }

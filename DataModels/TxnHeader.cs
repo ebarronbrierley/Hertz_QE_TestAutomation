@@ -168,25 +168,25 @@ namespace HertzNetFramework.DataModels
         public string A_TXNMASKID { get; set; }
         [ModelAttribute("TxnNumber", ReportOption.Print)]
         public string A_TXNNUMBER { get; set; }
-        [ModelAttribute("TxnRegisterNumber")]
+        [ModelAttribute("TxnRegisterNumber", check: EqualityCheck.Skip)]
         public string A_TXNREGISTERNUMBER { get; set; }
-        [ModelAttribute("TxnStoreId")]
+        [ModelAttribute("TxnStoreId", check: EqualityCheck.Skip)]
         public long? A_TXNSTOREID { get; set; }
-        [ModelAttribute("TxnTypeId")]
+        [ModelAttribute("TxnTypeId", check: EqualityCheck.Skip)]
         public long? A_TXNTYPEID { get; set; }
-        [ModelAttribute("TxnAmount")]
+        [ModelAttribute("TxnAmount", check: EqualityCheck.Skip)]
         public decimal? A_TXNAMOUNT { get; set; }
         [ModelAttribute("TxnQualPurchaseAmt", ReportOption.Print)]
         public decimal? A_TXNQUALPURCHASEAMT { get; set; }
         [ModelAttribute("TxnDiscountAmount")]
         public decimal? A_TXNDISCOUNTAMOUNT { get; set; }
-        [ModelAttribute("TxnEmployeeId")]
+        [ModelAttribute("TxnEmployeeId", check: EqualityCheck.Skip)]
         public string A_TXNEMPLOYEEID { get; set; }
-        [ModelAttribute("TxnChannel")]
+        [ModelAttribute("TxnChannel", check: EqualityCheck.Skip)]
         public string A_TXNCHANNEL { get; set; }
         [ModelAttribute("TxnOriginalTxnRowKey")]
         public decimal? A_TXNORIGINALTXNROWKEY { get; set; }
-        [ModelAttribute("TxnCreditsUsed")]
+        [ModelAttribute("TxnCreditsUsed", check: EqualityCheck.Skip)]
         public long? A_TXNCREDITSUSED { get; set; }
         public decimal? STATUSCODE { get; set; }
         public DateTime CREATEDATE { get; set; }
@@ -195,9 +195,9 @@ namespace HertzNetFramework.DataModels
         public decimal? LAST_DML_ID { get; set; }
         [ModelAttribute("HODIndicator", ReportOption.Print)]
         public short? A_HODINDICATOR { get; set; }
-        [ModelAttribute("CHKINROWKEY")]
+        [ModelAttribute("CHKINROWKEY", check:EqualityCheck.Skip)]
         public decimal? A_CHKINROWKEY { get; set; }
-        [ModelAttribute("CHKOUTROWKEY")]
+        [ModelAttribute("CHKOUTROWKEY", check: EqualityCheck.Skip)]
         public decimal? A_CHKOUTROWKEY { get; set; }
         [ModelAttribute("CHKINLOCATIONID")]
         public string A_CHKINLOCATIONID { get; set; }
@@ -207,8 +207,8 @@ namespace HertzNetFramework.DataModels
 
         public static TxnHeader Generate(string loyaltyId,  
                                             DateTime? checkInDate = null, DateTime? checkOutDate = null, DateTime? bookDate = null, 
-                                            decimal? CDP = null, IHertzProgram program = null, short? HODIndicator = null, string RSDNCTRYCD = "US",
-                                            decimal? qualifyingAmount = null, string contractTypeCode = null, decimal? contractNumber = null, string sacCode = null,
+                                            decimal? CDP = null, IHertzProgram program = null, short? HODIndicator = 0, string RSDNCTRYCD = "US",
+                                            decimal? qualifyingAmount = 0M, string contractTypeCode = null, decimal? contractNumber = null, string sacCode = null,
                                             string checkoutWorldWideISO = null, string promNum = null)
         {
             if (program == null) program = HertzProgram.GoldPointsRewards;
@@ -281,7 +281,7 @@ namespace HertzNetFramework.DataModels
                 A_RNTINGCTRYCRNCYUSDEXCHRT = 1M,
                 A_CORPDISCPRGID = CDP ?? Convert.ToDecimal(StrongRandom.Next(0, 9)),
                 A_CONTRACTTYPECD = contractTypeCode ?? StrongRandom.NumericString(3),
-                A_CONTRACTNUM = Convert.ToDecimal(StrongRandom.Next(1, 999999)),
+                A_CONTRACTNUM = contractNumber ?? Convert.ToDecimal(StrongRandom.Next(1, 999999)),
                 A_BRANDID = null,
                 A_CREDITCARDID = null,
                 A_TXNMASKID = null,
@@ -291,7 +291,7 @@ namespace HertzNetFramework.DataModels
                 A_TXNTYPEID = StrongRandom.Next(1, 9),
                 A_TXNAMOUNT = qualifyingAmount,
                 A_TXNQUALPURCHASEAMT = qualifyingAmount,
-                A_QUALTOTAMT = qualifyingAmount,
+                A_QUALTOTAMT = qualifyingAmount,             
                 A_TXNDISCOUNTAMOUNT = 0M,
                 A_TXNEMPLOYEEID = StrongRandom.NumericString(2),
                 A_TXNCHANNEL = StrongRandom.NumericString(2),
