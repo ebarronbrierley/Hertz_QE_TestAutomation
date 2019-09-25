@@ -18,12 +18,14 @@ namespace HertzNetFramework.Tests.SOAP
         [Category("AddMember")]
         [Category("AddMember_Positive")]
         [TestCaseSource("PositiveScenarios")]
-        public void UpdateMember_Positive(string name, MemberStyle memberStyle, long memberStatus, string earningPreference, string tierCode, bool hasTransactions)
+     //  public void UpdateMember_Positive(string name, MemberStyle memberStyle, long memberStatus, string earningPreference, string tierCode, bool hasTransactions)
+         public void UpdateMember_Positive(string name, MemberStyle memberStyle, long memberStatus, IHertzProgram Hpgm, string tierCode,bool hasTransactions)
         {
             try
             {
                 BPTest.Start<TestStep>("Get Existing Member from the database", "Existing member should be found");
-                Member dbMember = Member.GetFromDB(Database, memberStyle, Member.MemberStatus.Active, "N1", "RG", true);
+                Member dbMember = Member.GetFromDB(Database, memberStyle, Member.MemberStatus.Active, Hpgm.EarningPreference, tierCode,true);
+               // Member dbMember = Member.GetFromDB(Database, memberStyle, Member.MemberStatus.Active, Hpgm.EarningPreference, GPR.Tier. true);
                 Assert.IsNotNull(dbMember, "Member could not be retrieved from DB");
                 Assert.IsTrue(dbMember.VirtualCards.Count > 0);
                 BPTest.Pass<TestStep>("Existing member was found", dbMember.ReportDetail());
@@ -31,7 +33,7 @@ namespace HertzNetFramework.Tests.SOAP
                 var memberVCKEY = dbMember.VirtualCards.First().VCKEY;
 
                 BPTest.Start<TestStep>($"Add random transaction to members virtual card with VCKEY = {memberVCKEY}", "Transaction should be added to members virtual card");
-                dbMember.AddRandomTransaction(memberVCKEY);
+                dbMember.AddRandomTransaction(Hpgm,memberVCKEY);
                 Assert.IsTrue(dbMember.VirtualCards.First().TxnHeaders.Count > 0, "Expected 1 TxnHeader to be present in members vitual card");
                 BPTest.Pass<TestStep>("Transaction is added to members virtual card", dbMember.VirtualCards.First().TxnHeaders.First().ReportDetail());
 
@@ -95,10 +97,65 @@ namespace HertzNetFramework.Tests.SOAP
                 "Active GPR Member with RG Tier and existing transactions",
                 MemberStyle.ProjectOne,
                 Member.MemberStatus.Active,
-                "N1",
-                "RG",
+                HertzProgram.GoldPointsRewards,
+                GPR.Tier.RegularGold.Code,
                 true
-            }//"Active GPR Member with RG Tier and existing transactions",
+
+            },//"Active GPR Member with RG Tier and existing transactions"
+
+            new object[]
+            {
+                "Active GPR Member with FG Tier and existing transactions",
+                MemberStyle.ProjectOne,
+                Member.MemberStatus.Active,
+                HertzProgram.GoldPointsRewards,
+                GPR.Tier.FiveStar.Code,
+                true
+
+            },//"Active GPR Member with FG Tier and existing transactions"
+
+           new object[]
+            {
+                "Active GPR Member with PC Tier and existing transactions",
+                MemberStyle.ProjectOne,
+                Member.MemberStatus.Active,
+                HertzProgram.GoldPointsRewards,
+                GPR.Tier.PresidentsCircle.Code,
+                true
+
+            },//"Active GPR Member with PC Tier and existing transactions"
+
+            new object[]
+            {
+                "Active GPR Member with PL Tier and existing transactions",
+                MemberStyle.ProjectOne,
+                Member.MemberStatus.Active,
+                HertzProgram.GoldPointsRewards,
+                GPR.Tier.Platinum.Code,
+                false
+
+            },//"Active GPR Member with PL Tier and existing transactions"
+
+             new object[]
+              {
+                "Active Thrifty Member with new transactions",
+                MemberStyle.ProjectOne,
+                Member.MemberStatus.Active,
+                HertzProgram.ThriftyBlueChip,
+                "",
+                false
+            },//"Active Thrifty Member with new transactions"
+
+            new object[]
+            {
+                "Active Dollar Member with new transactions",
+                MemberStyle.ProjectOne,
+                Member.MemberStatus.Active,
+                HertzProgram.DollarExpressRenters,
+                "",
+                false
+            }//"Active Dollar Member with new transactions"
+      
         };
     }
 }

@@ -324,14 +324,14 @@ namespace HertzNetFramework.DataModels
                 }
             }
         }
-        public Member AddRandomTransaction(decimal? vckey = null)
+        public Member AddRandomTransaction(IHertzProgram Hpgm, decimal? vckey = null )
         {
             VirtualCard memberCard;
             if (vckey != null)
                 memberCard = this.VirtualCards.Find(x => x.VCKEY == vckey.Value);
             else memberCard = this.VirtualCards.FirstOrDefault();
 
-            memberCard.TxnHeaders.Add(TxnHeader.Generate(memberCard.LOYALTYIDNUMBER,
+            memberCard.TxnHeaders.Add(TxnHeader.Generate(memberCard.LOYALTYIDNUMBER,program: Hpgm, qualifyingAmount:100M,
                                                          checkInDate: DateTime.Now.Comparable(),
                                                          checkOutDate: DateTime.Now.AddDays(-1).Comparable()));
             return this;
