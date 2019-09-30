@@ -58,7 +58,7 @@ namespace HertzNetFramework.Tests.SOAP
 
                 BPTest.Start<TestStep>($"Verify API response contains expected VirtualCard for passed member", "API response should contain passed virtual card details.");
                 AssertModels.AreEqualWithAttribute(dbMember.VirtualCards.First(), updatedMember.VirtualCards.First());
-                BPTest.Pass<TestStep>("API response contains passed virtual card.");
+                BPTest.Pass<TestStep>("API response contains passed virtual card.", dbMember.VirtualCards.ReportDetail());
 
                 BPTest.Start<TestStep>($"Verify API response contains expected transaction", "API response contains expected transaction");
                 Assert.IsTrue(updatedMember.VirtualCards.First().TxnHeaders.Count > 0, "Expected API response to contain one TxnHeader");
