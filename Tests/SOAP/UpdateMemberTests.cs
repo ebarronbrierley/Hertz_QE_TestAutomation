@@ -18,14 +18,12 @@ namespace HertzNetFramework.Tests.SOAP
         [Category("AddMember")]
         [Category("AddMember_Positive")]
         [TestCaseSource("PositiveScenarios")]
-     //  public void UpdateMember_Positive(string name, MemberStyle memberStyle, long memberStatus, string earningPreference, string tierCode, bool hasTransactions)
-         public void UpdateMember_Positive(string name, MemberStyle memberStyle, long memberStatus, IHertzProgram Hpgm, string tierCode,bool hasTransactions)
+        public void UpdateMember_Positive(string name, MemberStyle memberStyle, long memberStatus, IHertzProgram hertzProgram, string tierCode,bool hasTransactions)
         {
             try
             {
                 BPTest.Start<TestStep>("Get Existing Member from the database", "Existing member should be found");
-                Member dbMember = Member.GetFromDB(Database, memberStyle, Member.MemberStatus.Active, Hpgm.EarningPreference, tierCode,true);
-               // Member dbMember = Member.GetFromDB(Database, memberStyle, Member.MemberStatus.Active, Hpgm.EarningPreference, GPR.Tier. true);
+                Member dbMember = Member.GetFromDB(Database, memberStyle, Member.MemberStatus.Active, hertzProgram.EarningPreference, tierCode,true);             
                 Assert.IsNotNull(dbMember, "Member could not be retrieved from DB");
                 Assert.IsTrue(dbMember.VirtualCards.Count > 0);
                 BPTest.Pass<TestStep>("Existing member was found", dbMember.ReportDetail());
@@ -33,7 +31,7 @@ namespace HertzNetFramework.Tests.SOAP
                 var memberVCKEY = dbMember.VirtualCards.First().VCKEY;
 
                 BPTest.Start<TestStep>($"Add random transaction to members virtual card with VCKEY = {memberVCKEY}", "Transaction should be added to members virtual card");
-                dbMember.AddRandomTransaction(Hpgm,memberVCKEY);
+                dbMember.AddRandomTransaction(hertzProgram, memberVCKEY,500);
                 Assert.IsTrue(dbMember.VirtualCards.First().TxnHeaders.Count > 0, "Expected 1 TxnHeader to be present in members vitual card");
                 BPTest.Pass<TestStep>("Transaction is added to members virtual card", dbMember.VirtualCards.First().TxnHeaders.First().ReportDetail());
 

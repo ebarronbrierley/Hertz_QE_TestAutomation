@@ -208,7 +208,7 @@ namespace HertzNetFramework.DataModels
         public static TxnHeader Generate(string loyaltyId,  
                                             DateTime? checkInDate = null, DateTime? checkOutDate = null, DateTime? bookDate = null, 
                                             decimal? CDP = null, IHertzProgram program = null, short? HODIndicator = 0, string RSDNCTRYCD = "US",
-                                            decimal? qualifyingAmount = 0M, string contractTypeCode = null, decimal? contractNumber = null, string sacCode = null,
+                                            decimal? rentalCharges = 0M, string contractTypeCode = null, decimal? contractNumber = null, string sacCode = null,
                                             string checkoutWorldWideISO = null, string promNum = null)
         {
             if (program == null) program = HertzProgram.GoldPointsRewards;
@@ -242,14 +242,14 @@ namespace HertzNetFramework.DataModels
                 A_CRNCYISOCD = null,
                 A_RENTALTYPE = null,
                 A_DAYSCHRGQTY = 1,
-                A_LDWCDWCHRGAMT = qualifyingAmount,
+                A_LDWCDWCHRGAMT = rentalCharges,
                 A_DISCAMT = 0M,
                 A_NWEXECSAMT = 0M,
                 A_PAITOTCHRGAMT = 0M,
                 A_ADDLAUTHDRVRCHRGAMT = 0M,
                 A_AGEDIFFCHRGAMT = 0M,
-                A_ADDLSRVCCHRGAMT = qualifyingAmount,
-                A_SBTOTAMT = qualifyingAmount,
+                A_ADDLSRVCCHRGAMT = rentalCharges,
+                A_SBTOTAMT = rentalCharges,
                 A_TOTCHRGAMT = 0M,
                 A_LISTOTCHRGAMT = 0M,
                 A_CHILDSEATTOTAMT = 0M,
