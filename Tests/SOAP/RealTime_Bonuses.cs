@@ -20,17 +20,18 @@ namespace HertzNetFramework.Tests.SOAP
 
         [Category("Bonus_Positive")]
         [Category("Bonus")]
-        [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(Corp550Points_2016Activity), "PositiveScenarios")]
-        [TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")] 
-        [TestCaseSource(typeof(GPRAAABonusActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(ACIActivation800Activity), "PositiveScenarios")]
-        [TestCaseSource(typeof(HorizonCardPointsActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(OngoingEMEABirthdayActivity),"PositiveScenarios")]
-        [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
-        [TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(LapsedOnGoingActivity), "PositiveScenarios")]
+        [TestCaseSource(typeof(CorpWinback), "PositiveScenarios")]
+        //[TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(Corp550Points_2016Activity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")]
+        //[TestCaseSource(typeof(GPRAAABonusActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(ACIActivation800Activity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(HorizonCardPointsActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(OngoingEMEABirthdayActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
+        //[TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(LapsedOnGoingActivity), "PositiveScenarios")]
         public void RealTime_Bonus_Positive(Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes)
         {
 
@@ -39,16 +40,19 @@ namespace HertzNetFramework.Tests.SOAP
             {
                 Member createMember = member.MakeVirtualCardLIDsUnique(Database);
                 BPTest.Start<TestStep>($"Make AddMember Call for {member.Style} Member", "Member should be added successfully and member object should be returned");
-                Member memberOut = Member.AddMember(createMember);
+                Member memberOut = Member.AddMember(member);
+                memberOut.MemberDetails.Add(member.MemberDetails[0]);
                 Assert.IsNotNull(memberOut, "Expected populated member object, but member object returned was null");
                 BPTest.Pass<TestStep>("Member was added successfully and member object was returned", memberOut.ReportDetail());
 
                 BPTest.Start<TestStep>($"Verify MemberDetails in AddMember output against member details passed", "API MemberDetails should match passed MemberDetails");
-                AssertModels.AreEqualWithAttribute(createMember.GetMemberDetails(member.Style).First(), memberOut.GetMemberDetails(member.Style).First());
+                MemberDetails m1 = createMember.GetMemberDetails(member.Style).First();
+                MemberDetails m2 = memberOut.GetMemberDetails(member.Style).First();
+                AssertModels.AreEqualWithAttribute(m1, m2);
                 BPTest.Pass<TestStep>("API MemberDetails match passed MemberDetails", memberOut.GetMemberDetails(member.Style).ReportDetail());
 
-                var memberVCKEY = memberOut.VirtualCards.First().VCKEY;
-                var memberLID = memberOut.VirtualCards.First().LOYALTYIDNUMBER;
+                decimal memberVCKEY = memberOut.VirtualCards.First().VCKEY;
+                string memberLID = memberOut.VirtualCards.First().LOYALTYIDNUMBER;
 
                 if (requiredPromotionCodes != null)
                 {
@@ -78,7 +82,6 @@ namespace HertzNetFramework.Tests.SOAP
                 memberOut = updatedMember;
 
                 Thread.Sleep(1000);
-
 
                 BPTest.Start<TestStep>($"Verify TxnHeader(s) in DB with VCKEY = {memberVCKEY}", "TxnHeader(s) from database should match expected TxnHeader");
                 List<TxnHeader> dbTxns = TxnHeader.GetFromDB(Database, memberVCKEY).ToList();

@@ -17,7 +17,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public const string ContractTypeCode = "COMM";
         public const decimal PointEventAmount = 800M;
         public const decimal BaseTxnAmount = 25M;
-        public static readonly decimal[] ValidCDPs = new decimal[] { 841369M, 843852M, 843853M, 843854M, 843855M, 843859M, 843860M };
+        public static readonly decimal[] ValidCDPs = new decimal[] { 841369, 843852, 843853, 843854, 843855, 843859, 843860 };
         public static readonly string[] ValidRSDNCTRYCDs = new string[] { "BE", "FR", "DE", "IT", "LU", "NL", "ES", "CH", "GB", "IE", "SE", "NO", "DK", "FI", 
                                                                           "AU","NZ","PW","CN","SG","JP","KR" };
         public static readonly string[] ValidCHKWORLDWIDECTRYCDs = new string[] {"US", "CA", "PR", "VI",

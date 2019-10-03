@@ -17,41 +17,57 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static readonly string[] ValidRSDNCTRYCDs = new string[] { "GB", "IE", "BE", "LUX", "FR", "IT", "ES", "DE", "NL", "CHF", "CHG" };
         public static readonly IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
         public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle };
-
-
-        public static IEnumerable PositiveScenarios
-    {
-        get
+        public static object[] PosScenariosObject =
         {
-            foreach (string rsdnCtry in ValidRSDNCTRYCDs)
+            Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("RG", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY"),
+            new TxnHeader[]{TxnHeader.Generate("", new DateTime(2019, 9, 4), new DateTime(2019, 9, 3), new DateTime(2019, 9, 3), null, HertzProgram.GoldPointsRewards, null, "GB", 50, "AAAA", 246095, "N", "US", null) },
+            GenerateExpectedPoints(7, GPR.Tier.RegularGold),
+            new string[]{ "EUWinback2019R2FG1" }
+        };
+
+        public static IEnumerable PositiveScenarios2
+        {
+            get
             {
-                yield return new TestCaseData(
-                    Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
-                                                                                                .Set("", "MemberDetails.A_CDPNUMBER")
-                                                                                                .Set(rsdnCtry, "MemberDetails.A_COUNTRY"),
-                    GenerateTxns(2, "", ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"), rsdnCtry),
-                    GenerateExpectedPoints(2, ValidTiers[0]),
-                    new string[] { }
-                ).SetName($"{PointEventName}. RSDNCTRYCD = {rsdnCtry}, EarningPref ={ValidPrograms[0].EarningPreference}, Tier ={ValidTiers[0].Code}");
-            }
-            foreach (IHertzProgram validProgram in ValidPrograms)
-            {
-                foreach (IHertzTier validTier in validProgram.Tiers)
-                {
-                    if (!ValidTiers.ToList().Any(x => x.Name.Equals(validTier.Name))) continue;
-                    for (int transactionCount = 2; transactionCount < 7; transactionCount++)
-                        yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
-                                                                                                        .Set("", "MemberDetails.A_CDPNUMBER")
-                                                                                                        .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY"),
-                            GenerateTxns(transactionCount, "", validProgram.Set(validTier.Code, "SpecificTier")),
-                            GenerateExpectedPoints(transactionCount, validTier),
-                            new string[] { }
-                        ).SetName($"{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]}");
-                }
+                TestCaseData posTCD = new TestCaseData(PosScenariosObject);
+                yield return posTCD;
             }
         }
-    }
+
+        public static IEnumerable PositiveScenarios
+        {
+            get
+            {
+                foreach (string rsdnCtry in ValidRSDNCTRYCDs)
+                {
+                    yield return new TestCaseData(
+                        Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE")
+                        .Set("", "MemberDetails.A_CDPNUMBER")
+                        .Set("FG", "MemberDetails.A_TIERCODE")
+                        .Set(rsdnCtry, "MemberDetails.A_COUNTRY"),
+                        GenerateTxns(13, "", ValidPrograms[0].Set(ValidTiers[1].Code, "SpecificTier"), rsdnCtry),
+                        GenerateExpectedPoints(2, ValidTiers[1]),
+                        new string[] { "EUWinback2019R2FG1" }
+                    ).SetName($"CorpWinbackPos{PointEventName}. RSDNCTRYCD = {rsdnCtry}, EarningPref ={ValidPrograms[0].EarningPreference}, Tier ={ValidTiers[0].Code}");
+                }
+                //foreach (IHertzProgram validProgram in ValidPrograms)
+                //{
+                //    foreach (IHertzTier validTier in validProgram.Tiers)
+                //    {
+                //        if (!ValidTiers.ToList().Any(x => x.Name.Equals(validTier.Name))) continue;
+                //        for (int transactionCount = 2; transactionCount < 7; transactionCount++)
+                //            yield return new TestCaseData(
+                //                Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                //                                                                                            .Set("", "MemberDetails.A_CDPNUMBER")
+                //                                                                                            .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY"),
+                //                GenerateTxns(transactionCount, "", validProgram.Set(validTier.Code, "SpecificTier")),
+                //                GenerateExpectedPoints(transactionCount, validTier),
+                //                new string[] { }
+                //            ).SetName($"CorpWinbackPos2{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]}");
+                //    }
+                //}
+            }
+        }
 
         private static TxnHeader[] GenerateTxns(int num, string cdp, IHertzProgram programIn, string resCountry = "US")
         {

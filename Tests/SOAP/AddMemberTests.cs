@@ -204,7 +204,7 @@ namespace HertzNetFramework.Tests.SOAP
                 sftp_config.Password = EnvironmentManager.Get.SFTPPassword;
 
                 BPTest.Start<TestStep>("Step 1: Generate and Add Member");
-                Member corpwinbackmember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("FG", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY");
+                Member corpwinbackmember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("PC", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY");
                 Member memberOut = Member.AddMember(corpwinbackmember);
                 Assert.IsNotNull(memberOut, "Expected populated member object, but member object returned was null");
                 string loyaltyid = corpwinbackmember.GetLoyaltyID();
@@ -214,28 +214,28 @@ namespace HertzNetFramework.Tests.SOAP
                 DateTime checkInDt = new DateTime(2019, 9, 4);
                 DateTime checkOutDt = new DateTime(2019, 9, 3);
                 DateTime origBkDt = new DateTime(2019, 9, 3);
-                for (int x = 0; x < 8; x++)
-                {
-                    TxnHeader txnHeader = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 50, "AAAA", 246095, "N", "US", null);
-                    corpwinbackmember.AddTransaction(txnHeader);
-                    Member updatedMember = Member.UpdateMember(corpwinbackmember);
-                    corpwinbackmember.RemoveTransaction();
-                }
+                //for (int x = 0; x < 8; x++)
+                //{
+                //    TxnHeader txnHeader = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 50, "AAAA", 246095, "N", "US", null);
+                //    corpwinbackmember.AddTransaction(txnHeader);
+                //    Member updatedMember = Member.UpdateMember(corpwinbackmember);
+                //    corpwinbackmember.RemoveTransaction();
+                //}
                 BPTest.Pass<TestStep>("Step 2: Passed");
 
                 BPTest.Start<TestStep>("Step 3: Add Member Promotion");
-                IEnumerable<Promotion> promos1 = Promotion.GetFromDB(Database, code: "GPRCorpWinback2_2019CurrentFSNotDowngradedLapsingLapsedBonus");
+                IEnumerable<Promotion> promos1 = Promotion.GetFromDB(Database, code: "GPRCorpWinback2_2019CurrentPCLapsingLapsedBonus");
                 IEnumerable<Promotion> promos2 = Promotion.GetFromDB(Database, code: "EUWinback2019R2FG1");
                 string promocode1 = promos1.First().CODE;
                 string promocode2 = promos2.First().CODE;
-                MemberPromotion mempromo = corpwinbackmember.AddPromotion(loyaltyid, promocode2, null, null, false, null, null, false);
+                //MemberPromotion mempromo = corpwinbackmember.AddPromotion(loyaltyid, promocode2, null, null, false, null, null, false);
                 OneClick oneclickObj = OneClick.GenerateOneClick(loyaltyid, promocode1);
                 string oneclickString = oneclickObj.ToString();
                 using (SFTP sftp = new SFTP(sftp_config))
                 {
                     sftp.Connect();
                     System.IO.File.WriteAllText($@"C:\Users\oagwuegbo\Documents\HertzProjectOne\SFTPFiles\{oneclickObj.Filename}", oneclickString);
-                    sftp.UploadFile($@"C:\Users\oagwuegbo\Documents\HertzProjectOne\SFTPFiles", oneclickObj.Filename, @"/opt/app/oracle/flatfiles/in/htz/qa/auto");
+                    sftp.UploadFile($@"C:\Users\oagwuegbo\Documents\HertzProjectOne\SFTPFiles", oneclickObj.Filename, @"/opt/app/oracle/flatfiles/in/htz/uat/auto");
                 }
                 Database.ExecuteNonQuery($@"BEGIN
                    sla.qa_utils.gen_trigger_and_load_file (
@@ -274,7 +274,7 @@ namespace HertzNetFramework.Tests.SOAP
                 //DateTime checkInDt = new DateTime(2019, 9, 4);
                 //DateTime checkOutDt = new DateTime(2019, 9, 3);
                 //DateTime origBkDt = new DateTime(2019, 9, 3);
-                for (int x = 0; x < 5; x++)
+                for (int x = 0; x < 13; x++)
                 {
                     TxnHeader txnHeader = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 50, "AAAA", 246095, "N", "US", null);
                     corpwinbackmember.AddTransaction(txnHeader);
@@ -456,18 +456,18 @@ namespace HertzNetFramework.Tests.SOAP
                 sftp_config.Password = EnvironmentManager.Get.SFTPPassword;
 
                 BPTest.Start<TestStep>("Step 1: Generate and Add Member");
-                Member corpwinbackmember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("PC", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY");
+                Member corpwinbackmember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE")
+                    .Set("FG", "MemberDetails.A_TIERCODE").Set("GB", "MemberDetails.A_COUNTRY").Set("0602642", "MemberDetails.A_CDPNUMBER");
                 Member memberOut = Member.AddMember(corpwinbackmember);
                 Assert.IsNotNull(memberOut, "Expected populated member object, but member object returned was null");
                 string loyaltyid = corpwinbackmember.GetLoyaltyID();
                 BPTest.Pass<TestStep>("Step 1 Passed", memberOut.ReportDetail());
 
-                BPTest.Start<TestStep>("Step 2: Add Member Promotion");
-                IEnumerable<Promotion> promos1 = Promotion.GetFromDB(Database, code: "EUWinback2019R2RG2");
-                string promocode1 = promos1.First().CODE;
-                MemberPromotion mempromo = corpwinbackmember.AddPromotion(loyaltyid, promocode1, null, null, false, null, null, false);
-                MemberPromotion mempromo2 = corpwinbackmember.AddPromotion(loyaltyid, "EUWinback2019R2FG1", null, null, false, null, null, false);
-                BPTest.Pass<TestStep>("Step 2 Passed");
+                //BPTest.Start<TestStep>("Step 2: Add Member Promotion");
+                //IEnumerable<Promotion> promos1 = Promotion.GetFromDB(Database, code: "EUWinback2019R2FG1");
+                //string promocode1 = promos1.First().CODE;
+                //MemberPromotion mempromo = corpwinbackmember.AddPromotion(loyaltyid, promocode1, null, null, false, null, null, false);
+                //BPTest.Pass<TestStep>("Step 2 Passed");
 
                 BPTest.Start<TestStep>("Step 3: Update Member with Transaction 13 Times");
                 //IEnumerable<Member> getMembersOut = Member.GetMembers(MemberStyle.ProjectOne, new[] { "CardID" }, new[] { "1818626" }, null, null, string.Empty);
@@ -476,22 +476,107 @@ namespace HertzNetFramework.Tests.SOAP
                 DateTime checkInDt = new DateTime(2019, 9, 4);
                 DateTime checkOutDt = new DateTime(2019, 9, 3);
                 DateTime origBkDt = new DateTime(2019, 9, 3);
-                for (int x = 0; x < 7; x++)
+                for (int x = 0; x < 3; x++)
                 {
                     TxnHeader txnHeader = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 1000, "AAAA", 246095, "N", "US", null);
                     corpwinbackmember.AddTransaction(txnHeader);
                     Member updatedMember = Member.UpdateMember(corpwinbackmember);
                     corpwinbackmember.RemoveTransaction();
                 }
-                for (int x = 0; x < 6; x++)
-                {
-                    TxnHeader txnHeader = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 1000, "AAAA", 246095, "N", "US", null);
-                    corpwinbackmember.AddTransaction(txnHeader);
-                    Member updatedMember = Member.UpdateMember(corpwinbackmember);
-                    corpwinbackmember.RemoveTransaction();
-                }
+                //for (int x = 0; x < 6; x++)
+                //{
+                //    TxnHeader txnHeader = TxnHeader.Generate(loyaltyid, checkInDt, checkOutDt, origBkDt, null, HertzProgram.GoldPointsRewards, null, "GB", 1000, "AAAA", 246095, "N", "US", null);
+                //    corpwinbackmember.AddTransaction(txnHeader);
+                //    Member updatedMember = Member.UpdateMember(corpwinbackmember);
+                //    corpwinbackmember.RemoveTransaction();
+                //}
                 BPTest.Pass<TestStep>("Step 3 Passed");
 
+            }
+            catch (AssertModelEqualityException ex)
+            {
+                BPTest.Fail<TestStep>(ex.Message);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                BPTest.Fail<TestStep>(ex.Message);
+                Assert.Fail();
+            }
+        }
+
+        [Category("Api_Smoke")]
+        [Category("Api_Positive")]
+        [Category("AddMember")]
+        [Category("AddMember_Positive")]
+        [TestCaseSource("PositiveScenarios")]
+        public void MantiwokCDP(string name, MemberStyle memberStyle, Member member)
+        {
+            try
+            {
+                SFTPConfiguration sftp_config = new SFTPConfiguration();
+                sftp_config.Host = EnvironmentManager.Get.SFTPHost;
+                sftp_config.Port = Convert.ToUInt16(EnvironmentManager.Get.SFTPPort);
+                sftp_config.User = EnvironmentManager.Get.SFTPUser;
+                sftp_config.Password = EnvironmentManager.Get.SFTPPassword;
+
+                BPTest.Start<TestStep>("Step 1: Generate and Add RG Member");
+                
+                //Member RGMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE")
+                //    .Set("RG", "MemberDetails.A_TIERCODE").Set("MX", "MemberDetails.A_COUNTRY").Set("537021", "MemberDetails.A_CDPNUMBER");
+                //Member FGMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE")
+                //    .Set("FG", "MemberDetails.A_TIERCODE").Set("MX", "MemberDetails.A_COUNTRY").Set("537021", "MemberDetails.A_CDPNUMBER");
+                //Member PCMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE")
+                //    .Set("PC", "MemberDetails.A_TIERCODE").Set("MX", "MemberDetails.A_COUNTRY").Set("537021", "MemberDetails.A_CDPNUMBER");
+                //Member PLMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE")
+                //    .Set("PL", "MemberDetails.A_TIERCODE").Set("MX", "MemberDetails.A_COUNTRY").Set("537021", "MemberDetails.A_CDPNUMBER");
+                Member RGMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE")
+                    .Set("RG", "MemberDetails.A_TIERCODE").Set("BZ", "MemberDetails.A_COUNTRY");
+                Member FGMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE")
+                    .Set("FG", "MemberDetails.A_TIERCODE").Set("BZ", "MemberDetails.A_COUNTRY");
+                Member PCMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE")
+                    .Set("PC", "MemberDetails.A_TIERCODE").Set("BZ", "MemberDetails.A_COUNTRY");
+                Member PLMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE")
+                    .Set("PL", "MemberDetails.A_TIERCODE").Set("BZ", "MemberDetails.A_COUNTRY");
+                Member memberOutRG = Member.AddMember(RGMember);
+                Member memberOutFG = Member.AddMember(FGMember);
+                Member memberOutPC = Member.AddMember(PCMember);
+                Member memberOutPL = Member.AddMember(PLMember);
+                Assert.IsNotNull(memberOutRG, "Expected populated member object, but member object returned was null");
+                Assert.IsNotNull(memberOutFG, "Expected populated member object, but member object returned was null");
+                Assert.IsNotNull(memberOutPC, "Expected populated member object, but member object returned was null");
+                Assert.IsNotNull(memberOutPL, "Expected populated member object, but member object returned was null");
+                string RGLoyaltyID = RGMember.GetLoyaltyID();
+                string FGLoyaltyID = FGMember.GetLoyaltyID();
+                string PCLoyaltyID = PCMember.GetLoyaltyID();
+                string PLLoyaltyID = PLMember.GetLoyaltyID();
+                BPTest.Pass<TestStep>($"Step 1 Passed. Created Members with LIDs: {RGLoyaltyID} {FGLoyaltyID} {PCLoyaltyID} {PLLoyaltyID}", memberOutRG.ReportDetail());
+
+                BPTest.Start<TestStep>("Step 2: Update Member with Transaction 3 Times");
+                DateTime checkInDt = new DateTime(2018, 10, 26);
+                DateTime checkOutDt = new DateTime(2018, 10, 25);
+                DateTime origBkDt = new DateTime(2018, 10, 25);
+                decimal? hercCDP = null;
+                for (int x = 0; x < 3; x++)
+                {
+                    TxnHeader txnHeaderRG = TxnHeader.Generate(RGLoyaltyID, checkInDt, checkOutDt, origBkDt, hercCDP, HertzProgram.GoldPointsRewards, null, "BZ", 1000, "AAAA", 246095, "N", "US", null);
+                    TxnHeader txnHeaderFG = TxnHeader.Generate(FGLoyaltyID, checkInDt, checkOutDt, origBkDt, hercCDP, HertzProgram.GoldPointsRewards, null, "BZ", 1000, "AAAA", 246095, "N", "US", null);
+                    TxnHeader txnHeaderPC = TxnHeader.Generate(PCLoyaltyID, checkInDt, checkOutDt, origBkDt, hercCDP, HertzProgram.GoldPointsRewards, null, "BZ", 1000, "AAAA", 246095, "N", "US", null);
+                    TxnHeader txnHeaderPL = TxnHeader.Generate(PLLoyaltyID, checkInDt, checkOutDt, origBkDt, hercCDP, HertzProgram.GoldPointsRewards, null, "BZ", 1000, "AAAA", 246095, "N", "US", null);
+                    RGMember.AddTransaction(txnHeaderRG);
+                    FGMember.AddTransaction(txnHeaderFG);
+                    PCMember.AddTransaction(txnHeaderPC);
+                    PLMember.AddTransaction(txnHeaderPL);
+                    Member updatedMemberRG = Member.UpdateMember(RGMember);
+                    Member updatedMemberFG = Member.UpdateMember(FGMember);
+                    Member updatedMemberPC = Member.UpdateMember(PCMember);
+                    Member updatedMemberPL = Member.UpdateMember(PLMember);
+                    RGMember.RemoveTransaction();
+                    FGMember.RemoveTransaction();
+                    PCMember.RemoveTransaction();
+                    PLMember.RemoveTransaction();
+                }
+                BPTest.Pass<TestStep>("Step 2 Passed");
             }
             catch (AssertModelEqualityException ex)
             {
