@@ -42,7 +42,7 @@ namespace HertzNetFramework.DataModels
         public string A_VCHRNUM { get; set; }
         [ModelAttribute("CHKINAREANUM", ReportOption.Print)]
         public string A_CHKINAREANUM { get; set; }
-        [ModelAttribute("CHKOUTDT", ReportOption.Print)]
+        [ModelAttribute("CHKOUTDT", ReportOption.Print, check: EqualityCheck.Skip)]
         public DateTime? A_CHKOUTDT { get; set; }
         [ModelAttribute("CHKOUTLOCNUM", ReportOption.Print)]
         public string A_CHKOUTLOCNUM { get; set; }
@@ -144,7 +144,7 @@ namespace HertzNetFramework.DataModels
         public string A_RSDNCTRYCD { get; set; }
         [ModelAttribute("GOLDRNTALIND")]
         public string A_GOLDRNTALIND { get; set; }
-        [ModelAttribute("TxnDate")]
+        [ModelAttribute("TxnDate", check: EqualityCheck.Skip)]
         public DateTime A_TXNDATE { get; set; }
         [ModelAttribute("TxnHeaderId", check:EqualityCheck.Skip)]
         public string A_TXNHEADERID { get; set; }
@@ -208,7 +208,7 @@ namespace HertzNetFramework.DataModels
         public static TxnHeader Generate(string loyaltyId,  
                                             DateTime? checkInDate = null, DateTime? checkOutDate = null, DateTime? bookDate = null, 
                                             decimal? CDP = null, IHertzProgram program = null, short? HODIndicator = 0, string RSDNCTRYCD = "US",
-                                            decimal? qualifyingAmount = 0M, string contractTypeCode = null, decimal? contractNumber = null, string sacCode = null,
+                                            decimal? rentalCharges = 0M, string contractTypeCode = null, decimal? contractNumber = null, string sacCode = null,
                                             string checkoutWorldWideISO = null, string promNum = null)
         {
             if (program == null) program = HertzProgram.GoldPointsRewards;
@@ -242,15 +242,15 @@ namespace HertzNetFramework.DataModels
                 A_CRNCYISOCD = null,
                 A_RENTALTYPE = null,
                 A_DAYSCHRGQTY = 1,
-                A_LDWCDWCHRGAMT = 0M,
+                A_LDWCDWCHRGAMT = rentalCharges,
                 A_DISCAMT = 0M,
                 A_NWEXECSAMT = 0M,
                 A_PAITOTCHRGAMT = 0M,
                 A_ADDLAUTHDRVRCHRGAMT = 0M,
                 A_AGEDIFFCHRGAMT = 0M,
-                A_ADDLSRVCCHRGAMT = 0M,
-                A_SBTOTAMT = qualifyingAmount,
-                A_TOTCHRGAMT = qualifyingAmount,
+                A_ADDLSRVCCHRGAMT = rentalCharges,
+                A_SBTOTAMT = rentalCharges,
+                A_TOTCHRGAMT = 0M,
                 A_LISTOTCHRGAMT = 0M,
                 A_CHILDSEATTOTAMT = 0M,
                 A_ITVALLFEETOTAMT = 0M,
@@ -289,16 +289,19 @@ namespace HertzNetFramework.DataModels
                 A_TXNREGISTERNUMBER = StrongRandom.NumericString(1),
                 A_TXNSTOREID = StrongRandom.Next(1, 9),
                 A_TXNTYPEID = StrongRandom.Next(1, 9),
-                A_TXNAMOUNT = qualifyingAmount,
-                A_TXNQUALPURCHASEAMT = qualifyingAmount,
-                A_QUALTOTAMT = qualifyingAmount,             
+                A_TXNAMOUNT = 0M,
+                A_TXNQUALPURCHASEAMT = 0M,
+                A_QUALTOTAMT = 0M,
                 A_TXNDISCOUNTAMOUNT = 0M,
                 A_TXNEMPLOYEEID = StrongRandom.NumericString(2),
                 A_TXNCHANNEL = StrongRandom.NumericString(2),
                 A_TXNORIGINALTXNROWKEY = null,
                 A_TXNCREDITSUSED = null,
-                A_HODINDICATOR = HODIndicator
-            };
+                A_HODINDICATOR = HODIndicator              
+        };
+        output.A_TXNQUALPURCHASEAMT = (output.A_SBTOTAMT+output.A_LDWCDWCHRGAMT + output.A_ADDLSRVCCHRGAMT + output.A_AGEDIFFCHRGAMT + output.A_ADDLAUTHDRVRCHRGAMT + output.A_CHILDSEATTOTAMT + output.A_MISCGRPAMT + output.A_GARSPECLEQMNTAMT + output.A_TOTCHRGAMT + output.A_NVGTNSYSTOTAMT + output.A_SATLTRADIOTOTAMT + output.A_REFUELINGCHRGAMT) * output.A_RNTINGCTRYCRNCYUSDEXCHRT;
+        output.A_QUALTOTAMT = (output.A_SBTOTAMT + output.A_LDWCDWCHRGAMT + output.A_ADDLSRVCCHRGAMT + output.A_AGEDIFFCHRGAMT + output.A_ADDLAUTHDRVRCHRGAMT + output.A_CHILDSEATTOTAMT + output.A_MISCGRPAMT + output.A_GARSPECLEQMNTAMT + output.A_TOTCHRGAMT + output.A_NVGTNSYSTOTAMT + output.A_SATLTRADIOTOTAMT + output.A_REFUELINGCHRGAMT) * output.A_RNTINGCTRYCRNCYUSDEXCHRT;
+
             return output;
         }
         public static IEnumerable<TxnHeader> GetFromDB(IDatabase db, decimal vckey, string RANUM = null)

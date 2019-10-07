@@ -43,7 +43,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
-                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount)
+                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                             },
                             ExpectedPointEvents,
                             new string[] { }
@@ -65,7 +65,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: validCDP,
-                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount)
+                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                             },
                             ExpectedPointEvents,
                             new string[] { }
@@ -86,7 +86,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
-                                RSDNCTRYCD: validRSDN, HODIndicator: 0, qualifyingAmount: BaseTxnAmount)
+                                RSDNCTRYCD: validRSDN, HODIndicator: 0, rentalCharges: BaseTxnAmount)
                             },
                             ExpectedPointEvents,
                             new string[] { }

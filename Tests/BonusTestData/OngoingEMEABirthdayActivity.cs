@@ -44,7 +44,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                                 checkOutDate:DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).Comparable(),
                                 bookDate:DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).Comparable(),
                                 program: validProgram.Set(validTier.Code,"SpecificTier"),
-                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, qualifyingAmount: BaseTxnAmount)
+                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                             },
                             ExpectedPointEvents,
                             new string[] { "EMEA60DayBirthdayEM" }
@@ -65,7 +65,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"),
-                                RSDNCTRYCD: validRSDN, HODIndicator: 0, qualifyingAmount: BaseTxnAmount)
+                                RSDNCTRYCD: validRSDN, HODIndicator: 0, rentalCharges: BaseTxnAmount)
                             },
                             ExpectedPointEvents,
                             new string[] { "EMEA60DayBirthdayEM" }
