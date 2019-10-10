@@ -65,8 +65,11 @@
     <Compile Include="Tests\BonusTestData\BonusTestCategory.cs" />
     <Compile Include="Tests\BonusTestData\Corp550Points_2016Activity.cs" />
     <Compile Include="Tests\BonusTestData\CorpNewMember550PointsOngoingActivity.cs" />
+<<<<<<< HEAD
     <Compile Include="Tests\BonusTestData\CorpWinback.cs" />
+=======
     <Compile Include="Tests\BonusTestData\EUCorp800Points_OngoingActivity.cs" />
+>>>>>>> master
     <Compile Include="Tests\BonusTestData\EUSchneider3x2019Bonus.cs" />
     <Compile Include="Tests\BonusTestData\GPRAAABonusActivity.cs" />
     <Compile Include="Tests\BonusTestData\HorizonCardPointsActivity.cs" />
@@ -76,8 +79,6 @@
     <Compile Include="Tests\BonusTestData\VisaInfinite10RGBonus.cs" />
     <Compile Include="Tests\SOAP\AddMemberPromotion.cs" />
     <Compile Include="Tests\SOAP\AddMemberTests.cs" />
-    <Compile Include="Tests\UserStoryTests\ExclusionListTests.cs" />
-    <Compile Include="Tests\UserStoryTests\FlashSale.cs" />
     <Compile Include="Tests\SOAP\GetMemberTests.cs" />
     <Compile Include="Tests\SOAP\RealTime_Bonuses.cs" />
     <Compile Include="Tests\SOAP\UpdateMemberTests.cs" />
