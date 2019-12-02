@@ -30,9 +30,9 @@ namespace HertzNetFramework.DataModels
         public long? NEWSTATUS { get; set; }
         public DateTime? NEWSTATUSEFFECTIVEDATE { get; set; }
         public string STATUSCHANGEREASON { get; set; }
-        [ModelAttribute("IsPrimary", ReportOption.Print)]
+        [ModelAttribute("IsPrimary", ReportOption.Skip)]
         public short ISPRIMARY { get; set; }
-        [ModelAttribute("CardType", ReportOption.Print)]
+        [ModelAttribute("CardType", ReportOption.Skip)]
         public decimal CARDTYPE { get; set; }
         public string CHANGEDBY { get; set; }
         public DateTime CREATEDATE { get; set; }

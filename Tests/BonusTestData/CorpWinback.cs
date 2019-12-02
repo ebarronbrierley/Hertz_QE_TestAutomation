@@ -78,7 +78,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                                         checkOutDate: DateTime.Now.AddDays(1).Comparable(),
                                         bookDate: DateTime.Now.Comparable(),
                                         program: programIn,
-                                        RSDNCTRYCD: resCountry, HODIndicator: 0, qualifyingAmount: Amount(i)));
+                                        RSDNCTRYCD: resCountry, HODIndicator: 0, rentalCharges: Amount(i)));
             }
             return output.ToArray();
         }

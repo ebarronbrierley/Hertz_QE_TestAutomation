@@ -32,7 +32,7 @@ namespace HertzNetFramework.DataModels
             OneClick newOneClick = new OneClick();
             newOneClick.loyaltynumber = loyaltynumberIN;
             newOneClick.promocode = promocodeIN;
-            newOneClick.clicktimestamp = "2019-08-02T00:00:01Z";
+            newOneClick.clicktimestamp = "2019-11-28T00:00:01Z";
             newOneClick.clickcategory = "OneClick_Registration";
             newOneClick.userId = "40031888129";
             newOneClick.recordTimestamp = "2016-11-19T14:27:51Z";

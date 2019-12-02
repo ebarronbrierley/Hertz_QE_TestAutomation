@@ -8,9 +8,12 @@ using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Framework;
 using Brierley.TestAutomation.Core.Reporting;
 using Brierley.TestAutomation.Core.Database;
+using Brierley.TestAutomation.Core.API;
 using System.Reflection;
 using System.Collections;
 using System.Linq.Expressions;
+using static HertzNetFramework.BrierleyTestFixture;
+using System.Globalization;
 
 namespace HertzNetFramework.DataModels
 {
@@ -157,7 +160,7 @@ namespace HertzNetFramework.DataModels
             if(memberStyle == MemberStyle.PreProjectOne)
             {
                 VirtualCard virtualCard = VirtualCard.Generate(member);
-                virtualCard.MemberDetails.Add(DataModels.MemberDetails.GenerateMemberDetails(member, program));
+                virtualCard.MemberDetails.Add(DataModels.MemberDetails.GenerateMemberDetails(member, program, tier));
                 virtualCard.MemberPreferences.Add(DataModels.MemberPreferences.Generate());
                 member.VirtualCards.Add(virtualCard);
                 member.ALTERNATEID = virtualCard.LOYALTYIDNUMBER;
@@ -252,6 +255,11 @@ namespace HertzNetFramework.DataModels
                         TestManager.Instance.AddAttachment<TestStep>(MethodBase.GetCurrentMethod().Name, capture.Output, Attachment.Type.Text);
                         memberOut = ConvertFromLWModel(lwMemberOut, member.style);
                         memberOut.style = member.style;
+
+                        //string query = $@"select vckey from bp_htz.lw_virtualcard where loyaltyidnumber = '{member.GetLoyaltyID()}'";
+                        //Hashtable ht = Database.QuerySingleRow(query);
+                        //decimal vckey = Convert.ToDecimal(ht["VCKEY"]);
+
                         return memberOut;
                     }
                 }
@@ -396,10 +404,36 @@ namespace HertzNetFramework.DataModels
             }
         }
 
-        #endregion
+        public static void AddReward(string alternateID, string typeCode, string vckey)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    using (LWIntegrationSvcClientManager client = new LWIntegrationSvcClientManager(EnvironmentManager.Get.SOAPServiceURL, "CDIS", true, string.Empty))
+                    {
+                        double time = 0;
+                        RewardOrderInfoStruct[] rewardInfoStruct = new RewardOrderInfoStruct[1];
+                        RewardOrderInfoStruct rewardInfo = new RewardOrderInfoStruct();
+                        rewardInfo.TypeCode = typeCode;
+                        rewardInfoStruct[0] = rewardInfo;
+                        string changedBy = "oagwuegbo";
+                        client.AddMemberRewards(alternateID, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, changedBy, rewardInfoStruct, string.Empty, out time);
+                        TestManager.Instance.AddAttachment<TestStep>(MethodBase.GetCurrentMethod().Name, capture.Output, Attachment.Type.Text);
 
-        #region LoyaltyWare DLL Data Conversion
-        private static Brierley.LoyaltyWare.ClientLib.DomainModel.Framework.Member ConvertToLWModel(Member member)
+                    }
+                }
+                catch(Exception ex)
+                {
+                    TestManager.Instance.AddAttachment<TestStep>(MethodBase.GetCurrentMethod().Name, capture.Output, Attachment.Type.Text);
+                    string message = ex.Message;
+                }
+            }
+        }
+     #endregion
+
+                        #region LoyaltyWare DLL Data Conversion
+                        private static Brierley.LoyaltyWare.ClientLib.DomainModel.Framework.Member ConvertToLWModel(Member member)
         {
             if (member.style == MemberStyle.PreProjectOne) return ConvertToPreProjectOneLWModel(member);
             else if (member.style == MemberStyle.ProjectOne) return ConvertToProjectOneLWModel(member);

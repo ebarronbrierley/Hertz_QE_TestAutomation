@@ -226,7 +226,8 @@ namespace HertzNetFramework.DataModels
                 A_CHKOUTDT = checkOutDate,
                 A_CHKOUTLOCNUM = "06",
                 A_CHKOUTAREANUM = "01474",
-                A_FTPTNRNUM = program.A_FTPTNRNUM,
+                //A_FTPTNRNUM = program.A_FTPTNRNUM,
+                A_FTPTNRNUM = "ZE%",
                 A_CHKOUTCITYCD = null,
                 A_CHKOUTWORLDWIDERGNCTRYISO = checkoutWorldWideISO ?? RSDNCTRYCD,
                 A_CHKOUTWWDSTPROVCD = StrongRandom.NumericString(2),
@@ -248,14 +249,14 @@ namespace HertzNetFramework.DataModels
                 A_PAITOTCHRGAMT = 0M,
                 A_ADDLAUTHDRVRCHRGAMT = 0M,
                 A_AGEDIFFCHRGAMT = 0M,
-                A_ADDLSRVCCHRGAMT = rentalCharges,
-                A_SBTOTAMT = rentalCharges,
+                A_ADDLSRVCCHRGAMT = 0M,
+                A_SBTOTAMT = 0M,
                 A_TOTCHRGAMT = 0M,
                 A_LISTOTCHRGAMT = 0M,
                 A_CHILDSEATTOTAMT = 0M,
                 A_ITVALLFEETOTAMT = 0M,
                 A_GARSPECLEQMNTAMT = 0M,
-                A_GRSREVNAMT = 0M,
+                A_GRSREVNAMT = rentalCharges,
                 A_MISCGRPAMT = 0M,
                 A_NVGTNSYSTOTAMT = 0M,
                 A_SATLTRADIOTOTAMT = 0M,
@@ -299,8 +300,8 @@ namespace HertzNetFramework.DataModels
                 A_TXNCREDITSUSED = null,
                 A_HODINDICATOR = HODIndicator              
         };
-        output.A_TXNQUALPURCHASEAMT = (output.A_SBTOTAMT+output.A_LDWCDWCHRGAMT + output.A_ADDLSRVCCHRGAMT + output.A_AGEDIFFCHRGAMT + output.A_ADDLAUTHDRVRCHRGAMT + output.A_CHILDSEATTOTAMT + output.A_MISCGRPAMT + output.A_GARSPECLEQMNTAMT + output.A_TOTCHRGAMT + output.A_NVGTNSYSTOTAMT + output.A_SATLTRADIOTOTAMT + output.A_REFUELINGCHRGAMT) * output.A_RNTINGCTRYCRNCYUSDEXCHRT;
-        output.A_QUALTOTAMT = (output.A_SBTOTAMT + output.A_LDWCDWCHRGAMT + output.A_ADDLSRVCCHRGAMT + output.A_AGEDIFFCHRGAMT + output.A_ADDLAUTHDRVRCHRGAMT + output.A_CHILDSEATTOTAMT + output.A_MISCGRPAMT + output.A_GARSPECLEQMNTAMT + output.A_TOTCHRGAMT + output.A_NVGTNSYSTOTAMT + output.A_SATLTRADIOTOTAMT + output.A_REFUELINGCHRGAMT) * output.A_RNTINGCTRYCRNCYUSDEXCHRT;
+        //output.A_TXNQUALPURCHASEAMT = (output.A_SBTOTAMT+output.A_LDWCDWCHRGAMT + output.A_ADDLSRVCCHRGAMT + output.A_AGEDIFFCHRGAMT + output.A_ADDLAUTHDRVRCHRGAMT + output.A_CHILDSEATTOTAMT + output.A_MISCGRPAMT + output.A_GARSPECLEQMNTAMT + output.A_TOTCHRGAMT + output.A_NVGTNSYSTOTAMT + output.A_SATLTRADIOTOTAMT + output.A_REFUELINGCHRGAMT) * output.A_RNTINGCTRYCRNCYUSDEXCHRT;
+        //output.A_QUALTOTAMT = (output.A_SBTOTAMT + output.A_LDWCDWCHRGAMT + output.A_ADDLSRVCCHRGAMT + output.A_AGEDIFFCHRGAMT + output.A_ADDLAUTHDRVRCHRGAMT + output.A_CHILDSEATTOTAMT + output.A_MISCGRPAMT + output.A_GARSPECLEQMNTAMT + output.A_TOTCHRGAMT + output.A_NVGTNSYSTOTAMT + output.A_SATLTRADIOTOTAMT + output.A_REFUELINGCHRGAMT) * output.A_RNTINGCTRYCRNCYUSDEXCHRT;
 
             return output;
         }
