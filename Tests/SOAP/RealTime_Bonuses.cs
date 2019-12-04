@@ -21,13 +21,15 @@ namespace HertzNetFramework.Tests.SOAP
         [Category("Bonus_Positive")]
         [Category("Bonus")]
         [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(Corp550Points_2016Activity), "PositiveScenarios")]
+        //CDP are expired for Corp550Points_2016Activity
+        //[TestCaseSource(typeof(Corp550Points_2016Activity), "PositiveScenarios")]
         [TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")] 
         [TestCaseSource(typeof(GPRAAABonusActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(ACIActivation800Activity), "PositiveScenarios")]
         [TestCaseSource(typeof(HorizonCardPointsActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(OngoingEMEABirthdayActivity),"PositiveScenarios")]
-        [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
+        // TopGolf_2019_GPR2XBonus is expired
+        // [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
         [TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(LapsedOnGoingActivity), "PositiveScenarios")]
