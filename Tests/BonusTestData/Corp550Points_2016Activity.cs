@@ -42,15 +42,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                         Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
                                                                                      .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
                         ,
-                        //new TxnHeader[] {
-                        //    TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
-                        //                checkOutDate:DateTime.Now.Comparable(),
-                        //                bookDate:DateTime.Now.Comparable(),
-                        //                program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"),
-                        //                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount, sacCode: "Y",
-                        //                contractTypeCode: ContractTypeCode, contractNumber: validContract, checkoutWorldWideISO: ValidCHKWORLDWIDECTRYCDs[0])
-
-                                         new TxnHeader[] {
+                           new TxnHeader[] {
                             TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                         checkOutDate:DateTime.Now.Comparable(),
                                         bookDate:DateTime.Now.Comparable(),
