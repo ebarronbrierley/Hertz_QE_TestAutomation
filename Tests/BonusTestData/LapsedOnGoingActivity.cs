@@ -22,6 +22,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle };
         public static TimeSpan ValidRentalLength = TimeSpan.FromDays(1);
         public static TimeSpan ValidTimeFromPromotion = TimeSpan.FromDays(90);
+        public const string ChkOutLocId = "00004";
 
         public static IEnumerable PositiveScenarios
         {
@@ -70,6 +71,24 @@ namespace HertzNetFramework.Tests.BonusTestData
                          .SetCategory(BonusTestCategory.Regression)
                          .SetCategory(BonusTestCategory.Positive)
                          .SetCategory(BonusTestCategory.Smoke);
+                        yield return new TestCaseData(
+                           Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                                                                                           .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
+                           ,
+                           new TxnHeader[] {
+                                    TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
+                                    checkOutDate:DateTime.Now.AddDays(1).Comparable(),
+                                    bookDate:DateTime.Now.AddDays(1).Comparable(),
+                                    program: validProgram.Set(validTier.Code,"SpecificTier"),
+                                    RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
+                                    contractTypeCode: ContractTypeCode, checkoutWorldWideISO: ValidRSDNCTRYCDs[0],chkoutlocnum:null,chkoutareanum:null,chkoutlocid: ChkOutLocId)
+                           },
+                            new ExpectedPointEvent[] { new ExpectedPointEvent(PointEventName, PointEventAmount) },
+                           new string[] { "GPRLapsedOnGoing" }
+                       ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, Tier={validTier.Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]},CHKOUTLOCID = {ChkOutLocId}")
+                        .SetCategory(BonusTestCategory.Regression)
+                        .SetCategory(BonusTestCategory.Positive)
+                        .SetCategory(BonusTestCategory.Smoke);
                     }
                 }
             }

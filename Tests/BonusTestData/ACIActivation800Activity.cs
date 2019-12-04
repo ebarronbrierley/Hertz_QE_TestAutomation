@@ -28,6 +28,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static TimeSpan ValidRentalLength = TimeSpan.FromDays(1);
         public static readonly DateTime StartDate = DateTime.Parse("08/01/2018");
         public static readonly DateTime EndDate = DateTime.Parse("08/01/2099");
+        public const string ChkOutLocId = "00004";
 
 
         public static IEnumerable PositiveScenarios
@@ -52,11 +53,32 @@ namespace HertzNetFramework.Tests.BonusTestData
                                 bookDate:DateTime.Now.Comparable(),
                                 program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
+                                contractTypeCode: ValidContractTypeCode,chkoutlocnum:null,chkoutareanum:null,chkoutlocid: ChkOutLocId)
+                            },
+                            ExpectedPointEvents,
+                            new string[] { }
+                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference},ChkOutLocId={ChkOutLocId}, Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                         .SetCategory(BonusTestCategory.Regression)
+                         .SetCategory(BonusTestCategory.Positive)
+                         .SetCategory(BonusTestCategory.Smoke);                 
+
+                        yield return new TestCaseData(
+                            Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                                                                                          .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
+                                                                                          .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
+                                                                                          .Set(ValidContractSegment, "MemberDetails.A_CONTRACTSEGMENTTYPE")
+                            ,
+                            new TxnHeader[] {
+                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                checkOutDate:DateTime.Now.Comparable(),
+                                bookDate:DateTime.Now.Comparable(),
+                                program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
                                 contractTypeCode: ValidContractTypeCode)
                             },
                             ExpectedPointEvents,
                             new string[] { }
-                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference},Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
                          .SetCategory(BonusTestCategory.Regression)
                          .SetCategory(BonusTestCategory.Positive)
                          .SetCategory(BonusTestCategory.Smoke);
@@ -136,7 +158,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                             RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
                             contractTypeCode: ValidContractTypeCode)
                             },
-                            ExpectedPointEvents,
+                           ExpectedPointEvents,
                             new string[] { }
                         ).SetName($"{PointEventName}. Invalid EarningPref={invalidProgram.EarningPreference}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
                             .SetCategory(BonusTestCategory.Regression)
@@ -159,7 +181,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
                                 contractTypeCode: ValidContractTypeCode)
                                 },
-                                ExpectedPointEvents,
+                              ExpectedPointEvents,
                                 new string[] { }
                             ).SetName($"{PointEventName}. Invalid CDP = {invalidCDP}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
                              .SetCategory(BonusTestCategory.Regression)

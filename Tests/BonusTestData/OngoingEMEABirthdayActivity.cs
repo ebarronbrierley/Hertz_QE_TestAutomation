@@ -23,6 +23,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static TimeSpan ValidBookingDateFromEnroll = TimeSpan.FromDays(60);
         public static readonly DateTime StartDate = DateTime.Parse("01/01/2018");
         public static readonly DateTime EndDate = DateTime.Parse("01/01/2099");
+        public const string ChkOutLocId = "00004";
 
 
         public static IEnumerable PositiveScenarios
@@ -52,6 +53,23 @@ namespace HertzNetFramework.Tests.BonusTestData
                          .SetCategory(BonusTestCategory.Regression)
                          .SetCategory(BonusTestCategory.Positive)
                          .SetCategory(BonusTestCategory.Smoke);
+                        yield return new TestCaseData(
+                          Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                                                                                        .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
+                          ,
+                          new TxnHeader[] {
+                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                checkOutDate:DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).Comparable(),
+                                bookDate:DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).Comparable(),
+                                program: validProgram.Set(validTier.Code,"SpecificTier"),
+                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,chkoutlocnum:null,chkoutareanum:null,chkoutlocid: ChkOutLocId)
+                          },
+                          ExpectedPointEvents,
+                          new string[] { "EMEA60DayBirthdayEM" }
+                      ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, ChkOutLocId ={ChkOutLocId}, Tier={validTier.Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                       .SetCategory(BonusTestCategory.Regression)
+                       .SetCategory(BonusTestCategory.Positive)
+                       .SetCategory(BonusTestCategory.Smoke);
                     }
                 }
                 foreach (string validRSDN in ValidRSDNCTRYCDs)

@@ -21,20 +21,20 @@ namespace HertzNetFramework.Tests.SOAP
         [Category("Bonus_Positive")]
         [Category("Bonus")]
         [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(Corp550Points_2016Activity), "PositiveScenarios")]
+        //No active CDPs exists for this promotion
+      //  [TestCaseSource(typeof(Corp550Points_2016Activity), "PositiveScenarios")]
         [TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")] 
         [TestCaseSource(typeof(GPRAAABonusActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(ACIActivation800Activity), "PositiveScenarios")]
         [TestCaseSource(typeof(HorizonCardPointsActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(OngoingEMEABirthdayActivity),"PositiveScenarios")]
-        [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
+        //This promotion is expired
+      //  [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "PositiveScenarios")]
         [TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "PositiveScenarios")]
         [TestCaseSource(typeof(LapsedOnGoingActivity), "PositiveScenarios")]
         public void RealTime_Bonus_Positive(Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes)
-        {
-
-            
+        {            
             try
             {
                 Member createMember = member.MakeVirtualCardLIDsUnique(Database);
@@ -145,12 +145,12 @@ namespace HertzNetFramework.Tests.SOAP
         [TestCaseSource(typeof(ACIActivation800Activity), "NegativeScenarios")]
         [TestCaseSource(typeof(HorizonCardPointsActivity), "NegativeScenarios")]
         [TestCaseSource(typeof(OngoingEMEABirthdayActivity), "NegativeScenarios")]
-        [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "NegativeScenarios")]
+      //  [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "NegativeScenarios")]
         [TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "NegativeScenarios")]
         [TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "NegativeScenarios")]
         [TestCaseSource(typeof(LapsedOnGoingActivity), "NegativeScenarios")]
-        public void RealTime_Bonus_Negative(Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes = null)
-        {
+        public void RealTime_Bonus_Negative(Member member, TxnHeader[] transactions, ExpectedPointEvent[] pointEventsNotPresent, string[] requiredPromotionCodes = null)
+         {
             try
             {
                 Member createMember = member.MakeVirtualCardLIDsUnique(Database);
@@ -213,25 +213,32 @@ namespace HertzNetFramework.Tests.SOAP
                 BPTest.Pass<TestStep>("Point event(s) exists for member", ptTransactions.ReportDetail());
 
 
-                BPTest.Start<TestStep>($"Verify point event(s) match expected {String.Join(",", expectedPointEvents.Select(x => x.PointEventName))}", "Point transaction should contain expected point event(s)");
-                List<PointEvent> pointEvents = PointEvent.GetFromDB(Database, ptTransactions.Select(x => x.POINTEVENTID).ToArray()).ToList();
-                List<string> pointEventNames = ptTransactions.Select(x => pointEvents.Find(y => y.POINTEVENTID == x.POINTEVENTID).NAME).ToList();
-                List<string> expectedPointEventNames = expectedPointEvents.Select(x => x.PointEventName).ToList();
-                Assert.IsTrue(!expectedPointEventNames.Except(pointEventNames).Any(), $"Expected point events {String.Join(",", expectedPointEventNames)} - Actual {String.Join(",", pointEventNames)}");
-                BPTest.Pass<TestStep>("Point event(s) exists for member", pointEvents.ReportDetail());
+                //BPTest.Start<TestStep>($"Verify point event(s) match expected {String.Join(",", expectedPointEvents.Select(x => x.PointEventName))}", "Point transaction should contain expected point event(s)");
+                //List<PointEvent> pointEvents = PointEvent.GetFromDB(Database, ptTransactions.Select(x => x.POINTEVENTID).ToArray()).ToList();
+                //List<string> pointEventNames = ptTransactions.Select(x => pointEvents.Find(y => y.POINTEVENTID == x.POINTEVENTID).NAME).ToList();
+                //List<string> expectedPointEventNames = expectedPointEvents.Select(x => x.PointEventName).ToList();
+                //Assert.IsTrue(!expectedPointEventNames.Except(pointEventNames).Any(), $"Expected point events {String.Join(",", expectedPointEventNames)} - Actual {String.Join(",", pointEventNames)}");
+                //BPTest.Pass<TestStep>("Point event(s) exists for member", pointEvents.ReportDetail());
 
 
-                List<PointTransaction> ptTransCompare = ptTransactions.ToList();
-                foreach (ExpectedPointEvent expectedEvent in expectedPointEvents)
-                {
-                    PointEvent ptEvent = pointEvents.Find(x => x.NAME.Equals(expectedEvent.PointEventName));
-                    BPTest.Start<TestStep>($"Verify point event {expectedEvent.PointEventName} points =  {expectedEvent.PointAmount}", $"Points for event {expectedEvent.PointEventName} should be {expectedEvent.PointAmount}");
-                    PointTransaction ptTransaction = ptTransCompare.Find(x => x.POINTEVENTID == ptEvent.POINTEVENTID && x.POINTS == expectedEvent.PointAmount);
-                    Assert.NotNull(ptTransaction, $"Expected point transaction Name:{expectedEvent.PointEventName} Point Value: {expectedEvent.PointAmount} was not found");
-                    Assert.AreEqual(expectedEvent.PointAmount, ptTransaction.POINTS, $"Expected points for {expectedEvent.PointEventName} do not match");
-                    BPTest.Pass<TestStep>($"Points for event {expectedEvent.PointEventName} match expected: {expectedEvent.PointAmount}", ptTransaction.ReportDetail());
-                    ptTransCompare.Remove(ptTransaction);
-                }
+                //List<PointTransaction> ptTransCompare = ptTransactions.ToList();
+                //foreach (ExpectedPointEvent expectedEvent in expectedPointEvents)
+                //{
+                //    PointEvent ptEvent = pointEvents.Find(x => x.NAME.Equals(expectedEvent.PointEventName));
+                //    BPTest.Start<TestStep>($"Verify point event {expectedEvent.PointEventName} points =  {expectedEvent.PointAmount}", $"Points for event {expectedEvent.PointEventName} should be {expectedEvent.PointAmount}");
+                //    PointTransaction ptTransaction = ptTransCompare.Find(x => x.POINTEVENTID == ptEvent.POINTEVENTID && x.POINTS == expectedEvent.PointAmount);
+                //    Assert.NotNull(ptTransaction, $"Expected point transaction Name:{expectedEvent.PointEventName} Point Value: {expectedEvent.PointAmount} was not found");
+                //    Assert.AreEqual(expectedEvent.PointAmount, ptTransaction.POINTS, $"Expected points for {expectedEvent.PointEventName} do not match");
+                //    BPTest.Pass<TestStep>($"Points for event {expectedEvent.PointEventName} match expected: {expectedEvent.PointAmount}", ptTransaction.ReportDetail());
+                //    ptTransCompare.Remove(ptTransaction);
+                //}
+                BPTest.Start<TestStep>($"Verify point event(s) {String.Join(",", pointEventsNotPresent.Select(x => x.PointEventName))} are not present for member", "Point transaction should not contain point event(s)");
+                IEnumerable<PointEvent> pointEvents = new List<PointEvent>();
+                if (ptTransactions.Count() > 0) pointEvents = PointEvent.GetFromDB(Database, ptTransactions.Select(x => x.POINTEVENTID).ToArray());
+                List<string> pointEventNames = pointEvents.Select(x => x.NAME).ToList();
+                Assert.IsTrue(pointEventNames.Intersect(pointEventsNotPresent.Select(x => x.PointEventName)).Count() == 0, $"{String.Join(",", pointEventNames.Intersect(pointEventsNotPresent.Select(x => x.PointEventName)))} should not be present for member");
+                BPTest.Pass<TestStep>("Point event(s) do not exist for member", pointEvents.ReportDetail());
+
 
             }
             catch (LWServiceException ex)

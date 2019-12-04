@@ -16,7 +16,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static readonly DateTime StartDate = DateTime.Parse("06/15/2019 12:00:01 AM");
         public static readonly DateTime EndDate = DateTime.Parse("09/15/2019 12:00:00 AM");
 
-        public static readonly string[] ValidCHKOUTWORLDWIDERGNCTRYISO = new string[] { "US","CA","PR","VI" };
+        public static readonly string[] ValidCHKOUTWORLDWIDERGNCTRYISO = new string[] { "US", "CA", "PR", "VI" };
         public static readonly decimal[] ValidCDPs = new decimal[] { 2152921M };
         public static readonly IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
         public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle, GPR.Tier.Platinum, GPR.Tier.PlatinumSelect, GPR.Tier.PlatinumVIP };
