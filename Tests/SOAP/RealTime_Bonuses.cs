@@ -21,7 +21,7 @@ namespace HertzNetFramework.Tests.SOAP
         [Category("Bonus_Positive")]
         [Category("Bonus")]
         [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
-        //CDP are expired for Corp550Points_2016Activity
+        //CDPs are expired for Corp550Points_2016Activity
         //[TestCaseSource(typeof(Corp550Points_2016Activity), "PositiveScenarios")]
         [TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")] 
         [TestCaseSource(typeof(GPRAAABonusActivity), "PositiveScenarios")]
@@ -35,8 +35,7 @@ namespace HertzNetFramework.Tests.SOAP
         [TestCaseSource(typeof(LapsedOnGoingActivity), "PositiveScenarios")]
         public void RealTime_Bonus_Positive(Member member, TxnHeader[] transactions, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes)
         {
-
-            
+                        
             try
             {
                 Member createMember = member.MakeVirtualCardLIDsUnique(Database);
