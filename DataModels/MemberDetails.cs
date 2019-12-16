@@ -218,7 +218,7 @@ namespace HertzNetFramework.DataModels
             details.A_OTHERCITY = null;
             details.A_OTHERSTATEORPROVINCE = null;
             details.A_OTHERZIPORPOSTALCODE = null;
-            details.A_TIERENDDATE = new DateTime(2099, 12, 31);
+            details.A_TIERENDDATE = new DateTime(2019, 12, 31);
             return details;
         }
 

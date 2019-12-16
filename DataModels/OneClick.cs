@@ -12,6 +12,8 @@ using Brierley.TestAutomation.Core.Database;
 using System.Reflection;
 using System.Collections;
 using System.Linq.Expressions;
+using Brierley.TestAutomation.Core.API;
+using Newtonsoft.Json.Linq;
 
 namespace HertzNetFramework.DataModels
 {
@@ -32,7 +34,7 @@ namespace HertzNetFramework.DataModels
             OneClick newOneClick = new OneClick();
             newOneClick.loyaltynumber = loyaltynumberIN;
             newOneClick.promocode = promocodeIN;
-            newOneClick.clicktimestamp = "2019-11-28T00:00:01Z";
+            newOneClick.clicktimestamp = "2019-12-12T00:00:01Z";
             newOneClick.clickcategory = "OneClick_Registration";
             newOneClick.userId = "40031888129";
             newOneClick.recordTimestamp = "2016-11-19T14:27:51Z";
@@ -50,6 +52,30 @@ namespace HertzNetFramework.DataModels
             sb.Append($"{loyaltynumber}|{promocode}|{clicktimestamp}|{clickcategory}|{userId}|{recordTimestamp}|{recordType}|{userAltEmail}");
             return sb.ToString();
             
+        }
+
+        public static void RunDAP()
+        {
+            string jobName = "HertzBLine - DAP Process One Click Registration";
+
+            RestConfiguration restConfig = new RestConfiguration()
+            {
+                BaseURL = "http://CY2QAAPP05:8001/VisualCron/json",
+                EndPoint = $"/Job/GetByName?password=7d7Yu^m&username=qa_htz_srv_acct&name={jobName}"
+            };
+
+            RestResponse restResponse = Rest.Get(restConfig).Execute();
+
+            JObject responseBody = JObject.Parse(restResponse.MessageBody);
+            string jobID = (string)responseBody["Id"];
+            restConfig = new RestConfiguration()
+            {
+                BaseURL = "http://CY2QAAPP05:8001/VisualCron/json",
+                EndPoint = $"/Job/Run?password=7d7Yu^m&username=qa_htz_srv_acct&id={jobID}"
+            };
+
+            restResponse = Rest.Get(restConfig).Execute();
+
         }
     }
 }

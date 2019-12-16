@@ -67,9 +67,9 @@ namespace HertzNetFramework.Tests.SOAP
                 BPTest.Pass<TestStep>($"Step 1 Passed: RG Member Created");
 
                 BPTest.Start<TestStep>($"Step 2: Update With Transaction");
-                DateTime checkInDt = new DateTime(2019, 10, 23);
-                DateTime checkOutDt = new DateTime(2019, 10, 22);
-                DateTime origBkDt = new DateTime(2019, 10, 22);
+                DateTime checkInDt = new DateTime(2019, 12, 12);
+                DateTime checkOutDt = new DateTime(2019, 12, 11);
+                DateTime origBkDt = new DateTime(2019, 12, 11);
                 decimal? cdp = null;
 
                 TxnHeader txnHeaderRG = TxnHeader.Generate(RGLoyaltyID, checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, null, "US", pointsEarnRG, "AAAA", 246095, "N", "US", null);
@@ -289,7 +289,7 @@ namespace HertzNetFramework.Tests.SOAP
 "10576738",
 "10576739",
 "10576740"};
-                foreach(string pointevent in pointevents)
+                foreach(string pointevent in pointeventsStage)
                 {
                     string queryRG = $@"select pt.pointeventid from bp_htz.lw_pointtransaction pt where pt.vckey = '{vckeyRG}' and pt.pointeventid = '{pointevent}'";
                     string queryFG = $@"select pt.pointeventid from bp_htz.lw_pointtransaction pt where pt.vckey = '{vckeyFG}' and pt.pointeventid = '{pointevent}'";

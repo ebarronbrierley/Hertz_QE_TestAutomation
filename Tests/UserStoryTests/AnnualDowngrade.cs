@@ -27,10 +27,14 @@ namespace HertzNetFramework.Tests.UserStoryTests
             try
             {
                 BPTest.Start<TestStep>($"Step 1: Create Member and Execute Transaction");
-                string tier = "RG";
-                Member testMember1 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
-                Member testMember2 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
-                Member testMember3 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
+                string tierRG = "RG";
+                string tierFG = "FG";
+                string tierPC = "PC";
+                string tierPL = "PL";
+                string mktCode = "SIEMN";
+                Member testMember1 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierRG, "MemberDetails.A_TIERCODE").Set(mktCode, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
+                Member testMember2 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierFG, "MemberDetails.A_TIERCODE").Set(mktCode, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
+                Member testMember3 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierPC, "MemberDetails.A_TIERCODE").Set(mktCode, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
                 Member.AddMember(testMember1);
                 Member.AddMember(testMember2);
                 Member.AddMember(testMember3);
@@ -49,21 +53,59 @@ namespace HertzNetFramework.Tests.UserStoryTests
                 DateTime origBkDt = new DateTime(2019, 11, 1);
                 BPTest.Pass<TestStep>($"Step 1 Passed");
 
-                BPTest.Start<TestStep>($"Step 2: Update Members with Transaction");
+                //BPTest.Start<TestStep>($"Step 2: Update Members with Transaction");
 
-                TxnHeader txnHeader1 = TxnHeader.Generate(loyaltyid1, checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "US", pointsTierRG, null, null, "N", "US", null);
-                testMember1.AddTransaction(txnHeader1);
-                Member.UpdateMember(testMember1);
-                TxnHeader txnHeader2 = TxnHeader.Generate(loyaltyid2, checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "US", pointsTierFG, null, null, "N", "US", null);
-                testMember2.AddTransaction(txnHeader2);
-                Member.UpdateMember(testMember2);
-                TxnHeader txnHeader3 = TxnHeader.Generate(loyaltyid3, checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "US", pointsTierPC, null, null, "N", "US", null);
-                testMember3.AddTransaction(txnHeader3);
-                Member.UpdateMember(testMember3);
+                //TxnHeader txnHeader1 = TxnHeader.Generate(loyaltyid1, checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "US", pointsTierRG, null, null, "N", "US", null);
+                //testMember1.AddTransaction(txnHeader1);
+                //Member.UpdateMember(testMember1);
+                //TxnHeader txnHeader2 = TxnHeader.Generate(loyaltyid2, checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "US", pointsTierFG, null, null, "N", "US", null);
+                //testMember2.AddTransaction(txnHeader2);
+                //Member.UpdateMember(testMember2);
+                //TxnHeader txnHeader3 = TxnHeader.Generate(loyaltyid3, checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "US", pointsTierPC, null, null, "N", "US", null);
+                //testMember3.AddTransaction(txnHeader3);
+                //Member.UpdateMember(testMember3);
 
-                BPTest.Pass<TestStep>($"Step 2 Passed");
+                //BPTest.Pass<TestStep>($"Step 2 Passed");
 
-                
+
+
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+
+        }
+
+        [Test]
+        public void AnnualDowngradeTest2()
+        {
+            try
+            {
+                BPTest.Start<TestStep>($"Step 1: Create Member and Execute Transaction");
+                string tierRG = "RG";
+                string tierFG = "FG";
+                string tierPC = "PC";
+                string[] mktCode = { "EWB19", "AD19F", "AD19P", "BTEMF", "BTEMP", "BU19F", "BU19P", "BT19F", "BT19P" };
+                string[] mktCode2 = { "BU19F", "BU19P", "BT19F", "BT19P" };
+                foreach (string code in mktCode)
+                {
+                    Member testMember1 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierRG, "MemberDetails.A_TIERCODE").Set(code, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE").Set(2, "MemberDetails.A_MEMBERSTATUSCODE"); 
+                    Member testMember2 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierFG, "MemberDetails.A_TIERCODE").Set(code, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE").Set(2, "MemberDetails.A_MEMBERSTATUSCODE"); 
+                    Member testMember3 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierPC, "MemberDetails.A_TIERCODE").Set(code, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE").Set(2, "MemberDetails.A_MEMBERSTATUSCODE"); 
+                    Member.AddMember(testMember1);
+                    Member.AddMember(testMember2);
+                    Member.AddMember(testMember3);
+                    string loyaltyid1 = testMember1.GetLoyaltyID();
+                    string alternateid1 = testMember1.ALTERNATEID;
+                    string loyaltyid2 = testMember2.GetLoyaltyID();
+                    string alternateid2 = testMember2.ALTERNATEID;
+                    string loyaltyid3 = testMember3.GetLoyaltyID();
+                    string alternateid3 = testMember3.ALTERNATEID;
+                }
+                BPTest.Pass<TestStep>($"Step 1 Passed");
+
+
 
             }
             catch (Exception ex)
@@ -110,7 +152,7 @@ namespace HertzNetFramework.Tests.UserStoryTests
 
         }
 
-        [Test]
+     
         public void vcjobTest()
         {
             BPTest.Start<TestStep>($"Step 1: Run VC Job");
