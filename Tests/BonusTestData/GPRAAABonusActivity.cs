@@ -24,6 +24,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static readonly string[] ValidRSDNCTRYCDs = new string[]{ "US", "PR" };
         public static readonly IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
         public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle, GPR.Tier.Platinum };
+        public const string ChkOutLocId = "00004";
 
         public static IEnumerable PositiveScenarios 
         {
@@ -65,6 +66,15 @@ namespace HertzNetFramework.Tests.BonusTestData
                             GenerateExpectedPoints(transactionCount, validTier),
                             new string[] { }
                         ).SetName($"{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]}");
+                        for (int transactionCount = 2; transactionCount < 7; transactionCount++)
+                        yield return new TestCaseData(
+                          Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                                                                                                      .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
+                                                                                                      .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY"),
+                          GenerateTxns(transactionCount, ValidCDPs[0], validProgram.Set(validTier.Code, "SpecificTier"), chkOutLocNum:null, chkOutAreaNum: null,chkoutLocId: ChkOutLocId),
+                          GenerateExpectedPoints(transactionCount, validTier),
+                          new string[] { }
+                      ).SetName($"{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]},CHKOUTLOCID:{ChkOutLocId}");
                     }
                 }
             }
@@ -81,7 +91,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         {
             return (BaseAmount + (BaseAmount * num));
         }
-        private static TxnHeader[] GenerateTxns(int num, decimal cdp, IHertzProgram programIn, string resCountry = "US")
+        private static TxnHeader[] GenerateTxns(int num, decimal cdp, IHertzProgram programIn, string resCountry = "US", string chkOutLocNum = "06", string chkOutAreaNum ="01474", string chkoutLocId = null)
         {
             List<TxnHeader> output = new List<TxnHeader>();
             for (int i = 0; i < num; i++)
@@ -90,7 +100,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                                         checkOutDate: DateTime.Now.AddDays(1).Comparable(),
                                         bookDate: DateTime.Now.Comparable(),
                                         program: programIn,
-                                        RSDNCTRYCD: resCountry, HODIndicator: 0, rentalCharges: Amount(i), CDP: cdp));
+                                        RSDNCTRYCD: resCountry, HODIndicator: 0, rentalCharges: Amount(i), CDP: cdp,chkoutlocnum: chkOutLocNum, chkoutareanum: chkOutAreaNum, chkoutlocid: chkoutLocId));
             }
             return output.ToArray();
         }
