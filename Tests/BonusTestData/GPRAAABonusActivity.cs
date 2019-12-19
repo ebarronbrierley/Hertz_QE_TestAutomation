@@ -33,7 +33,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                 foreach (decimal validCDP in ValidCDPs)
                 {
                     yield return new TestCaseData(
-                        Member.GenerateRandom(MemberStyle.PreProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
+                        Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
                                                                                                     .Set(validCDP, "MemberDetails.A_CDPNUMBER")
                                                                                                     .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY"),
                         GenerateTxns(2, validCDP, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier")),
@@ -44,7 +44,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                 foreach (string rsdnCtry in ValidRSDNCTRYCDs)
                 {
                     yield return new TestCaseData(
-                        Member.GenerateRandom(MemberStyle.PreProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
+                        Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
                                                                                                     .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
                                                                                                     .Set(rsdnCtry, "MemberDetails.A_COUNTRY"),
                         GenerateTxns(2, ValidCDPs[0], ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"), rsdnCtry),
@@ -59,7 +59,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                         if (!ValidTiers.ToList().Any(x => x.Name.Equals(validTier.Name))) continue;
                         for(int transactionCount =2; transactionCount < 7; transactionCount++)
                         yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.PreProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                            Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
                                                                                                         .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
                                                                                                         .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY"),
                             GenerateTxns(transactionCount, ValidCDPs[0], validProgram.Set(validTier.Code, "SpecificTier")),
@@ -68,7 +68,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                         ).SetName($"{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]}");
                         for (int transactionCount = 2; transactionCount < 7; transactionCount++)
                         yield return new TestCaseData(
-                          Member.GenerateRandom(MemberStyle.PreProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                          Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
                                                                                                       .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
                                                                                                       .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY"),
                           GenerateTxns(transactionCount, ValidCDPs[0], validProgram.Set(validTier.Code, "SpecificTier"), chkOutLocNum:null, chkOutAreaNum: null,chkoutLocId: ChkOutLocId),

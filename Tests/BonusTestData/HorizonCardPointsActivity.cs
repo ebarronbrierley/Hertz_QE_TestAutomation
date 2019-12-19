@@ -35,7 +35,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                         if (!ValidTiers.ToList().Any(x => x.Name.Equals(validTier.Name))) continue;
 
                         yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.PreProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                            Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
                                                                                           .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
                                                                                           .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
                             ,
@@ -57,7 +57,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                 foreach (decimal validCDP in ValidCDPs)
                 {
                     yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.PreProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
+                            Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
                                                                                           .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
                                                                                           .Set(validCDP, "MemberDetails.A_CDPNUMBER")
                             ,
@@ -75,7 +75,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                          .SetCategory(BonusTestCategory.Positive)
                          .SetCategory(BonusTestCategory.Smoke);
                     yield return new TestCaseData(
-                           Member.GenerateRandom(MemberStyle.PreProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
+                           Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
                                                                                          .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
                                                                                          .Set(validCDP, "MemberDetails.A_CDPNUMBER")
                            ,
@@ -96,7 +96,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                 foreach (string validRSDN in ValidRSDNCTRYCDs)
                 {
                     yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.PreProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
+                            Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
                                                                                           .Set(validRSDN, "MemberDetails.A_COUNTRY")
                                                                                           .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
                             ,
