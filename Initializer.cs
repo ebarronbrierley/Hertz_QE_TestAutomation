@@ -34,7 +34,7 @@ public class AssemblyInit
             TestManager.Instance.End<TestSuite>();
 
             File.WriteAllText(EnvironmentManager.Get.ReportPath + EnvironmentManager.Get.ReportName, TestManager.Instance.GenerateReport());
-            if (EnvironmentManager.Get.isDBReportingRequired)
+            if (EnvironmentManager.Get.IsDBReportingRequired)
                 TestManager.Instance.PostResultsToServer();
 
             Directory.Delete(EnvironmentManager.Get.TempFilesPath); //Delete the temporary files directory to clean up workspace
