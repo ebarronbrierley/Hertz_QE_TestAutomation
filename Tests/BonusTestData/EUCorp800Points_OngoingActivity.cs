@@ -90,7 +90,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                                         checkOutDate:DateTime.Now.Comparable(),
                                         bookDate:DateTime.Now.Comparable(),
                                         program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"),
-                                        RSDNCTRYCD: ValidRSDNCTRYCDs[1], HODIndicator: 0, rentalCharges: BaseTxnAmount, sacCode: "Y",
+                                        RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount, sacCode: "Y",
                                         contractTypeCode: ContractTypeCode, CDP: ValidCDPs[0], checkoutWorldWideISO: wwCheckout)
                         },
                         ExpectedPointEvents,

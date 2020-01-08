@@ -10,9 +10,7 @@ namespace HertzNetFramework.Tests.BonusTestData
 {
     public class VisaInfinite10RGBonusActivity
     {
-        public const string PointEventName = "VisaInfinite10RGBo" +
-            "" +
-            "nusActivity";
+        public const string PointEventName = "VisaInfinite10RGBonusActivity";
         public const decimal BaseTxnAmount = 100M;
         public const decimal PointEventAmount = BaseTxnAmount;
         public static readonly DateTime StartDate = DateTime.Parse("03/01/19 12:00:01 AM");
