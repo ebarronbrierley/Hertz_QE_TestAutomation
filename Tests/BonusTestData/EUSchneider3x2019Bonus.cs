@@ -18,7 +18,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static readonly DateTime EndDate = DateTime.Parse("12/31/2019 12:00:00 AM");
 
         public static readonly string[] ValidRSDNCTRYCDs = new string[] { "BE", "FR", "DE", "IT", "LU", "NL", "ES", "CH", "GB", "IE", "SE", "NO", "DK", "FI" };
-        // 524304M  is removed from the below list since it's in the exclusion list since 2013( refer HTZ-20830 ) 
+       
         public static readonly decimal[] ValidCDPs = new decimal[] { 830063M, 777967M, 771845M, 771844M, 797934M, 772513M, 867985M, 867984M, 825961M, 820736M, 818718M,
                                                                      818717M, 677115M, 525278M, 967352M, 963004M, 852405M, 852374M, 851608M, 851595M, 824332M, 794724M,
                                                                      629921M, 629910M, 629881M, 629878M, 629875M, 629872M, 629869M, 629829M, 629815M, 629812M, 629811M,
