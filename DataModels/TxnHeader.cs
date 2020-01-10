@@ -299,9 +299,7 @@ namespace HertzNetFramework.DataModels
                 A_TXNCREDITSUSED = null,
                 A_HODINDICATOR = HODIndicator,
                 A_CHKOUTLOCATIONID = chkoutlocid
-        };
-            //output.A_TXNQUALPURCHASEAMT = (output.A_SBTOTAMT + output.A_LDWCDWCHRGAMT + output.A_ADDLSRVCCHRGAMT + output.A_AGEDIFFCHRGAMT + output.A_ADDLAUTHDRVRCHRGAMT + output.A_CHILDSEATTOTAMT + output.A_MISCGRPAMT + output.A_GARSPECLEQMNTAMT + output.A_TOTCHRGAMT + output.A_NVGTNSYSTOTAMT + output.A_SATLTRADIOTOTAMT + output.A_REFUELINGCHRGAMT) * output.A_RNTINGCTRYCRNCYUSDEXCHRT;
-            //output.A_QUALTOTAMT = (output.A_SBTOTAMT + output.A_LDWCDWCHRGAMT + output.A_ADDLSRVCCHRGAMT + output.A_AGEDIFFCHRGAMT + output.A_ADDLAUTHDRVRCHRGAMT + output.A_CHILDSEATTOTAMT + output.A_MISCGRPAMT + output.A_GARSPECLEQMNTAMT + output.A_TOTCHRGAMT + output.A_NVGTNSYSTOTAMT + output.A_SATLTRADIOTOTAMT + output.A_REFUELINGCHRGAMT) * output.A_RNTINGCTRYCRNCYUSDEXCHRT;
+        };           
 
             return output;
         }
@@ -313,7 +311,12 @@ namespace HertzNetFramework.DataModels
 
             return db.Query<TxnHeader>(query.ToString());
         }
-        
+        public decimal? TotalAmt(TxnHeader expectedTransaction)
+        {
+            decimal? A_TXNQUALPURCHASEAMT = (expectedTransaction.A_SBTOTAMT + expectedTransaction.A_LDWCDWCHRGAMT + expectedTransaction.A_ADDLSRVCCHRGAMT + expectedTransaction.A_AGEDIFFCHRGAMT + expectedTransaction.A_ADDLAUTHDRVRCHRGAMT + expectedTransaction.A_CHILDSEATTOTAMT + expectedTransaction.A_MISCGRPAMT + expectedTransaction.A_GARSPECLEQMNTAMT + expectedTransaction.A_TOTCHRGAMT + expectedTransaction.A_NVGTNSYSTOTAMT + expectedTransaction.A_SATLTRADIOTOTAMT + expectedTransaction.A_REFUELINGCHRGAMT) * expectedTransaction.A_RNTINGCTRYCRNCYUSDEXCHRT;
+            return A_TXNQUALPURCHASEAMT;
+        }
+
     }
     public class RANUM
     {
@@ -335,6 +338,8 @@ namespace HertzNetFramework.DataModels
                 section2[i] = StrongRandom.Next(0, 25);
             section3 = StrongRandom.Next(0, 99);
         }
+
+      
 
         public static string Generate()
         {

@@ -34,10 +34,10 @@ namespace HertzNetFramework.Tests.SOAP
                 dbMember.AddRandomTransaction(hertzProgram, memberVCKEY,500);
                 Assert.IsTrue(dbMember.VirtualCards.First().TxnHeaders.Count > 0, "Expected 1 TxnHeader to be present in members vitual card");
                 BPTest.Pass<TestStep>("Transaction is added to members virtual card", dbMember.VirtualCards.First().TxnHeaders.First().ReportDetail());
-
+                TxnHeader TxnHeaderTotal = new TxnHeader();
                 TxnHeader expectedTransaction = dbMember.VirtualCards.First().TxnHeaders.First();
-                expectedTransaction.A_TXNQUALPURCHASEAMT = (expectedTransaction.A_SBTOTAMT + expectedTransaction.A_LDWCDWCHRGAMT + expectedTransaction.A_ADDLSRVCCHRGAMT + expectedTransaction.A_AGEDIFFCHRGAMT + expectedTransaction.A_ADDLAUTHDRVRCHRGAMT + expectedTransaction.A_CHILDSEATTOTAMT + expectedTransaction.A_MISCGRPAMT + expectedTransaction.A_GARSPECLEQMNTAMT + expectedTransaction.A_TOTCHRGAMT + expectedTransaction.A_NVGTNSYSTOTAMT + expectedTransaction.A_SATLTRADIOTOTAMT + expectedTransaction.A_REFUELINGCHRGAMT) * expectedTransaction.A_RNTINGCTRYCRNCYUSDEXCHRT;
-                expectedTransaction.A_QUALTOTAMT = (expectedTransaction.A_SBTOTAMT + expectedTransaction.A_LDWCDWCHRGAMT + expectedTransaction.A_ADDLSRVCCHRGAMT + expectedTransaction.A_AGEDIFFCHRGAMT + expectedTransaction.A_ADDLAUTHDRVRCHRGAMT + expectedTransaction.A_CHILDSEATTOTAMT + expectedTransaction.A_MISCGRPAMT + expectedTransaction.A_GARSPECLEQMNTAMT + expectedTransaction.A_TOTCHRGAMT + expectedTransaction.A_NVGTNSYSTOTAMT + expectedTransaction.A_SATLTRADIOTOTAMT + expectedTransaction.A_REFUELINGCHRGAMT) * expectedTransaction.A_RNTINGCTRYCRNCYUSDEXCHRT;
+                expectedTransaction.A_TXNQUALPURCHASEAMT= TxnHeaderTotal.TotalAmt(expectedTransaction);
+                expectedTransaction.A_QUALTOTAMT = TxnHeaderTotal.TotalAmt(expectedTransaction);               
 
                 BPTest.Start<TestStep>("Update Existing Member with added transaction", "Member object should be returned from UpdateMember call");
                 Member updatedMember = Member.UpdateMember(dbMember);
