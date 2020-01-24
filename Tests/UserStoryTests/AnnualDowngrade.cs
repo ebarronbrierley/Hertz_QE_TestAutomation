@@ -117,9 +117,9 @@ namespace HertzNetFramework.Tests.UserStoryTests
 
                 //foreach (string tier in tiers)
                 //{
-                //    Member testMember1 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE"); 
-                //    Member testMember2 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE"); 
-                //    Member testMember3 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE"); 
+                //    Member testMember1 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
+                //    Member testMember2 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
+                //    Member testMember3 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
                 //    Member.AddMember(testMember1);
                 //    Member.AddMember(testMember2);
                 //    Member.AddMember(testMember3);

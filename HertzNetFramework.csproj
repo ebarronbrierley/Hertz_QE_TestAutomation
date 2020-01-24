@@ -77,10 +77,16 @@
     <Compile Include="Tests\SOAP\GetMemberTests.cs" />
     <Compile Include="Tests\SOAP\RealTime_Bonuses.cs" />
     <Compile Include="Tests\SOAP\UpdateMemberTests.cs" />
+    <Compile Include="Tests\UserStoryTests\AnnualDowngrade.cs" />
+    <Compile Include="Tests\UserStoryTests\BuyTier.cs" />
+    <Compile Include="Tests\UserStoryTests\CorpWinback.cs" />
+    <Compile Include="Tests\UserStoryTests\ExclusionListTests.cs" />
+    <Compile Include="Tests\UserStoryTests\FlashSale.cs" />
+    <Compile Include="Tests\UserStoryTests\OneClick.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Brierley.TestAutomation.Core.API">
-      <Version>1.0.0.2</Version>
+      <Version>1.0.0.4</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Database">
       <Version>1.0.0.3</Version>
@@ -93,6 +99,9 @@
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Utilities">
       <Version>1.0.0.11</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
     </PackageReference>
     <PackageReference Include="NUnit">
       <Version>3.12.0</Version>
