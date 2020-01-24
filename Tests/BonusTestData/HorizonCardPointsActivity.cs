@@ -22,6 +22,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static TimeSpan ValidRentalLength = TimeSpan.FromDays(1);
         public static readonly DateTime StartDate = DateTime.Parse("01/01/2018");
         public static readonly DateTime EndDate = DateTime.Parse("01/01/2099");
+        public const string ChkOutLocId = "00004";
 
         public static IEnumerable PositiveScenarios
         {
@@ -73,6 +74,24 @@ namespace HertzNetFramework.Tests.BonusTestData
                          .SetCategory(BonusTestCategory.Regression)
                          .SetCategory(BonusTestCategory.Positive)
                          .SetCategory(BonusTestCategory.Smoke);
+                    yield return new TestCaseData(
+                           Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
+                                                                                         .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
+                                                                                         .Set(validCDP, "MemberDetails.A_CDPNUMBER")
+                           ,
+                           new TxnHeader[] {
+                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                checkOutDate:DateTime.Now.Comparable(),
+                                bookDate:DateTime.Now.Comparable(),
+                                program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: validCDP,
+                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,chkoutlocnum:null,chkoutareanum:null,chkoutlocid:ChkOutLocId)
+                           },
+                           ExpectedPointEvents,
+                           new string[] { }
+                       ).SetName($"{PointEventName}. CDP = {validCDP}, CHKOUTLOCID = {ChkOutLocId},EarningPref ={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                        .SetCategory(BonusTestCategory.Regression)
+                        .SetCategory(BonusTestCategory.Positive)
+                        .SetCategory(BonusTestCategory.Smoke);
                 }
                 foreach (string validRSDN in ValidRSDNCTRYCDs)
                 {

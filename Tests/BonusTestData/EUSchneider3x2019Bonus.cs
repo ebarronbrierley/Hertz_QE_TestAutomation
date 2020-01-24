@@ -18,6 +18,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static readonly DateTime EndDate = DateTime.Parse("12/31/2019 12:00:00 AM");
 
         public static readonly string[] ValidRSDNCTRYCDs = new string[] { "BE", "FR", "DE", "IT", "LU", "NL", "ES", "CH", "GB", "IE", "SE", "NO", "DK", "FI" };
+       
         public static readonly decimal[] ValidCDPs = new decimal[] { 830063M, 777967M, 771845M, 771844M, 797934M, 772513M, 867985M, 867984M, 825961M, 820736M, 818718M,
                                                                      818717M, 677115M, 525278M, 967352M, 963004M, 852405M, 852374M, 851608M, 851595M, 824332M, 794724M,
                                                                      629921M, 629910M, 629881M, 629878M, 629875M, 629872M, 629869M, 629829M, 629815M, 629812M, 629811M,
@@ -35,12 +36,13 @@ namespace HertzNetFramework.Tests.BonusTestData
                                                                      872048M, 824871M, 824868M, 774444M, 774432M, 774422M, 774410M, 774405M, 774391M, 774338M, 824641M,
                                                                      824640M, 778413M, 778411M, 778410M, 769751M, 769750M, 769749M, 769748M, 769747M, 769746M, 769745M,
                                                                      769688M, 767174M, 754743M, 754616M, 753055M, 552207M, 552206M, 797888M, 719350M, 719345M, 710953M,
-                                                                     529849M, 524304M };
+                                                                     529849M};
         public static readonly IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
         public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle };
         public static TimeSpan ValidRentalLength = TimeSpan.FromDays(1);
         public static TimeSpan ValidBookingDate = TimeSpan.FromDays(-8);
         public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent("EUSchneider3x2019BonusActivity", BaseTxnAmount*2) };
+        public const string ChkOutLocId = "00004";
 
         public static IEnumerable PositiveScenarios
         {
@@ -91,8 +93,8 @@ namespace HertzNetFramework.Tests.BonusTestData
                     foreach (IHertzTier validTier in validProgram.Tiers)
                     {
                         if (!ValidTiers.ToList().Any(x => x.Name.Equals(validTier.Name))) continue;
-
-                        yield return new TestCaseData(
+                        
+                          yield return new TestCaseData(
                             Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
                                                                                           .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
                                                                                           .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
@@ -110,6 +112,24 @@ namespace HertzNetFramework.Tests.BonusTestData
                          .SetCategory(BonusTestCategory.Regression)
                          .SetCategory(BonusTestCategory.Positive)
                          .SetCategory(BonusTestCategory.Smoke);
+                        yield return new TestCaseData(
+                           Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                                                                                         .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
+                                                                                         .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
+                           ,
+                           new TxnHeader[] {
+                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                checkOutDate:DateTime.Now.Comparable(),
+                                bookDate:DateTime.Now.AddTicks(ValidBookingDate.Ticks).Comparable(),
+                                program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,chkoutlocnum: null,chkoutareanum: null,chkoutlocid: ChkOutLocId)
+                           },
+                           ExpectedPointEvents,
+                           new string[] { }
+                       ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, CHKOUTLOCID = {ChkOutLocId}, Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                        .SetCategory(BonusTestCategory.Regression)
+                        .SetCategory(BonusTestCategory.Positive)
+                        .SetCategory(BonusTestCategory.Smoke);
                     }
                 }
             }

@@ -201,15 +201,15 @@ namespace HertzNetFramework.DataModels
         public decimal? A_CHKOUTROWKEY { get; set; }
         [ModelAttribute("CHKINLOCATIONID")]
         public string A_CHKINLOCATIONID { get; set; }
-        [ModelAttribute("CHKOUTLOCATIONID")]
+        [ModelAttribute("CHKOUTLOCATIONID", ReportOption.Print)]
         public string A_CHKOUTLOCATIONID { get; set; }
         #endregion
 
         public static TxnHeader Generate(string loyaltyId,  
-                                            DateTime? checkInDate = null, DateTime? checkOutDate = null, DateTime? bookDate = null, 
+                                            DateTime? checkInDate = null, DateTime? checkOutDate = null, DateTime? bookDate = null,
                                             decimal? CDP = null, IHertzProgram program = null, short? HODIndicator = 0, string RSDNCTRYCD = "US",
                                             decimal? rentalCharges = 0M, string contractTypeCode = null, decimal? contractNumber = null, string sacCode = null,
-                                            string checkoutWorldWideISO = null, string promNum = null)
+                                            string checkoutWorldWideISO = null, string promNum = null,string chkoutlocnum="06",string chkoutareanum = "01474", string chkoutlocid = null)
         {
             if (program == null) program = HertzProgram.GoldPointsRewards;
 
@@ -224,8 +224,8 @@ namespace HertzNetFramework.DataModels
                 A_VCHRNUM = null,
                 A_CHKINAREANUM = "01474",
                 A_CHKOUTDT = checkOutDate,
-                A_CHKOUTLOCNUM = "06",
-                A_CHKOUTAREANUM = "01474",
+                A_CHKOUTLOCNUM = chkoutlocnum,
+                A_CHKOUTAREANUM = chkoutareanum,
                 A_FTPTNRNUM = program.A_FTPTNRNUM,
                 A_CHKOUTCITYCD = null,
                 A_CHKOUTWORLDWIDERGNCTRYISO = checkoutWorldWideISO ?? RSDNCTRYCD,
@@ -248,8 +248,8 @@ namespace HertzNetFramework.DataModels
                 A_PAITOTCHRGAMT = 0M,
                 A_ADDLAUTHDRVRCHRGAMT = 0M,
                 A_AGEDIFFCHRGAMT = 0M,
-                A_ADDLSRVCCHRGAMT = rentalCharges,
-                A_SBTOTAMT = rentalCharges,
+                A_ADDLSRVCCHRGAMT = 0M,
+                A_SBTOTAMT = 0M,
                 A_TOTCHRGAMT = 0M,
                 A_LISTOTCHRGAMT = 0M,
                 A_CHILDSEATTOTAMT = 0M,
@@ -297,10 +297,9 @@ namespace HertzNetFramework.DataModels
                 A_TXNCHANNEL = StrongRandom.NumericString(2),
                 A_TXNORIGINALTXNROWKEY = null,
                 A_TXNCREDITSUSED = null,
-                A_HODINDICATOR = HODIndicator              
-        };
-        output.A_TXNQUALPURCHASEAMT = (output.A_SBTOTAMT+output.A_LDWCDWCHRGAMT + output.A_ADDLSRVCCHRGAMT + output.A_AGEDIFFCHRGAMT + output.A_ADDLAUTHDRVRCHRGAMT + output.A_CHILDSEATTOTAMT + output.A_MISCGRPAMT + output.A_GARSPECLEQMNTAMT + output.A_TOTCHRGAMT + output.A_NVGTNSYSTOTAMT + output.A_SATLTRADIOTOTAMT + output.A_REFUELINGCHRGAMT) * output.A_RNTINGCTRYCRNCYUSDEXCHRT;
-        output.A_QUALTOTAMT = (output.A_SBTOTAMT + output.A_LDWCDWCHRGAMT + output.A_ADDLSRVCCHRGAMT + output.A_AGEDIFFCHRGAMT + output.A_ADDLAUTHDRVRCHRGAMT + output.A_CHILDSEATTOTAMT + output.A_MISCGRPAMT + output.A_GARSPECLEQMNTAMT + output.A_TOTCHRGAMT + output.A_NVGTNSYSTOTAMT + output.A_SATLTRADIOTOTAMT + output.A_REFUELINGCHRGAMT) * output.A_RNTINGCTRYCRNCYUSDEXCHRT;
+                A_HODINDICATOR = HODIndicator,
+                A_CHKOUTLOCATIONID = chkoutlocid
+        };           
 
             return output;
         }
@@ -312,7 +311,12 @@ namespace HertzNetFramework.DataModels
 
             return db.Query<TxnHeader>(query.ToString());
         }
-        
+        public decimal? TotalAmt(TxnHeader expectedTransaction)
+        {
+            decimal? A_TXNQUALPURCHASEAMT = (expectedTransaction.A_SBTOTAMT + expectedTransaction.A_LDWCDWCHRGAMT + expectedTransaction.A_ADDLSRVCCHRGAMT + expectedTransaction.A_AGEDIFFCHRGAMT + expectedTransaction.A_ADDLAUTHDRVRCHRGAMT + expectedTransaction.A_CHILDSEATTOTAMT + expectedTransaction.A_MISCGRPAMT + expectedTransaction.A_GARSPECLEQMNTAMT + expectedTransaction.A_TOTCHRGAMT + expectedTransaction.A_NVGTNSYSTOTAMT + expectedTransaction.A_SATLTRADIOTOTAMT + expectedTransaction.A_REFUELINGCHRGAMT) * expectedTransaction.A_RNTINGCTRYCRNCYUSDEXCHRT;
+            return A_TXNQUALPURCHASEAMT;
+        }
+
     }
     public class RANUM
     {
@@ -334,6 +338,8 @@ namespace HertzNetFramework.DataModels
                 section2[i] = StrongRandom.Next(0, 25);
             section3 = StrongRandom.Next(0, 99);
         }
+
+      
 
         public static string Generate()
         {
