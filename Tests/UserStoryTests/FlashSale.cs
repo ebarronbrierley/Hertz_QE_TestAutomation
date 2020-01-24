@@ -9,9 +9,8 @@ using HertzNetFramework.DataModels;
 using System.Collections;
 using Brierley.TestAutomation.Core.Database;
 
-namespace HertzNetFramework.Tests.SOAP
+namespace HertzNetFramework.Tests.UserStoryTests
 {
-    [TestFixture]
     class FlashSale : BrierleyTestFixture
     {
         [Category("Api_Smoke")]

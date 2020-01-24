@@ -227,7 +227,7 @@ namespace HertzNetFramework.DataModels
                 A_CHKOUTLOCNUM = "06",
                 A_CHKOUTAREANUM = "01474",
                 //A_FTPTNRNUM = program.A_FTPTNRNUM,
-                A_FTPTNRNUM = "ZE%",
+                A_FTPTNRNUM = "ZE1",
                 A_CHKOUTCITYCD = null,
                 A_CHKOUTWORLDWIDERGNCTRYISO = checkoutWorldWideISO ?? RSDNCTRYCD,
                 A_CHKOUTWWDSTPROVCD = StrongRandom.NumericString(2),

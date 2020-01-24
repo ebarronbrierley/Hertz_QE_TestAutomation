@@ -31,13 +31,14 @@ namespace HertzNetFramework.Tests.UserStoryTests
                 string tierFG = "FG";
                 string tierPC = "PC";
                 string tierPL = "PL";
-                string mktCode1 = "SIEMN";
-                string mktCode2 = "DJDFG";
-                string mktCode3 = "MISFG";
-                string mktCode4 = "SLIHF";
-                Member testMember1 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierRG, "MemberDetails.A_TIERCODE").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
-                Member testMember2 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierRG, "MemberDetails.A_TIERCODE").Set(mktCode1, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
-                Member testMember3 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierRG, "MemberDetails.A_TIERCODE").Set(mktCode1, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
+                string mktCode1 = "ECPFG";
+                string mktCode2 = "ECPPC";
+                Member testMember1 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierRG, "MemberDetails.A_TIERCODE")
+                    .Set(mktCode2, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
+                Member testMember2 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierFG, "MemberDetails.A_TIERCODE")
+                    .Set(mktCode2, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
+                Member testMember3 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierPC, "MemberDetails.A_TIERCODE")
+                    .Set(mktCode2, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
                 Member.AddMember(testMember1);
                 Member.AddMember(testMember2);
                 Member.AddMember(testMember3);
@@ -47,7 +48,7 @@ namespace HertzNetFramework.Tests.UserStoryTests
                 string alternateid2 = testMember2.ALTERNATEID;
                 string loyaltyid3 = testMember3.GetLoyaltyID();
                 string alternateid3 = testMember3.ALTERNATEID;
-                decimal? cdp = 963233;
+                decimal? cdp = null;
                 decimal pointsTierRG = 150;
                 decimal pointsTierFG = 2401;
                 decimal pointsTierPC = 4000;
@@ -69,9 +70,6 @@ namespace HertzNetFramework.Tests.UserStoryTests
                 Member.UpdateMember(testMember3);
 
                 BPTest.Pass<TestStep>($"Step 2 Passed");
-
-
-
             }
             catch (Exception ex)
             {
@@ -89,13 +87,23 @@ namespace HertzNetFramework.Tests.UserStoryTests
                 string tierRG = "RG";
                 string tierFG = "FG";
                 string tierPC = "PC";
+                string[] tiers = {"RG", "FG", "PC", "PL" };
                 string[] mktCode = { "EWB19", "AD19F", "AD19P", "BTEMF", "BTEMP", "BU19F", "BU19P", "BT19F", "BT19P" };
-                string[] mktCode2 = { "BU19F", "BU19P", "BT19F", "BT19P" };
+                string[] mktCode2 = { "ECPFG", "ECPPC", "AXPCA", "AXPCE", "TFDFG", "TFDPC", "SIEMN" };
+                string[] mktCode3 = { "AXPCA", "AXPCE", "TFDFG", "TFDPC" };
+                decimal? cdp = null;
+                decimal pointsTierRG = 150;
+                decimal pointsTierFG = 2401;
+                decimal pointsTierPC = 4000;
+                DateTime checkInDt = new DateTime(2019, 11, 2);
+                DateTime checkOutDt = new DateTime(2019, 11, 1);
+                DateTime origBkDt = new DateTime(2019, 11, 1);
+
                 foreach (string code in mktCode)
                 {
-                    Member testMember1 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierRG, "MemberDetails.A_TIERCODE").Set(code, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE").Set(2, "MemberDetails.A_MEMBERSTATUSCODE"); 
-                    Member testMember2 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierFG, "MemberDetails.A_TIERCODE").Set(code, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE").Set(2, "MemberDetails.A_MEMBERSTATUSCODE"); 
-                    Member testMember3 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierPC, "MemberDetails.A_TIERCODE").Set(code, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE").Set(2, "MemberDetails.A_MEMBERSTATUSCODE"); 
+                    Member testMember1 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierRG, "MemberDetails.A_TIERCODE").Set(code, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
+                    Member testMember2 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierFG, "MemberDetails.A_TIERCODE").Set(code, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
+                    Member testMember3 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tierPC, "MemberDetails.A_TIERCODE").Set(code, "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE");
                     Member.AddMember(testMember1);
                     Member.AddMember(testMember2);
                     Member.AddMember(testMember3);
@@ -106,6 +114,34 @@ namespace HertzNetFramework.Tests.UserStoryTests
                     string loyaltyid3 = testMember3.GetLoyaltyID();
                     string alternateid3 = testMember3.ALTERNATEID;
                 }
+
+                //foreach (string tier in tiers)
+                //{
+                //    Member testMember1 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE"); 
+                //    Member testMember2 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE"); 
+                //    Member testMember3 = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set(tier, "MemberDetails.A_TIERCODE").Set("AXCUS", "MemberDetails.A_MKTGPROGRAMID").Set("US", "MemberDetails.A_COUNTRY").Set(new DateTime(2019, 12, 31), "MemberDetails.A_TIERENDDATE"); 
+                //    Member.AddMember(testMember1);
+                //    Member.AddMember(testMember2);
+                //    Member.AddMember(testMember3);
+                //    string loyaltyid1 = testMember1.GetLoyaltyID();
+                //    string alternateid1 = testMember1.ALTERNATEID;
+                //    string loyaltyid2 = testMember2.GetLoyaltyID();
+                //    string alternateid2 = testMember2.ALTERNATEID;
+                //    string loyaltyid3 = testMember3.GetLoyaltyID();
+                //    string alternateid3 = testMember3.ALTERNATEID;
+
+                //    TxnHeader txnHeader1 = TxnHeader.Generate(loyaltyid1, checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "US", pointsTierRG, null, null, "N", "US", null);
+                //    testMember1.AddTransaction(txnHeader1);
+                //    Member.UpdateMember(testMember1);
+                //    TxnHeader txnHeader2 = TxnHeader.Generate(loyaltyid2, checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "US", pointsTierFG, null, null, "N", "US", null);
+                //    testMember2.AddTransaction(txnHeader2);
+                //    Member.UpdateMember(testMember2);
+                //    TxnHeader txnHeader3 = TxnHeader.Generate(loyaltyid3, checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "US", pointsTierPC, null, null, "N", "US", null);
+                //    testMember3.AddTransaction(txnHeader3);
+                //    Member.UpdateMember(testMember3);
+
+                //}
+
                 BPTest.Pass<TestStep>($"Step 1 Passed");
 
 

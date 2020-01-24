@@ -14,10 +14,13 @@ using System.Collections;
 using System.Linq.Expressions;
 using Brierley.TestAutomation.Core.API;
 using Newtonsoft.Json.Linq;
+using Brierley.TestAutomation.Core.SFTP;
+using System.Threading;
+using NUnit.Framework;
 
 namespace HertzNetFramework.DataModels
 {
-    class OneClick
+    public class OneClick
     {
         string loyaltynumber { get; set; }
         string promocode { get; set; }
@@ -29,6 +32,8 @@ namespace HertzNetFramework.DataModels
         string userAltEmail { get; set; }
         public string Filename { get; private set; }
 
+
+       
         public static OneClick GenerateOneClick(string loyaltynumberIN, string promocodeIN)
         {
             OneClick newOneClick = new OneClick();
@@ -52,6 +57,56 @@ namespace HertzNetFramework.DataModels
             sb.Append($"{loyaltynumber}|{promocode}|{clicktimestamp}|{clickcategory}|{userId}|{recordTimestamp}|{recordType}|{userAltEmail}");
             return sb.ToString();
             
+        }
+
+        public static void UploadOneClick(OneClick oneclickObj, OracleDB Database)
+        {
+            SFTPConfiguration sftp_config = new SFTPConfiguration();
+            sftp_config.Host = EnvironmentManager.Get.SFTPHost;
+            sftp_config.Port = Convert.ToUInt16(EnvironmentManager.Get.SFTPPort);
+            sftp_config.User = EnvironmentManager.Get.SFTPUser;
+            sftp_config.Password = EnvironmentManager.Get.SFTPPassword;
+
+            string oneclickString = oneclickObj.ToString();
+            using (SFTP sftp = new SFTP(sftp_config))
+            {
+                sftp.Connect();
+                System.IO.File.WriteAllText($@"C:\Users\oagwuegbo\Documents\HertzProjectOne\SFTPFiles\HTZ19270BuyTierOneClickFiles\{oneclickObj.Filename}", oneclickString);
+                sftp.UploadFile($@"C:\Users\oagwuegbo\Documents\HertzProjectOne\SFTPFiles\HTZ19270BuyTierOneClickFiles", oneclickObj.Filename, @"/opt/app/oracle/flatfiles/htz/lw/qa_b/in/auto");
+            }
+            Thread.Sleep(1000);
+
+            Database.ExecuteNonQuery($@"BEGIN
+                   sla.qa_utils.gen_trigger_and_load_file (
+                         p_filename  => '{oneclickObj.Filename}'
+                       , p_client_cd => 'HTZLW'
+                   );
+                END;");
+            bool complete = false;
+            int count = 0;
+            while (!complete && count < 60)
+            {
+                string query1 = $@"select * from bp_htz.nova_loads where file_name = '{oneclickObj.Filename}'";
+                Hashtable ht1 = Database.QuerySingleRow(query1);
+                if (ht1["PROCESSING_STATE"] == null)
+                {
+                    Thread.Sleep(2000);
+                    OneClick.RunDAP();
+                    continue;
+                }
+
+                if (ht1["PROCESSING_STATE"].ToString().Equals("COMPLETE", StringComparison.OrdinalIgnoreCase))
+                {
+                    complete = true;
+                }
+                else
+                {
+                    count++;
+                    Thread.Sleep(8000);
+                }
+            }
+
+
         }
 
         public static void RunDAP()

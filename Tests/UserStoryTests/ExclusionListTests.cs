@@ -9,7 +9,7 @@ using HertzNetFramework.DataModels;
 using System.Collections;
 using Brierley.TestAutomation.Core.Database;
 
-namespace HertzNetFramework.Tests.SOAP
+namespace HertzNetFramework.Tests.UserStoryTests
 {
     [TestFixture]
     class ExclusionListTests : BrierleyTestFixture
@@ -1258,36 +1258,35 @@ namespace HertzNetFramework.Tests.SOAP
             try
             {
                 BPTest.Start<TestStep>($"Step 1: Create Member and Execute Transaction");
-                Member testMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("RG", "MemberDetails.A_TIERCODE");
+                Member testMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("RG", "MemberDetails.A_TIERCODE")
+                    .Set("GB", "MemberDetails.A_COUNTRY").Set(new DateTime(2020, 01, 31), "MemberDetails.A_TIERENDDATE").Set("", "MemberDetails.A_CDPNUMBER");
                 Member.AddMember(testMember);
                 string loyaltyid = testMember.GetLoyaltyID();
                 string alternateid = testMember.ALTERNATEID;
-                decimal? cdp = 334505;
-                decimal points = 150;
+                decimal? cdp = null;
+                decimal points = 100;
                 decimal[] cdps = new decimal[] { 102495, 515, 11850, 135391, 281733, 40000 };
 
-                DateTime checkInDt = new DateTime(2019, 11, 2);
-                DateTime checkOutDt = new DateTime(2019, 11, 1);
-                DateTime origBkDt = new DateTime(2019, 11, 1);
+                //MemberPromotion mempromo = testMember.AddPromotion(loyaltyid, "MayJune2018RedemptionA", null, null, false, null, null, false);
+                //Member.AddReward("8399164", "204592", "3195662");
+                //OneClick ocObj = OneClick.GenerateOneClick(loyaltyid, "UK2018SpringRegBonus");
+                //OneClick.UploadOneClick(ocObj, Database);
+
+                DateTime checkInDt = new DateTime(2020, 1, 10);
+                DateTime checkOutDt = new DateTime(2020, 1, 2);
+                DateTime origBkDt = new DateTime(2020, 1, 2);
                 BPTest.Pass<TestStep>($"Step 1 Passed");
 
                 BPTest.Start<TestStep>($"Step 2: Add Reward");
-                for(int x = 0; x < 3; x++)
+                for (int x = 0; x < 1; x++)
                 {
-                    TxnHeader txnHeader = TxnHeader.Generate(testMember.GetLoyaltyID(), checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "US", points, null, null, "N", "US", null);
+                    TxnHeader txnHeader = TxnHeader.Generate(testMember.GetLoyaltyID(), checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, 0, "GB", points, null, null, "Y", "GB", null);
                     testMember.AddTransaction(txnHeader);
                     Member.UpdateMember(testMember);
                     testMember.RemoveTransaction();
                     //points += 150;
                 }
-                
 
-                //string query = $@"select vckey from bp_htz.lw_virtualcard where loyaltyidnumber = '{testMember.GetLoyaltyID()}'";
-                //Hashtable ht = Database.QuerySingleRow(query);
-                //decimal vckey = Convert.ToDecimal(ht["VCKEY"]);
-                //string string_vckey = Convert.ToString(ht["VCKEY"]);
-
-                //Member.AddReward(alternateid, "182346", string_vckey);
                 BPTest.Pass<TestStep>($"Step 2 Passed");
 
             }

@@ -78,6 +78,7 @@
     <Compile Include="Tests\SOAP\AddMemberTests.cs" />
     <Compile Include="Tests\UserStoryTests\AnnualDowngrade.cs" />
     <Compile Include="Tests\UserStoryTests\BuyTier.cs" />
+    <Compile Include="Tests\UserStoryTests\CorpWinback.cs" />
     <Compile Include="Tests\UserStoryTests\ExclusionListTests.cs" />
     <Compile Include="Tests\UserStoryTests\FlashSale.cs" />
     <Compile Include="Tests\SOAP\GetMemberTests.cs" />
