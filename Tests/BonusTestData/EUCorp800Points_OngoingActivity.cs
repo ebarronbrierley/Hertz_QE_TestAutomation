@@ -29,6 +29,7 @@ namespace HertzNetFramework.Tests.BonusTestData
         public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle };
         public static TimeSpan ValidRentalLength = TimeSpan.FromDays(2);
         public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent(PointEventName, PointEventAmount) };
+        public const string ChkOutLocId = "00004";
 
         public static IEnumerable PositiveScenarios
         {
@@ -82,6 +83,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                     yield return new TestCaseData(
                         Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
                                                                                      .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
+                                                                                      .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
                         ,
                         new TxnHeader[] {
                             TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
@@ -93,7 +95,7 @@ namespace HertzNetFramework.Tests.BonusTestData
                         },
                         ExpectedPointEvents,
                         new string[] { }
-                    ).SetName($"{PointEventName}. CHKOUTWORLDWIDERGNCTRYISO = {wwCheckout}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                    ).SetName($"{PointEventName}. CHKOUTWORLDWIDERGNCTRYISO = {wwCheckout}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[1]}")
                      .SetCategory(BonusTestCategory.Regression)
                      .SetCategory(BonusTestCategory.Positive);
                 }
@@ -121,6 +123,26 @@ namespace HertzNetFramework.Tests.BonusTestData
                          .SetCategory(BonusTestCategory.Regression)
                          .SetCategory(BonusTestCategory.Positive)
                          .SetCategory(BonusTestCategory.Smoke);
+                        yield return new TestCaseData(
+                       Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
+                                                                                       .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
+                                                                                       .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
+                       ,
+                       new TxnHeader[] {
+                                    TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                    checkOutDate:DateTime.Now.Comparable(),
+                                    bookDate:DateTime.Now.Comparable(),
+                                    program: validProgram.Set(validTier.Code,"SpecificTier"),
+                                    RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount, sacCode: "Y",
+                                    contractTypeCode: ContractTypeCode, CDP:ValidCDPs[0], checkoutWorldWideISO: ValidCHKWORLDWIDECTRYCDs[0],chkoutlocnum: null,chkoutareanum: null,chkoutlocid: ChkOutLocId)
+                       },
+                       ExpectedPointEvents,
+                       new string[] { }
+                   ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference}, ChkOutLocId={ChkOutLocId}, Tier ={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, CHKOUTWORLDWIDERGNCTRYISO = {ValidCHKWORLDWIDECTRYCDs[0]}")
+                    .SetCategory(BonusTestCategory.Regression)
+                    .SetCategory(BonusTestCategory.Positive)
+                    .SetCategory(BonusTestCategory.Smoke);
+               
                     }
                 }
             }

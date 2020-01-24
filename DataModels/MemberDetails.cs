@@ -176,7 +176,8 @@ namespace HertzNetFramework.DataModels
             details.A_NAMESUFFIX = member.NAMESUFFIX;
             details.A_PRIMARYPHONENUMBER = member.PRIMARYPHONENUMBER;
             details.A_SECONDARYEMAILADDRESS = null;
-            details.A_TIERCODE = tier == null ? "" : tier.Code;
+            //  details.A_TIERCODE = tier == null ? "" : tier.Code;
+            details.A_TIERCODE =  program.SpecificTier ?? null;
             details.A_ADDRESSLINEONE = "Hertz Dr";
             details.A_ADDRESSLINETWO = "APT " + StrongRandom.NumericString(4);
             details.A_ADDRESSLINETHREE = null;

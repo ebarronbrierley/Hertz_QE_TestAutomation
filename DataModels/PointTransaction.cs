@@ -11,7 +11,6 @@ using Brierley.TestAutomation.Core.Database;
 using System.Reflection;
 using System.Collections;
 using System.Linq.Expressions;
-using Brierley.TestAutomation.Core.Utilities;
 
 namespace HertzNetFramework.DataModels
 {

@@ -53,7 +53,6 @@
     <Compile Include="DataModels\MemberDetails.cs" />
     <Compile Include="DataModels\MemberPreferences.cs" />
     <Compile Include="DataModels\MemberPromotion.cs" />
-    <Compile Include="DataModels\OneClick.cs" />
     <Compile Include="DataModels\PointEvent.cs" />
     <Compile Include="DataModels\PointTransaction.cs" />
     <Compile Include="DataModels\Promotion.cs" />
@@ -65,7 +64,6 @@
     <Compile Include="Tests\BonusTestData\BonusTestCategory.cs" />
     <Compile Include="Tests\BonusTestData\Corp550Points_2016Activity.cs" />
     <Compile Include="Tests\BonusTestData\CorpNewMember550PointsOngoingActivity.cs" />
-    <Compile Include="Tests\BonusTestData\CorpWinback.cs" />
     <Compile Include="Tests\BonusTestData\EUCorp800Points_OngoingActivity.cs" />
     <Compile Include="Tests\BonusTestData\EUSchneider3x2019Bonus.cs" />
     <Compile Include="Tests\BonusTestData\GPRAAABonusActivity.cs" />
@@ -76,18 +74,13 @@
     <Compile Include="Tests\BonusTestData\VisaInfinite10RGBonus.cs" />
     <Compile Include="Tests\SOAP\AddMemberPromotion.cs" />
     <Compile Include="Tests\SOAP\AddMemberTests.cs" />
-    <Compile Include="Tests\UserStoryTests\AnnualDowngrade.cs" />
-    <Compile Include="Tests\UserStoryTests\BuyTier.cs" />
-    <Compile Include="Tests\UserStoryTests\CorpWinback.cs" />
-    <Compile Include="Tests\UserStoryTests\ExclusionListTests.cs" />
-    <Compile Include="Tests\UserStoryTests\FlashSale.cs" />
     <Compile Include="Tests\SOAP\GetMemberTests.cs" />
     <Compile Include="Tests\SOAP\RealTime_Bonuses.cs" />
     <Compile Include="Tests\SOAP\UpdateMemberTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Brierley.TestAutomation.Core.API">
-      <Version>1.0.0.4</Version>
+      <Version>1.0.0.2</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Database">
       <Version>1.0.0.3</Version>
@@ -99,10 +92,7 @@
       <Version>1.0.0.2</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Utilities">
-      <Version>1.0.0.10</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
+      <Version>1.0.0.11</Version>
     </PackageReference>
     <PackageReference Include="NUnit">
       <Version>3.12.0</Version>
