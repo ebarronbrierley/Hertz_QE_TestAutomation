@@ -5,7 +5,10 @@ using System.Linq;
 using NUnit.Framework;
 using Brierley.TestAutomation.Core.Reporting;
 using Brierley.TestAutomation.Core.Utilities;
+using Brierley.TestAutomation.Core.SFTP;
 using HertzNetFramework.DataModels;
+using System.Collections;
+using System.Threading;
 
 namespace HertzNetFramework.Tests.SOAP
 {
@@ -34,7 +37,10 @@ namespace HertzNetFramework.Tests.SOAP
                 BPTest.Pass<TestStep>("Member created matches member in database");
 
                 BPTest.Start<TestStep>($"Verify MemberDetails in {MemberDetails.TableName} table", "Database member details should match created member");
+                //MemberDetails md1 = createMember.MemberDetails.First();
+                //MemberDetails md2 = dbMember.GetMemberDetails(memberStyle).First();
                 AssertModels.AreEqualWithAttribute(createMember.GetMemberDetails(memberStyle).First(), dbMember.GetMemberDetails(memberStyle).First());
+                //AssertModels.AreEqualWithAttribute(md1, md2);
                 BPTest.Pass<TestStep>("Member details created matches member details in database");
 
                 BPTest.Start<TestStep>($"Verify MemberPreferences in {MemberPreferences.TableName} table", "Database member preferences should match created member");
@@ -90,6 +96,7 @@ namespace HertzNetFramework.Tests.SOAP
                 Assert.Fail();
             }
         }
+
         static object[] PositiveScenarios =
         {
             new object[]
@@ -98,6 +105,7 @@ namespace HertzNetFramework.Tests.SOAP
                 MemberStyle.ProjectOne,
                 Member.GenerateRandom(MemberStyle.ProjectOne).Set("DX","MemberDetails.A_EARNINGPREFERENCE").Set(null, "MemberDetails.A_TIERCODE")
             },//EarningPreference = DX (Dollar Member), TierCode = empty string
+
             new object[]
             {
                 "EarningPreference = N1 (GoldPointsReward Member), TierCode = FG",
