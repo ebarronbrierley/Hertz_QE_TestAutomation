@@ -1,0 +1,9 @@
+{
+  "Browser": "Chrome",
+  "LongTimeout": "30",
+  "MediumTimeout": "10",
+  "ShortTimeout": "3",
+  "ImplicitlyWaitMilliseconds": "200",
+  "PageLoadMilliseconds": "5000",
+  "AsyncJavaScriptMilliseconds" :  "1000"
+}
