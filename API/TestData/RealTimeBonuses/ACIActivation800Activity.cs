@@ -47,7 +47,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                         member.MemberDetails.A_CDPNUMBER = $"{ValidCDPs[0]}";
                         member.MemberDetails.A_CONTRACTSEGMENTTYPE = ValidContractSegment;
 
-                        TxnHeaderModel
+                        //TxnHeaderModel
 
                         yield return new TestCaseData(
                            member,

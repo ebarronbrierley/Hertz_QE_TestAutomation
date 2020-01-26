@@ -8,7 +8,7 @@ namespace Hertz.API.DataModels
 {
     public class HertzLoyalty
     {
-        public IEnumerable<IHertzProgram> Programs { 
+        public static IEnumerable<IHertzProgram> Programs { 
             get { 
                 yield return new GoldPointsRewards();
                 yield return new ThriftyBlueChip();
@@ -22,6 +22,7 @@ namespace Hertz.API.DataModels
 
     public sealed class GoldPointsRewards : IHertzProgram
     {
+        public string Name => "Gold Points Rewards";
         public string EarningPreference => "N1";
 
         public string A_FTPTNRNUM => "ZE1";
@@ -60,6 +61,8 @@ namespace Hertz.API.DataModels
 
     public sealed class ThriftyBlueChip:IHertzProgram
     {
+        public string Name => "Thrifty Blue Chip";
+
         public string EarningPreference => "BC";
 
         public string A_FTPTNRNUM => "BC1";
@@ -70,18 +73,18 @@ namespace Hertz.API.DataModels
 
         public decimal CARDTYPE => 2M;
 
-        public IEnumerable<IHertzTier> Tiers { get { return tiers; } }
+        public IEnumerable<IHertzTier> Tiers { get { yield return DefaultTier; } }
 
-        private readonly List<Tier> tiers;
+        public IHertzTier DefaultTier { get { return new Tier(this, "No Tier", null, 0M); } }
 
         public ThriftyBlueChip()
         {
-            tiers = new List<Tier>();
         }
     }
 
     public sealed class DollarExpressRenters : IHertzProgram
     {
+        public string Name => "Dollar Express Renters";
         public string EarningPreference => "DX";
 
         public string A_FTPTNRNUM => "RR1";
@@ -92,13 +95,13 @@ namespace Hertz.API.DataModels
 
         public decimal CARDTYPE => 3M;
 
-        public IEnumerable<IHertzTier> Tiers { get { return tiers; } }
+        public IEnumerable<IHertzTier> Tiers { get { yield return DefaultTier; } }
 
-        private readonly List<Tier> tiers;
+        public IHertzTier DefaultTier { get { return new Tier(this, "No Tier    ", null, 0M); } }
 
         public DollarExpressRenters()
         {
-            tiers = new List<Tier>();
+
         }
     }
 
@@ -122,6 +125,7 @@ namespace Hertz.API.DataModels
 
     public interface IHertzProgram
     {
+        string Name { get; }
         string EarningPreference { get; }
         string A_FTPTNRNUM { get; }
         string A_RASRCCD { get; }

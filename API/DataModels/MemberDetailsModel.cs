@@ -9,7 +9,11 @@ namespace Hertz.API.DataModels
 {
     public class MemberDetailsModel
     {
+        public static readonly string[] BaseVerify = new string[] { "A_CITY", "A_STATEORPROVINCE", "A_ZIPORPOSTALCODE", "A_COUNTRY", "A_TIERCODE", "A_MEMBERSTATUSCODE", "A_ENROLLDATE", "A_LANGUAGEPREFERENCE", "A_CONTACTNAME", "A_HODINDICATOR", "A_CDPNUMBER" };
+
         public const string TableName = "BP_HTZ.ATS_MEMBERDETAILS";
+
+
         public decimal A_ROWKEY { get; set; }
         public decimal? A_PARENTROWKEY { get; set; }
         [ModelAttribute("AddressLineThree")]
@@ -29,7 +33,7 @@ namespace Hertz.API.DataModels
         [ModelAttribute("ZipOrPostalCode")]
         public string A_ZIPORPOSTALCODE { get; set; }
 
-        [Randomizer(DataType = RandomDataType.Country)]
+        [Randomizer(DataType = RandomDataType.CountryAbbreviation)]
         [ModelAttribute("Country")]
         public string A_COUNTRY { get; set; }
 
@@ -167,6 +171,7 @@ namespace Hertz.API.DataModels
         public decimal? LASTDMLID { get; set; }
         public decimal? LAST_DML_ID { get; set; }
 
+        [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year | TimeCompare.Hour | TimeCompare.Minute)]
         [Randomizer(DataType = RandomDataType.FutureDateMonths, Max =11)]
         [ModelAttribute("TierEndDate")]
         public DateTime? A_TIERENDDATE { get; set; }

@@ -53,25 +53,17 @@
     <Compile Include="API\DataModels\MemberPreferencesModel.cs" />
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
+    <Compile Include="API\TestCases\AddMemberTests.cs" />
     <Compile Include="API\TestCases\RealTime_Bonuses.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\ACIActivation800Activity.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\BonusTestCategory.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\Corp550Points_2016Activity.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\CorpNewMember550PointsOngoingActivity.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\CorpWinback.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\EUCorp800Points_OngoingActivity.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\EUSchneider3x2019Bonus.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\GPRAAABonusActivity.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\HorizonCardPointsActivity.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\LapsedOnGoingActivity.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\OngoingEMEABirthdayActivity.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\TopGolf_2019_GPR2XBonus.cs" />
-    <Compile Include="API\TestData\RealTimeBonuses\VisaInfinite10RGBonus.cs" />
+    <Compile Include="API\TestData\AddMemberTestData.cs" />
+    <Compile Include="API\Utilities\LODConvert.cs" />
+    <Compile Include="API\Utilities\LWServiceException.cs" />
     <Compile Include="AssemblyInitializer.cs" />
     <Compile Include="BrierleyTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="API\TestData\RealTimeBonuses\" />
     <Folder Include="Database\DataModels\" />
     <Folder Include="FIleProcessing\Controllers\" />
     <Folder Include="FIleProcessing\DataModels\" />
@@ -123,7 +115,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ClientDLL\Brierley.LoyaltyWare.ClientLib.dll" />
+    <Content Include="ClientDLL\Brierley.LoyaltyWare.ClientLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
