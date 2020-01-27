@@ -159,11 +159,11 @@ namespace Hertz.API.Utilities
                     {
                         if (IsPropertyACollection(attributeProperty))
                         {
-                            var listObj = Activator.CreateInstance(attributeProperty.PropertyType.GetGenericArguments()[0]);
+                            var listObj = Activator.CreateInstance(attributeProperty.PropertyType);
 
                             foreach (var lwChild in lwChildren)
                             {
-                                var setObj = FromLw(lwChild, attributeProperty.PropertyType);
+                                var setObj = FromLw(lwChild, attributeProperty.PropertyType.GetGenericArguments()[0]);
                                 listObj.GetType().GetMethod("Add").Invoke(listObj, new[] { setObj });
                             }
                             attributeProperty.SetValue(outputBase, listObj);

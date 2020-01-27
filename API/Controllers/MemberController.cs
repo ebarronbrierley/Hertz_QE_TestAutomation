@@ -79,6 +79,32 @@ namespace Hertz.API.Controllers
             }
             return membersOut;
         }
+        public MemberModel UpdateMember(MemberModel member)
+        {
+            MemberModel memOut = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwMemIn = LODConvert.ToLW<Member>(member);
+                    var lwMemOut = lwSvc.UpdateMember(lwMemIn, String.Empty, out double time);
+                    memOut = LODConvert.FromLW<MemberModel>(lwMemOut);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("UpdateMember", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return memOut;
+        }
         #endregion
 
         #region Database Methods
@@ -101,10 +127,20 @@ namespace Hertz.API.Controllers
             member.VirtualCards = dbContext.Query<VirtualCardModel>($"select * from {VirtualCardModel.TableName} where IPCODE = {member.IPCODE}").ToList();
             return member;
         }
-        public  MemberModel GetRandomFromDB(long memberStatus)
+        public  MemberModel GetRandomFromDB(long memberStatus, IHertzTier tier = null)
         {
-            string query = $"select * from {MemberModel.TableName} where MEMBERSTATUS = {memberStatus}";
-            return GetFromDB(ipCodeQuery: query);
+            StringBuilder query = new StringBuilder($"select * from {MemberModel.TableName} SAMPLE(10) mem where mem.MEMBERSTATUS = {memberStatus}");
+            if(tier != null)
+            {
+                query.Append(" and ");
+                query.Append($"(select a_earningpreference from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) = '{tier.ParentProgram.EarningPreference}'");
+                query.Append(" and ");
+                if(!String.IsNullOrEmpty(tier.Code))
+                    query.Append($"(select a_tiercode from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) = '{tier.Code}'");
+                else
+                    query.Append($"(select a_tiercode from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) is null");
+            }
+            return GetFromDB(ipCodeQuery: query.ToString());
         }
         #endregion
 

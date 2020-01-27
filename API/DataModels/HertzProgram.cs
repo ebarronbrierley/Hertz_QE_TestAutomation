@@ -97,7 +97,7 @@ namespace Hertz.API.DataModels
 
         public IEnumerable<IHertzTier> Tiers { get { yield return DefaultTier; } }
 
-        public IHertzTier DefaultTier { get { return new Tier(this, "No Tier    ", null, 0M); } }
+        public IHertzTier DefaultTier { get { return new Tier(this, "No Tier", null, 0M); } }
 
         public DollarExpressRenters()
         {

@@ -191,6 +191,7 @@ namespace Hertz.API.DataModels
         [ModelAttribute("NameSuffix")]
         public string A_NAMESUFFIX { get; set; }
 
+        [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year)]
         [ModelAttribute("Birthdate")]
         public DateTime? A_BIRTHDATE { get; set; }
 
@@ -205,15 +206,18 @@ namespace Hertz.API.DataModels
         [ModelAttribute("MarriottRwdsNum")]
         public string A_MARRIOTTRWDSNUM { get; set; }
 
+        [DateTimeCompare(TimeCompare.Day|TimeCompare.Month|TimeCompare.Year|TimeCompare.Hour|TimeCompare.Minute|TimeCompare.Second)]
         [ModelAttribute("MarriottStatusMatchDate")]
         public DateTime? A_MARRIOTTSTATUSMATCHDATE { get; set; }
 
         [ModelAttribute("SPGRwdsNum")]
         public string A_SPGRWDSNUM { get; set; }
 
+        [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year | TimeCompare.Hour | TimeCompare.Minute | TimeCompare.Second)]
         [ModelAttribute("SPGStatusMatchDate")]
         public DateTime? A_SPGSTATUSMATCHDATE { get; set; }
 
+        [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year | TimeCompare.Hour | TimeCompare.Minute | TimeCompare.Second)]
         [ModelAttribute("SmsConsentChangeDate")]
         public DateTime? A_SMSCONSENTCHANGEDATE { get; set; }
 
@@ -230,6 +234,7 @@ namespace Hertz.API.DataModels
         [ModelAttribute("PreviousTierCode")]
         public string A_PREVIOUSTIERCODE { get; set; }
 
+        [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year)]
         [ModelAttribute("PreviousTierEndDate")]
         public DateTime? A_PREVIOUSTIERENDDATE { get; set; }
 
@@ -245,7 +250,9 @@ namespace Hertz.API.DataModels
         [ModelAttribute("LastRedemptionDate", equalityCheck: EqualityCheck.Skip)]
         public DateTime? A_LASTREDEMPTIONDATE { get; set; }
         public DateTime LAST_DML_DATE { get; set; }
+
         public decimal A_IPCODE { get; set; }
+
 
         [ModelAttribute("HertzCustomerID", ReportOption.Print, equalityCheck: EqualityCheck.Skip)]
         public string A_HERTZCUSTOMERID { get; set; }

@@ -133,6 +133,16 @@ namespace Hertz.API.Controllers
             return txn;
         }
 
+        public static List<TxnHeaderModel> GenerateRandomTransactions(VirtualCardModel vc, IHertzProgram htzProgram,int numTransactions = 1, decimal amount = 100M)
+        {
+            List<TxnHeaderModel> output = new List<TxnHeaderModel>();
+            for (int i = 0; i < numTransactions; i++)
+            {
+                output.Add(GenerateTransaction(vc.LOYALTYIDNUMBER, checkInDate: DateTime.Now, checkOutDate: DateTime.Now.AddDays(-1), program: htzProgram, rentalCharges: amount));
+            }
+            return output;
+        }
+
         public IEnumerable<TxnHeaderModel> GetFromDB(decimal vckey, string RANUM = null)
         {
             StringBuilder query = new StringBuilder();
@@ -145,19 +155,20 @@ namespace Hertz.API.Controllers
         private static decimal? Sum(params decimal?[] values)
         {
             decimal? output = null;
-            foreach (var value in values)
+            if (values.Any(x => x != null))
             {
-                if (value.HasValue) output += value.Value;
+                output = values.Select(x => x).Where(x => x != null).Sum(x => x.Value);
+                return output;
             }
-            return output;
+            return null;
         }
         private static decimal? Multiply(params decimal?[] values)
         {
-            decimal? output = null;
+            decimal? output = 1M;
             if (values.Any(x => x == null)) return null;
             foreach (var value in values)
             {
-                output += value.Value;
+                output *= value.Value;
             }
             return output;
         }
