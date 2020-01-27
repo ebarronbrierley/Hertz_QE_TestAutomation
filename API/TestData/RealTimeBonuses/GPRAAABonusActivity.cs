@@ -42,7 +42,9 @@ namespace Hertz.API.TestData.RealTimeBonuses
                         GenerateTxns(2, validCDP, ValidTiers[0]),
                         GenerateExpectedPoints(2, ValidTiers[0]),
                         new string[] { }
-                    ).SetName($"{PointEventName}. CDP = {validCDP}, EarningPref ={ValidPrograms[0].EarningPreference}, Tier ={ValidTiers[0].Code}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]}");
+                    ).SetName($"{PointEventName}. CDP = {validCDP}, EarningPref ={ValidPrograms[0].EarningPreference}, Tier ={ValidTiers[0].Code}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]}")
+                    .SetCategory(BonusTestCategory.Regression)
+                    .SetCategory(BonusTestCategory.Positive);
                 }
                 foreach (string rsdnCtry in ValidRSDNCTRYCDs)
                 {
@@ -55,7 +57,9 @@ namespace Hertz.API.TestData.RealTimeBonuses
                         GenerateTxns(2, ValidCDPs[0], ValidTiers[0], rsdnCtry),
                         GenerateExpectedPoints(2, ValidTiers[0]),
                         new string[] { }
-                    ).SetName($"{PointEventName}. RSDNCTRYCD = {rsdnCtry}, EarningPref ={ValidPrograms[0].EarningPreference}, Tier ={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}");
+                    ).SetName($"{PointEventName}. RSDNCTRYCD = {rsdnCtry}, EarningPref ={ValidPrograms[0].EarningPreference}, Tier ={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}")
+                     .SetCategory(BonusTestCategory.Regression)
+                     .SetCategory(BonusTestCategory.Positive);
                 }
                 foreach(IHertzProgram validProgram in ValidPrograms)
                 {
@@ -87,7 +91,10 @@ namespace Hertz.API.TestData.RealTimeBonuses
                               GenerateTxns(transactionCount, ValidCDPs[0], validTier, chkOutLocNum: null, chkOutAreaNum: null, chkoutLocId: ChkOutLocId),
                               GenerateExpectedPoints(transactionCount, validTier),
                               new string[] { }
-                          ).SetName($"{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]},CHKOUTLOCID:{ChkOutLocId}");
+                          ).SetName($"{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]},CHKOUTLOCID:{ChkOutLocId}")
+                          .SetCategory(BonusTestCategory.Smoke)
+                          .SetCategory(BonusTestCategory.Regression)
+                          .SetCategory(BonusTestCategory.Positive);
                         }
                     }
                 }

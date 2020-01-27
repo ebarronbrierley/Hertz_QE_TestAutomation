@@ -61,8 +61,10 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             },
                             ExpectedPointEvents,
                             new string[] { }
-                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference},ChkOutLocId={ChkOutLocId}, Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}");
-
+                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference},ChkOutLocId={ChkOutLocId}, Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                         .SetCategory(BonusTestCategory.Regression)
+                         .SetCategory(BonusTestCategory.Positive)
+                         .SetCategory(BonusTestCategory.Smoke);
 
                         member = MemberController.GenerateRandomMember(validTier);
                         member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
@@ -80,7 +82,9 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             },
                             ExpectedPointEvents,
                             new string[] { }
-                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference},Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}");
+                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference},Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
+                         .SetCategory(BonusTestCategory.Regression)
+                         .SetCategory(BonusTestCategory.Positive);
                     }
                 }
 
@@ -125,7 +129,9 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             },
                             ExpectedPointEvents,
                             new string[] { }
-                        ).SetName($"{PointEventName}. RSDNCTRYCODE = {validRSDN}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}");
+                        ).SetName($"{PointEventName}. RSDNCTRYCODE = {validRSDN}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}")
+                         .SetCategory(BonusTestCategory.Regression)
+                         .SetCategory(BonusTestCategory.Positive);
                 }
             }
         }
