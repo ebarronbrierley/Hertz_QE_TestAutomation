@@ -54,8 +54,10 @@
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
     <Compile Include="API\TestCases\AddMemberTests.cs" />
-    <Compile Include="API\TestCases\RealTime_Bonuses.cs" />
+    <Compile Include="API\TestCases\GetMemberTests.cs" />
+    <Compile Include="API\TestCases\RealTimeBonusTests.cs" />
     <Compile Include="API\TestData\AddMemberTestData.cs" />
+    <Compile Include="API\TestData\GetMembersTestData.cs" />
     <Compile Include="API\Utilities\LODConvert.cs" />
     <Compile Include="API\Utilities\LWServiceException.cs" />
     <Compile Include="AssemblyInitializer.cs" />

@@ -17,7 +17,7 @@ namespace Hertz.API.DataModels
     {
         public static readonly string[] BaseVerify = new string[] { "MEMBERCLOSEDATE", "MEMBERSTATUS", "BIRTHDATE", "FIRSTNAME", "LASTNAME", "MIDDLENAME", "NAMEPREFIX", "NAMESUFFIX", "PRIMARYPHONENUMBER", "PRIMARYPOSTALCODE", "ISEMPLOYEE", "CHANGEDBY" };
 
-        public class Status
+        public sealed class Status
         {
             public static readonly long Active = 1, Disabled = 2, Terminated = 3, Locked = 4, NonMember = 5, Merged = 6, PreEnrolled = 7;
         }

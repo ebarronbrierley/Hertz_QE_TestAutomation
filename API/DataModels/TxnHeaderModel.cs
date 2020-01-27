@@ -9,6 +9,7 @@ namespace Hertz.API.DataModels
 {
     public class TxnHeaderModel
     {
+        public const string TableName = "BP_HTZ.ATS_TXNHEADER";
         public decimal A_ROWKEY { get; set; }
         public decimal A_VCKEY { get; set; }
         public decimal? A_PARENTROWKEY { get; set; }
