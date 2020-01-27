@@ -105,6 +105,32 @@ namespace Hertz.API.Controllers
             }
             return memOut;
         }
+        public MemberPromotionModel AddMemberPromotion(string loyaltyId, string promotionCode,string programCode, string certificateNumber,
+                                    bool? returnDefinition, string language, string channel, bool? returnAttributes)
+        {
+            MemberPromotionModel memberPromoOut = default;
+            using(ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwMemberPromo = lwSvc.AddMemberPromotion(loyaltyId, promotionCode, promotionCode, certificateNumber, returnDefinition, language, channel, returnDefinition, String.Empty, out double time);
+                    memberPromoOut = LODConvert.FromLW<MemberPromotionModel>(lwMemberPromo);
+                }
+                catch(LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch(Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("AddMemberPromotion", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return memberPromoOut;
+        }
         #endregion
 
         #region Database Methods
@@ -141,6 +167,23 @@ namespace Hertz.API.Controllers
                     query.Append($"(select a_tiercode from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) is null");
             }
             return GetFromDB(ipCodeQuery: query.ToString());
+        }
+        public IEnumerable<MemberPromotionModel> GetMemberPromotionsFromDB(decimal? id = null, string code = null, decimal? memberId = null)
+        {
+            StringBuilder query = new StringBuilder();
+            query.Append($"select * from {MemberPromotionModel.TableName}");
+
+            if (id == null && code == null && memberId == null) return new List<MemberPromotionModel>();
+
+            query.Append($" where ");
+
+            List<string> queryParams = new List<string>();
+            if (id != null) queryParams.Add($" id = {id} ");
+            if (code != null) queryParams.Add($" code = '{code}' ");
+            if (memberId != null) queryParams.Add($" memberId = '{memberId.Value}' ");
+
+            query.Append(String.Join(" and ", queryParams));
+            return dbContext.Query<MemberPromotionModel>(query.ToString());
         }
         #endregion
 
