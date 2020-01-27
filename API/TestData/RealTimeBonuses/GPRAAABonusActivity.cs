@@ -23,8 +23,8 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                                                     00000219M, 00000222M, 00000227M, 00000238M, 00000240M, 00000241M, 00000243M,
                                                                     00000252M, 00000258M, 00000260M, 00000270M, 00011845M, 00068965M, 01571971M };
         public static readonly string[] ValidRSDNCTRYCDs = new string[]{ "US", "PR" };
-        public static readonly IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
-        public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold, GPR.Tier.FiveStar, GPR.Tier.PresidentsCircle, GPR.Tier.Platinum };
+        public static readonly IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzLoyalty.GoldPointsRewards };
+        public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { HertzLoyalty.GoldPointsRewards.RegularGold, HertzLoyalty.GoldPointsRewards.FiveStar, HertzLoyalty.GoldPointsRewards.PresidentsCircle, HertzLoyalty.GoldPointsRewards.Platinum };
         public const string ChkOutLocId = "00004";
 
         public static IEnumerable PositiveScenarios 
@@ -33,22 +33,26 @@ namespace Hertz.API.TestData.RealTimeBonuses
             {
                 foreach (decimal validCDP in ValidCDPs)
                 {
+                    MemberModel member = MemberController.GenerateRandomMember(ValidTiers[0]);
+                    member.MemberDetails.A_CDPNUMBER = $"{validCDP}";
+                    member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+
                     yield return new TestCaseData(
-                        Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
-                                                                                                    .Set(validCDP, "MemberDetails.A_CDPNUMBER")
-                                                                                                    .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY"),
-                        GenerateTxns(2, validCDP, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier")),
+                        member,
+                        GenerateTxns(2, validCDP, ValidTiers[0]),
                         GenerateExpectedPoints(2, ValidTiers[0]),
                         new string[] { }
                     ).SetName($"{PointEventName}. CDP = {validCDP}, EarningPref ={ValidPrograms[0].EarningPreference}, Tier ={ValidTiers[0].Code}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]}");
                 }
                 foreach (string rsdnCtry in ValidRSDNCTRYCDs)
                 {
+                    MemberModel member = MemberController.GenerateRandomMember(ValidTiers[0]);
+                    member.MemberDetails.A_CDPNUMBER = $"{ValidCDPs[0]}";
+                    member.MemberDetails.A_COUNTRY = rsdnCtry;
+
                     yield return new TestCaseData(
-                        Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
-                                                                                                    .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
-                                                                                                    .Set(rsdnCtry, "MemberDetails.A_COUNTRY"),
-                        GenerateTxns(2, ValidCDPs[0], ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"), rsdnCtry),
+                        member,
+                        GenerateTxns(2, ValidCDPs[0], ValidTiers[0], rsdnCtry),
                         GenerateExpectedPoints(2, ValidTiers[0]),
                         new string[] { }
                     ).SetName($"{PointEventName}. RSDNCTRYCD = {rsdnCtry}, EarningPref ={ValidPrograms[0].EarningPreference}, Tier ={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}");
@@ -58,24 +62,33 @@ namespace Hertz.API.TestData.RealTimeBonuses
                     foreach(IHertzTier validTier in validProgram.Tiers)
                     {
                         if (!ValidTiers.ToList().Any(x => x.Name.Equals(validTier.Name))) continue;
-                        for(int transactionCount =2; transactionCount < 7; transactionCount++)
-                        yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
-                                                                                                        .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
-                                                                                                        .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY"),
-                            GenerateTxns(transactionCount, ValidCDPs[0], validProgram.Set(validTier.Code, "SpecificTier")),
-                            GenerateExpectedPoints(transactionCount, validTier),
-                            new string[] { }
-                        ).SetName($"{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]}");
+
                         for (int transactionCount = 2; transactionCount < 7; transactionCount++)
-                        yield return new TestCaseData(
-                          Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
-                                                                                                      .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
-                                                                                                      .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY"),
-                          GenerateTxns(transactionCount, ValidCDPs[0], validProgram.Set(validTier.Code, "SpecificTier"), chkOutLocNum:null, chkOutAreaNum: null,chkoutLocId: ChkOutLocId),
-                          GenerateExpectedPoints(transactionCount, validTier),
-                          new string[] { }
-                      ).SetName($"{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]},CHKOUTLOCID:{ChkOutLocId}");
+                        {
+                            MemberModel member = MemberController.GenerateRandomMember(validTier);
+                            member.MemberDetails.A_CDPNUMBER = $"{ValidCDPs[0]}";
+                            member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+
+                            yield return new TestCaseData(
+                                member,
+                                GenerateTxns(transactionCount, ValidCDPs[0], validTier),
+                                GenerateExpectedPoints(transactionCount, validTier),
+                                new string[] { }
+                            ).SetName($"{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]}");
+                        }
+
+                        for (int transactionCount = 2; transactionCount < 7; transactionCount++)
+                        {
+                            MemberModel member = MemberController.GenerateRandomMember(validTier);
+                            member.MemberDetails.A_CDPNUMBER = $"{ValidCDPs[0]}";
+                            member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+                            yield return new TestCaseData(
+                              member,
+                              GenerateTxns(transactionCount, ValidCDPs[0], validTier, chkOutLocNum: null, chkOutAreaNum: null, chkoutLocId: ChkOutLocId),
+                              GenerateExpectedPoints(transactionCount, validTier),
+                              new string[] { }
+                          ).SetName($"{PointEventName}. {transactionCount} Transactions EarningPref ={validProgram.EarningPreference}, Tier ={validTier.Code}, CDP = {ValidCDPs[0]}, RSDNCTRYCD = {ValidRSDNCTRYCDs[0]},CHKOUTLOCID:{ChkOutLocId}");
+                        }
                     }
                 }
             }
@@ -92,15 +105,15 @@ namespace Hertz.API.TestData.RealTimeBonuses
         {
             return (BaseAmount + (BaseAmount * num));
         }
-        private static TxnHeader[] GenerateTxns(int num, decimal cdp, IHertzProgram programIn, string resCountry = "US", string chkOutLocNum = "06", string chkOutAreaNum ="01474", string chkoutLocId = null)
+        private static TxnHeaderModel[] GenerateTxns(int num, decimal cdp, IHertzTier tierIn, string resCountry = "US", string chkOutLocNum = "06", string chkOutAreaNum ="01474", string chkoutLocId = null)
         {
-            List<TxnHeader> output = new List<TxnHeader>();
+            List<TxnHeaderModel> output = new List<TxnHeaderModel>();
             for (int i = 0; i < num; i++)
             {
-                output.Add(TxnHeader.Generate("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
+                output.Add(TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
                                         checkOutDate: DateTime.Now.AddDays(1).Comparable(),
                                         bookDate: DateTime.Now.Comparable(),
-                                        program: programIn,
+                                        program: tierIn.ParentProgram,
                                         RSDNCTRYCD: resCountry, HODIndicator: 0, rentalCharges: Amount(i), CDP: cdp,chkoutlocnum: chkOutLocNum, chkoutareanum: chkOutAreaNum, chkoutlocid: chkoutLocId));
             }
             return output.ToArray();
@@ -108,10 +121,10 @@ namespace Hertz.API.TestData.RealTimeBonuses
         private static ExpectedPointEvent[] GenerateExpectedPoints(int num, IHertzTier tier)
         {
             List<ExpectedPointEvent> output = new List<ExpectedPointEvent>();
-            if (tier.Code == GPR.Tier.RegularGold.Code) output.AddRange(RegularGold(num));
-            else if (tier.Code == GPR.Tier.FiveStar.Code) output.AddRange(FiveStar(num));
-            else if (tier.Code == GPR.Tier.PresidentsCircle.Code) output.AddRange(PresidentsCircle(num));
-            else if (tier.Code == GPR.Tier.Platinum.Code) output.AddRange(Platinum(num));
+            if (tier.Code == HertzLoyalty.GoldPointsRewards.RegularGold.Code) output.AddRange(RegularGold(num));
+            else if (tier.Code == HertzLoyalty.GoldPointsRewards.FiveStar.Code) output.AddRange(FiveStar(num));
+            else if (tier.Code == HertzLoyalty.GoldPointsRewards.PresidentsCircle.Code) output.AddRange(PresidentsCircle(num));
+            else if (tier.Code == HertzLoyalty.GoldPointsRewards.Platinum.Code) output.AddRange(Platinum(num));
             return output.ToArray();
         }
         private static List<ExpectedPointEvent> RegularGold(int num)
@@ -119,21 +132,21 @@ namespace Hertz.API.TestData.RealTimeBonuses
             List<ExpectedPointEvent> output = new List<ExpectedPointEvent>();
             for (int i = 0; i < num; i++)
             {
-                if (i == 0) output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i) * (1+GPR.Tier.RegularGold.EarningRateModifier)));
+                if (i == 0) output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i) * (1+ HertzLoyalty.GoldPointsRewards.RegularGold.EarningRateModifier)));
                 else if (i >= 1 && i <= 2)
                 {
-                    output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i) * (1 + GPR.Tier.RegularGold.EarningRateModifier)));
-                    output.Add(new ExpectedPointEvent("GPRAAABonusActivity", Math.Round(Amount(i) * (0.1M - GPR.Tier.RegularGold.EarningRateModifier), MidpointRounding.AwayFromZero)));
+                    output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i) * (1 + HertzLoyalty.GoldPointsRewards.RegularGold.EarningRateModifier)));
+                    output.Add(new ExpectedPointEvent("GPRAAABonusActivity", Math.Round(Amount(i) * (0.1M - HertzLoyalty.GoldPointsRewards.RegularGold.EarningRateModifier), MidpointRounding.AwayFromZero)));
                 }
                 else if (i >= 3 && i <= 4)
                 {
-                    output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i) * (1 + GPR.Tier.RegularGold.EarningRateModifier)));
-                    output.Add(new ExpectedPointEvent("GPRAAABonusActivity", Math.Round(Amount(i) * (0.15M - GPR.Tier.RegularGold.EarningRateModifier), MidpointRounding.AwayFromZero)));
+                    output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i) * (1 + HertzLoyalty.GoldPointsRewards.RegularGold.EarningRateModifier)));
+                    output.Add(new ExpectedPointEvent("GPRAAABonusActivity", Math.Round(Amount(i) * (0.15M - HertzLoyalty.GoldPointsRewards.RegularGold.EarningRateModifier), MidpointRounding.AwayFromZero)));
                 }
                 else if (i >= 5)
                 {
-                    output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i) * (1 + GPR.Tier.RegularGold.EarningRateModifier)));
-                    output.Add(new ExpectedPointEvent("GPRAAABonusActivity", Math.Round(Amount(i) * (0.25M - GPR.Tier.RegularGold.EarningRateModifier), MidpointRounding.AwayFromZero)));
+                    output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i) * (1 + HertzLoyalty.GoldPointsRewards.RegularGold.EarningRateModifier)));
+                    output.Add(new ExpectedPointEvent("GPRAAABonusActivity", Math.Round(Amount(i) * (0.25M - HertzLoyalty.GoldPointsRewards.RegularGold.EarningRateModifier), MidpointRounding.AwayFromZero)));
                 }
             }
             return output;
@@ -146,18 +159,18 @@ namespace Hertz.API.TestData.RealTimeBonuses
                 if (i <= 2)
                 {
                     output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i)));
-                    output.Add(new ExpectedPointEvent("GPRTierBonus_FS", Math.Round(Amount(i) * GPR.Tier.FiveStar.EarningRateModifier, MidpointRounding.AwayFromZero)));
+                    output.Add(new ExpectedPointEvent("GPRTierBonus_FS", Math.Round(Amount(i) * HertzLoyalty.GoldPointsRewards.FiveStar.EarningRateModifier, MidpointRounding.AwayFromZero)));
                 }
                 else if (i >= 3 && i <= 4)
                 {
                     output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i)));
-                    output.Add(new ExpectedPointEvent("GPRTierBonus_FS", Math.Round(Amount(i) * GPR.Tier.FiveStar.EarningRateModifier, MidpointRounding.AwayFromZero)));
+                    output.Add(new ExpectedPointEvent("GPRTierBonus_FS", Math.Round(Amount(i) * HertzLoyalty.GoldPointsRewards.FiveStar.EarningRateModifier, MidpointRounding.AwayFromZero)));
                     output.Add(new ExpectedPointEvent("GPRAAABonusActivity", Math.Round(Amount(i) * 0.05M , MidpointRounding.AwayFromZero)));
                 }
                 else if (i >= 5)
                 {
                     output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i)));
-                    output.Add(new ExpectedPointEvent("GPRTierBonus_FS", Math.Round(Amount(i) * GPR.Tier.FiveStar.EarningRateModifier, MidpointRounding.AwayFromZero)));
+                    output.Add(new ExpectedPointEvent("GPRTierBonus_FS", Math.Round(Amount(i) * HertzLoyalty.GoldPointsRewards.FiveStar.EarningRateModifier, MidpointRounding.AwayFromZero)));
                     output.Add(new ExpectedPointEvent("GPRAAABonusActivity", Math.Round(Amount(i) * 0.15M, MidpointRounding.AwayFromZero)));
                 }
             }
@@ -169,7 +182,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
             for (int i = 0; i < num; i++)
             {
                 output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i)));
-                output.Add(new ExpectedPointEvent("GPRTierBonus_PC_PL", Math.Round(Amount(i) * GPR.Tier.PresidentsCircle.EarningRateModifier, MidpointRounding.AwayFromZero)));
+                output.Add(new ExpectedPointEvent("GPRTierBonus_PC_PL", Math.Round(Amount(i) * HertzLoyalty.GoldPointsRewards.PresidentsCircle.EarningRateModifier, MidpointRounding.AwayFromZero)));
             }
             return output;
         }
@@ -179,7 +192,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
             for (int i = 0; i < num; i++)
             {
                 output.Add(new ExpectedPointEvent("GPRGoldRental", Amount(i)));
-                output.Add(new ExpectedPointEvent("GPRTierBonus_PC_PL", Math.Round(Amount(i) * GPR.Tier.Platinum.EarningRateModifier, MidpointRounding.AwayFromZero)));
+                output.Add(new ExpectedPointEvent("GPRTierBonus_PC_PL", Math.Round(Amount(i) * HertzLoyalty.GoldPointsRewards.Platinum.EarningRateModifier, MidpointRounding.AwayFromZero)));
             }
             return output;
         }

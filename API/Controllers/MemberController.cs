@@ -10,6 +10,7 @@ using Hertz.API.DataModels;
 using Hertz.API.Utilities;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Framework;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
+using System.Diagnostics;
 
 namespace Hertz.API.Controllers
 {
@@ -184,6 +185,40 @@ namespace Hertz.API.Controllers
 
             query.Append(String.Join(" and ", queryParams));
             return dbContext.Query<MemberPromotionModel>(query.ToString());
+        }
+
+        public MemberModel AssignUniqueLIDs(MemberModel member)
+        {
+            foreach(var virtualCard in member.VirtualCards)
+            {
+                virtualCard.LOYALTYIDNUMBER = GetUniqueLID();
+            }
+            return member;
+        }
+        public string GetUniqueLID()
+        {
+            Stopwatch timer = new Stopwatch();
+            TimeSpan timeout = new TimeSpan(0, 0, 10);
+            timer.Start();
+            bool timedOut = false;
+            int attempts = 0;
+
+            while(!timedOut)
+            {
+                string potentialLID = StrongRandom.NumericString(7);
+
+                if (String.IsNullOrEmpty(dbContext.QuerySingleColumn<string>($"select LOYALTYIDNUMBER from {VirtualCardModel.TableName} where LOYALTYIDNUMBER = '{potentialLID}';")))
+                    return potentialLID;
+
+                if (timer.ElapsedTicks > timeout.Ticks)
+                {
+                    timedOut = true;
+                }
+                ++attempts;
+            }
+
+            //If we get here, we timed out
+            throw new Exception($"Timed out attempting to find unique Loyalty Id. Attempted generating {attempts} times.");
         }
         #endregion
 

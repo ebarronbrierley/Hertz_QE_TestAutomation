@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
 using Brierley.TestAutomation.Core.Utilities;
 using Hertz.API.Utilities;
-using Brierley.LoyaltyWare.ClientLib.DomainModel.Framework;
-using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
-using System.Collections;
 
 namespace Hertz.API.DataModels
 {

@@ -17,8 +17,8 @@ namespace Hertz.API.TestData.RealTimeBonuses
         public const string PointEventName = "HorizonCardPointsActivity";
         public const decimal PointEventAmount = 12000M;
         public const string ValidFTPTNRNUM = "ZE1";
-        public static IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzProgram.GoldPointsRewards };
-        public static IHertzTier[] ValidTiers = new IHertzTier[] { GPR.Tier.RegularGold };
+        public static IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzLoyalty.GoldPointsRewards };
+        public static IHertzTier[] ValidTiers = new IHertzTier[] { HertzLoyalty.GoldPointsRewards.RegularGold };
         public const decimal BaseTxnAmount = 25M;
         public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent(PointEventName, PointEventAmount) };
         public static TimeSpan ValidRentalLength = TimeSpan.FromDays(1);
@@ -36,13 +36,13 @@ namespace Hertz.API.TestData.RealTimeBonuses
                     {
                         if (!ValidTiers.ToList().Any(x => x.Name.Equals(validTier.Name))) continue;
 
+                        MemberModel member = MemberController.GenerateRandomMember(validTier);
+                        member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+                        member.MemberDetails.A_CDPNUMBER = $"{ValidCDPs[0]}";
                         yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
-                                                                                          .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
-                                                                                          .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
-                            ,
-                            new TxnHeader[] {
-                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                            member,
+                            new TxnHeaderModel[] {
+                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
@@ -58,13 +58,13 @@ namespace Hertz.API.TestData.RealTimeBonuses
                 }
                 foreach (decimal validCDP in ValidCDPs)
                 {
+                    MemberModel member = MemberController.GenerateRandomMember(ValidTiers[0]);
+                    member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+                    member.MemberDetails.A_CDPNUMBER = $"{validCDP}";
                     yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
-                                                                                          .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
-                                                                                          .Set(validCDP, "MemberDetails.A_CDPNUMBER")
-                            ,
-                            new TxnHeader[] {
-                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                            member,
+                            new TxnHeaderModel[] {
+                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: validCDP,
@@ -76,13 +76,16 @@ namespace Hertz.API.TestData.RealTimeBonuses
                          .SetCategory(BonusTestCategory.Regression)
                          .SetCategory(BonusTestCategory.Positive)
                          .SetCategory(BonusTestCategory.Smoke);
+
+
+
+                    member = MemberController.GenerateRandomMember(ValidTiers[0]);
+                    member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+                    member.MemberDetails.A_CDPNUMBER = $"{validCDP}";
                     yield return new TestCaseData(
-                           Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
-                                                                                         .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
-                                                                                         .Set(validCDP, "MemberDetails.A_CDPNUMBER")
-                           ,
-                           new TxnHeader[] {
-                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                           member,
+                           new TxnHeaderModel[] {
+                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: validCDP,
@@ -97,13 +100,13 @@ namespace Hertz.API.TestData.RealTimeBonuses
                 }
                 foreach (string validRSDN in ValidRSDNCTRYCDs)
                 {
+                    MemberModel member = MemberController.GenerateRandomMember(ValidTiers[0]);
+                    member.MemberDetails.A_COUNTRY = validRSDN;
+                    member.MemberDetails.A_CDPNUMBER = $"{ValidCDPs[0]}";
                     yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
-                                                                                          .Set(validRSDN, "MemberDetails.A_COUNTRY")
-                                                                                          .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
-                            ,
-                            new TxnHeader[] {
-                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                           member,
+                            new TxnHeaderModel[] {
+                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],

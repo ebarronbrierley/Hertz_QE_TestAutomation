@@ -36,6 +36,8 @@ namespace Hertz.API.TestData.RealTimeBonuses
         {
             get
             {
+                TxnHeaderController txnController = new TxnHeaderController();
+
                 foreach (IHertzProgram validProgram in ValidPrograms)
                 {
                     foreach (IHertzTier validTier in validProgram.Tiers)
@@ -47,12 +49,10 @@ namespace Hertz.API.TestData.RealTimeBonuses
                         member.MemberDetails.A_CDPNUMBER = $"{ValidCDPs[0]}";
                         member.MemberDetails.A_CONTRACTSEGMENTTYPE = ValidContractSegment;
 
-                        //TxnHeaderModel
-
                         yield return new TestCaseData(
                            member,
-                            new TxnHeader[] {
-                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                            new TxnHeaderModel[] {
+                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
@@ -61,19 +61,17 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             },
                             ExpectedPointEvents,
                             new string[] { }
-                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference},ChkOutLocId={ChkOutLocId}, Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
-                         .SetCategory(BonusTestCategory.Regression)
-                         .SetCategory(BonusTestCategory.Positive)
-                         .SetCategory(BonusTestCategory.Smoke);                 
+                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference},ChkOutLocId={ChkOutLocId}, Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}");
 
+
+                        member = MemberController.GenerateRandomMember(validTier);
+                        member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+                        member.MemberDetails.A_CDPNUMBER = $"{ValidCDPs[0]}";
+                        member.MemberDetails.A_CONTRACTSEGMENTTYPE = ValidContractSegment;
                         yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.ProjectOne, validProgram.Set(validTier.Code, "SpecificTier"))
-                                                                                          .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
-                                                                                          .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
-                                                                                          .Set(ValidContractSegment, "MemberDetails.A_CONTRACTSEGMENTTYPE")
-                            ,
-                            new TxnHeader[] {
-                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                            member,
+                            new TxnHeaderModel[] {
+                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
@@ -82,22 +80,21 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             },
                             ExpectedPointEvents,
                             new string[] { }
-                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference},Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
-                         .SetCategory(BonusTestCategory.Regression)
-                         .SetCategory(BonusTestCategory.Positive)
-                         .SetCategory(BonusTestCategory.Smoke);
+                        ).SetName($"{PointEventName}. EarningPref={validProgram.EarningPreference},Tier={validTier.Code}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}");
                     }
                 }
+
                 foreach (decimal validCDP in ValidCDPs)
                 {
+                    MemberModel member = MemberController.GenerateRandomMember(ValidTiers[0]);
+                    member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+                    member.MemberDetails.A_CDPNUMBER = $"{validCDP}";
+                    member.MemberDetails.A_CONTRACTSEGMENTTYPE = ValidContractSegment;
+
                     yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
-                                                                                          .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
-                                                                                          .Set(validCDP, "MemberDetails.A_CDPNUMBER")
-                                                                                          .Set(ValidContractSegment, "MemberDetails.A_CONTRACTSEGMENTTYPE")
-                            ,
-                            new TxnHeader[] {
-                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                            member,
+                            new TxnHeaderModel[] {
+                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: validCDP,
@@ -106,21 +103,20 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             },
                             ExpectedPointEvents,
                             new string[] { }
-                        ).SetName($"{PointEventName}. CDP = {validCDP}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
-                         .SetCategory(BonusTestCategory.Regression)
-                         .SetCategory(BonusTestCategory.Positive)
-                         .SetCategory(BonusTestCategory.Smoke);
+                        ).SetName($"{PointEventName}. CDP = {validCDP}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}");
                 }
+
                 foreach (string validRSDN in ValidRSDNCTRYCDs)
                 {
+                    MemberModel member = MemberController.GenerateRandomMember(ValidTiers[0]);
+                    member.MemberDetails.A_COUNTRY = validRSDN;
+                    member.MemberDetails.A_CDPNUMBER = $"{ValidCDPs[0]}";
+                    member.MemberDetails.A_CONTRACTSEGMENTTYPE = ValidContractSegment;
+
                     yield return new TestCaseData(
-                            Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
-                                                                                          .Set(validRSDN, "MemberDetails.A_COUNTRY")
-                                                                                          .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
-                                                                                          .Set(ValidContractSegment, "MemberDetails.A_CONTRACTSEGMENTTYPE")
-                            ,
-                            new TxnHeader[] {
-                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                            member,
+                            new TxnHeaderModel[] {
+                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
@@ -129,9 +125,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             },
                             ExpectedPointEvents,
                             new string[] { }
-                        ).SetName($"{PointEventName}. RSDNCTRYCODE = {validRSDN}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}")
-                         .SetCategory(BonusTestCategory.Regression)
-                         .SetCategory(BonusTestCategory.Positive);
+                        ).SetName($"{PointEventName}. RSDNCTRYCODE = {validRSDN}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, CDP = {ValidCDPs[0]}");
                 }
             }
         }
@@ -139,7 +133,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
 
 
 
-        public static IHertzProgram[] InvalidPrograms = new IHertzProgram[]{ HertzProgram.DollarExpressRenters, HertzProgram.ThriftyBlueChip };
+        public static IHertzProgram[] InvalidPrograms = new IHertzProgram[]{ HertzLoyalty.DollarExpressRenters, HertzLoyalty.ThriftyBlueChip };
         public static decimal[] InvalidCDPs = new decimal[] { 1234567M };
         public static decimal[] InvalidBaseTxnAmount = new decimal[] { 10M, 24M };
         public static IEnumerable NegativeScenarios
@@ -148,14 +142,15 @@ namespace Hertz.API.TestData.RealTimeBonuses
             {
                 foreach (IHertzProgram invalidProgram in InvalidPrograms)
                 {
+                    MemberModel member = MemberController.GenerateRandomMember(invalidProgram.Tiers.FirstOrDefault());
+                    member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+                    member.MemberDetails.A_CDPNUMBER = $"{ValidCDPs[0]}";
+                    member.MemberDetails.A_CONTRACTSEGMENTTYPE = ValidContractSegment;
+
                     yield return new TestCaseData(
-                        Member.GenerateRandom(MemberStyle.ProjectOne, invalidProgram)
-                                                                                              .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
-                                                                                              .Set(ValidCDPs[0], "MemberDetails.A_CDPNUMBER")
-                                                                                              .Set(ValidContractSegment, "MemberDetails.A_CONTRACTSEGMENTTYPE")
-                            ,
-                            new TxnHeader[] {
-                            TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                            member,
+                            new TxnHeaderModel[] {
+                            TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                             checkOutDate:DateTime.Now.Comparable(),
                             bookDate:DateTime.Now.Comparable(),
                             program: invalidProgram, CDP: ValidCDPs[0],
@@ -164,21 +159,19 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             },
                            ExpectedPointEvents,
                             new string[] { }
-                        ).SetName($"{PointEventName}. Invalid EarningPref={invalidProgram.EarningPreference}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
-                            .SetCategory(BonusTestCategory.Regression)
-                            .SetCategory(BonusTestCategory.Negative)
-                            .SetCategory(BonusTestCategory.Smoke);
+                        ).SetName($"{PointEventName}. Invalid EarningPref={invalidProgram.EarningPreference}, CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}");
                 }
                 foreach (decimal invalidCDP in InvalidCDPs)
                 {
+                    MemberModel member = MemberController.GenerateRandomMember(ValidTiers[0]);
+                    member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+                    member.MemberDetails.A_CDPNUMBER = $"{invalidCDP}";
+                    member.MemberDetails.A_CONTRACTSEGMENTTYPE = ValidContractSegment;
+
                     yield return new TestCaseData(
-                                Member.GenerateRandom(MemberStyle.ProjectOne, ValidPrograms[0].Set(ValidTiers[0].Code, "SpecificTier"))
-                                                                                              .Set(ValidRSDNCTRYCDs[0], "MemberDetails.A_COUNTRY")
-                                                                                              .Set(invalidCDP, "MemberDetails.A_CDPNUMBER")
-                                                                                              .Set(ValidContractSegment, "MemberDetails.A_CONTRACTSEGMENTTYPE")
-                                ,
-                                new TxnHeader[] {
-                                TxnHeader.Generate("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
+                                member,
+                                new TxnHeaderModel[] {
+                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
                                 program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: invalidCDP,
@@ -187,10 +180,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 },
                               ExpectedPointEvents,
                                 new string[] { }
-                            ).SetName($"{PointEventName}. Invalid CDP = {invalidCDP}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}")
-                             .SetCategory(BonusTestCategory.Regression)
-                             .SetCategory(BonusTestCategory.Positive)
-                             .SetCategory(BonusTestCategory.Smoke);
+                            ).SetName($"{PointEventName}. Invalid CDP = {invalidCDP}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}");
                 }
                 foreach(decimal invalidTxnAmount in InvalidBaseTxnAmount)
                 {
