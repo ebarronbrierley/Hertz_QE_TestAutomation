@@ -202,10 +202,11 @@ namespace Hertz.API.Controllers
             timer.Start();
             bool timedOut = false;
             int attempts = 0;
+            int lidSize = 7;
 
             while(!timedOut)
             {
-                string potentialLID = StrongRandom.NumericString(7);
+                string potentialLID = StrongRandom.NumericString(lidSize);
 
                 if (String.IsNullOrEmpty(dbContext.QuerySingleColumn<string>($"select LOYALTYIDNUMBER from {VirtualCardModel.TableName} where LOYALTYIDNUMBER = '{potentialLID}';")))
                     return potentialLID;
@@ -216,6 +217,11 @@ namespace Hertz.API.Controllers
                 }
                 ++attempts;
             }
+
+            //If we couldn't generate anything above, try increasing the size once
+            string biggerLIDAttempt = StrongRandom.NumericString(++lidSize);
+            if (String.IsNullOrEmpty(dbContext.QuerySingleColumn<string>($"select LOYALTYIDNUMBER from {VirtualCardModel.TableName} where LOYALTYIDNUMBER = '{biggerLIDAttempt}';")))
+                return biggerLIDAttempt;
 
             //If we get here, we timed out
             throw new Exception($"Timed out attempting to find unique Loyalty Id. Attempted generating {attempts} times.");
