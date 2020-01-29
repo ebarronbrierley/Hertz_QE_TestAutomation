@@ -255,7 +255,7 @@ namespace HertzNetFramework.DataModels
                 A_CHILDSEATTOTAMT = 0M,
                 A_ITVALLFEETOTAMT = 0M,
                 A_GARSPECLEQMNTAMT = 0M,
-                A_GRSREVNAMT = 0M,
+                A_GRSREVNAMT = rentalCharges,
                 A_MISCGRPAMT = 0M,
                 A_NVGTNSYSTOTAMT = 0M,
                 A_SATLTRADIOTOTAMT = 0M,

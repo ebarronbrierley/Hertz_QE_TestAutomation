@@ -8,29 +8,19 @@ using Brierley.TestAutomation.Core.Utilities;
 using HertzNetFramework.DataModels;
 using System.Collections;
 using Brierley.TestAutomation.Core.Database;
+using System.Reflection;
 
 namespace HertzNetFramework.Tests.UserStoryTests
 {
-    [TestFixture]
-    class ExclusionListTests : BrierleyTestFixture
-    {
-        [Category("Api_Smoke")]
-        [Category("Api_Positive")]
-        [Category("ExclusionList")]
-        [Category("ExclusionList_Positive")]
-        [Test]
-        public void ExclusionList_Positive()
-        {
-            try
-            {
 
-                BPTest.Start<TestStep>($"Step 0: Create an RG Member");
-                decimal[] RemovedCDPs = new decimal[] { 552641M , 552642M , 603849M , 610205M , 663884M , 663888M , 779693M ,
+    class ExclusionLists
+    {
+        static decimal[] RemovedCDPs = new decimal[] { 552641M , 552642M , 603849M , 610205M , 663884M , 663888M , 779693M ,
                                                         792763M , 793627M , 881706M , 965871M , 538987M , 525191M  , 517402M };
 
-                decimal[] HTZ18536RemovedCDPs = new decimal[] { 67447M, 66442M,64747M, 358685M };
+        static decimal[] HTZ18536RemovedCDPs = new decimal[] { 67447M, 66442M, 64747M, 358685M };
 
-                decimal[] HTZ18536_NonEarningCDPs = new decimal[] {69042M,
+        static decimal[] HTZ18536_NonEarningCDPs = new decimal[] {69042M,
                     67198M,
                     67045M,
                     67046M,
@@ -71,22 +61,53 @@ namespace HertzNetFramework.Tests.UserStoryTests
                     69038M,
                     69107M,
                     69121M,};
-                
-                Member testMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("RG", "MemberDetails.A_TIERCODE");
+
+
+
+        public static IEnumerable PositiveScenarios
+        {
+            get
+            {
+                IEnumerable<FieldInfo> ExclusionListFieldInfo = typeof(ExclusionLists).GetFields(BindingFlags.Static | BindingFlags.Public);
+                foreach(var fieldInfo in ExclusionListFieldInfo)
+                {
+                    if(fieldInfo.GetValue(new ExclusionLists()) is decimal[] cdps)
+                    {
+                        foreach(var cdp in cdps)
+                        {
+                            yield return cdp;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    [TestFixture]
+    class ExclusionListTests : BrierleyTestFixture
+    {
+        [Category("Api_Smoke")]
+        [Category("Api_Positive")]
+        [Category("ExclusionList")]
+        [Category("ExclusionList_Positive")]
+        [Test]
+        public void ExclusionList_Positive()
+        {
+            try
+            {
+                BPTest.Start<TestStep>($"Step 1: Create an RG Member");
+                Member testMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set(HertzProgram.GoldPointsRewards, "MemberDetails.A_EARNINGPREFERENCE").Set("RG", "MemberDetails.A_TIERCODE");
                 Member memberOut = Member.AddMember(testMember);
                 string loyaltyid = testMember.GetLoyaltyID();
-
-                string query = $@"select vckey from bp_htz.lw_virtualcard where loyaltyidnumber = '{loyaltyid}'";
-                Hashtable ht = Database.QuerySingleRow(query);
-                decimal vckey = Convert.ToDecimal(ht["VCKEY"]);
-
-                DateTime checkInDt = new DateTime(2019, 10, 2);
+                decimal vckey = memberOut.VirtualCards[0].VCKEY;
+                int daysAfterCheckOut = 1; 
                 DateTime checkOutDt = new DateTime(2019, 10, 1);
-                DateTime origBkDt = new DateTime(2019, 10, 1);
-                int count = 1;
-                BPTest.Pass<TestStep>($"RG Member Created");
+                DateTime checkInDt = checkOutDt.AddDays(daysAfterCheckOut);
+                DateTime origBkDt = checkOutDt;
+                int count = 2;
+                BPTest.Pass<TestStep>($"Step 1: RG Member Created");
                 
-                foreach (decimal cdp in HTZ18536_NonEarningCDPs)
+                foreach (decimal cdp in ExclusionLists.PositiveScenarios)
                 {
                     BPTest.Start<TestStep>($"Step {count}: Test CDP {cdp}");
                     TxnHeader txnHeader = TxnHeader.Generate(testMember.GetLoyaltyID(), checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, null, "US", 100, "AAAA", 246095, "N", "US", null);
@@ -95,6 +116,7 @@ namespace HertzNetFramework.Tests.UserStoryTests
                     testMember.RemoveTransaction();
                     BPTest.Pass<TestStep>($"Step {count++} Passed");
                 }
+
                 BPTest.Start<TestStep>($"Step {count}: Validate DB");
                 string query2 = $@"select * from bp_htz.lw_pointtransaction where vckey = '{vckey}'";
                 QueryResult qr = Database.Query(query2);
@@ -1220,25 +1242,27 @@ namespace HertzNetFramework.Tests.UserStoryTests
                     828541M,
                 };
 
-                Member testMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("PL", "MemberDetails.A_TIERCODE");
+                decimal[] HTZ22330_EarningCDPs = new decimal[] { 17376,52753,65909,66825,67049,67051,67947,68017,68019,68032,68033,68096,68278,};
+
+                Member testMember = Member.GenerateRandom(MemberStyle.ProjectOne).Set("N1", "MemberDetails.A_EARNINGPREFERENCE").Set("RG", "MemberDetails.A_TIERCODE");
                 Member memberOut = Member.AddMember(testMember);
                 string loyaltyid = testMember.GetLoyaltyID();
 
-                string query = $@"select vckey from bp_htz.lw_virtualcard where loyaltyidnumber = '{loyaltyid}'";
+                //string query = $@"select vckey from bp_htz.lw_virtualcard where loyaltyidnumber = '{loyaltyid}'";
                 //Hashtable ht = Database.QuerySingleRow(query);
                 //decimal vckey = Convert.ToDecimal(ht["VCKEY"]);
                 //string query2 = $@"select * from bp_htz.lw_pointtransaction where vckey = '{vckey}'";
 
-                DateTime checkInDt = new DateTime(2019, 10, 2);
-                DateTime checkOutDt = new DateTime(2019, 10, 1);
-                DateTime origBkDt = new DateTime(2019, 10, 1);
+                DateTime checkInDt = new DateTime(2020, 01, 2);
+                DateTime checkOutDt = new DateTime(2020, 01, 1);
+                DateTime origBkDt = new DateTime(2020, 01, 1);
                 int count = 1;
                 BPTest.Pass<TestStep>($"Step 0 Passed: RG Member Created");
 
-                foreach (decimal cdp in HTZ18527_NewlyNonEarningCDPs)
+                foreach (decimal cdp in HTZ22330_EarningCDPs)
                 {
                     BPTest.Start<TestStep>($"Step {count}: Test CDP {cdp}");
-                    TxnHeader txnHeader = TxnHeader.Generate(testMember.GetLoyaltyID(), checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, null, "US", 100, "AAAA", 246095, "N", "US", null);
+                    TxnHeader txnHeader = TxnHeader.Generate(testMember.GetLoyaltyID(), checkInDt, checkOutDt, origBkDt, cdp, HertzProgram.GoldPointsRewards, null, "US", 100, null, null, "N", "US", null);
                     testMember.AddTransaction(txnHeader);
                     Member.UpdateMember(testMember);
                     testMember.RemoveTransaction();
