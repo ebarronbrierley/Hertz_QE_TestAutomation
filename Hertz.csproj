@@ -88,7 +88,7 @@
     <Compile Include="Database\DataModels\NovaLoadsModel.cs" />
     <Compile Include="FileProcessing\Controllers\CSUsernameController.cs" />
     <Compile Include="FileProcessing\DataModels\CSUsernameFileModel.cs" />
-    <Compile Include="FileProcessing\TestCases\CSUsernameFileFeedTests.cs" />
+    <Compile Include="FileProcessing\TestCases\FileFeedTests.cs" />
     <Compile Include="FileProcessing\TestData\CSUsernameFileTestData.cs" />
     <Compile Include="FileProcessing\Utilities\DataFeedSerializer.cs" />
     <Compile Include="FileProcessing\Utilities\DataFeedTypeException.cs" />

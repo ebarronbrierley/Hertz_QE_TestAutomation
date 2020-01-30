@@ -8,5 +8,10 @@ namespace Hertz.FileProcessing.Utilities
 {
     public class FileFeedVerificationException : Exception
     {
+        public string[] FailureReasons { get; set; }
+        public FileFeedVerificationException(string message, params string[] failureReasons):base(message)
+        {
+            FailureReasons = failureReasons;
+        }
     }
 }

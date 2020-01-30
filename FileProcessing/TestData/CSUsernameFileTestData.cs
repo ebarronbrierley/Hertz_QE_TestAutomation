@@ -13,8 +13,9 @@ using Hertz.FileProcessing.Controllers;
 
 namespace Hertz.FileProcessing.TestData
 {
-    public class CSUsernameFileTestData
+    public class CSUsernameFileFeedTestData
     {
+        public static readonly string TestCaseBaseName = "Customer Service Username File";
         public static IEnumerable Scenarios
         {
             get
@@ -23,19 +24,10 @@ namespace Hertz.FileProcessing.TestData
 
                 CSUsernameRow row =  CSUsernameController.GenerateRandomRow();
                 row.Description = "Positive - Random row valid fields";
-                //row.RowData.New_Username = StrongRandom.Username();
-                //row.RowData.Role_Id = 277M;
-                //row.RowData.Group_Id = 1M;
-                //row.RowData.First_Name = "bbKk";
-                //row.RowData.Last_Name = "VEEw";
-                //row.RowData.Email_Address = "SeoNp_cwFD9@GMAIL.COM";
-                //row.RowData.Phone_Number = "6584242";
-                //row.RowData.Extension = "1";
-                //row.RowData.Status = 1;
                 row.Verifications.Add((str, data, rowNum) => str.VerifyInDatabase(data));
                 csUserFile.AddRow(row);
 
-                yield return new TestCaseData(csUserFile).SetName("Customer Service Username - Positive: All fields valid");
+                yield return new TestCaseData(csUserFile).SetName($"{TestCaseBaseName}");
             }
         }
     }

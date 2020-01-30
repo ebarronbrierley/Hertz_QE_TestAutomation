@@ -15,7 +15,7 @@ using Hertz.FileProcessing.TestData;
 namespace Hertz.FileProcessing.TestCases
 {
     [TestFixture]
-    public class CSUsernameFileFeedTests : BrierleyTestFixture
+    public class FileFeedTests : BrierleyTestFixture
     {
         [SetUp]
         public void SetFileProcessingDirectory()
@@ -25,8 +25,8 @@ namespace Hertz.FileProcessing.TestCases
 
         [Test]
         [SFTPTest]
-        [TestCaseSource(typeof(CSUsernameFileTestData), "Scenarios")]
-        public void CSUsernameFileFeedTestsTest(IDataFeed fileFeed)
+        [TestCaseSource(typeof(CSUsernameFileFeedTestData), "Scenarios")]
+        public void FileFeedTest(IDataFeed fileFeed)
         {
             try
             {
@@ -49,10 +49,19 @@ namespace Hertz.FileProcessing.TestCases
                 foreach (IDataFeedRow row in fileFeed.Rows)
                 {
                     TestStep.Start($"Verify Row Number {row.RowNumber} Scenario {row.Description}", "File row verification should pass");
-                    Assert.DoesNotThrow( () => fileFeed.VerifyRow(row));
-                    TestStep.Pass("Files row verified successfully", row.Data.ToString());
+
+                    try
+                    {
+                        fileFeed.VerifyRow(row);
+                        TestStep.Pass("Files row verified successfully", row.Data.ToString());
+                    }
+                    catch (FileFeedVerificationException ex)
+                    {
+                        TestStep.Fail(ex.Message, ex.FailureReasons);
+                    }
                 }
             }
+            
             catch (DatabaseException ex)
             {
                 TestStep.Fail(ex.Message);
