@@ -19,7 +19,7 @@ namespace Hertz.FileProcessing.Controllers
         public string FileType { get { return this.GetType().Name.Replace("Controller", String.Empty); } }
         public string Filename { get; set; }
         public int RowCount { get { return fileRows.Count; } }
-        public IEnumerable<string> RejectTables { get { return new List<string>() { "EXPSTG.NOVA_ERRORS", "BP_EXP.ERR_DF_EXP_PRODUCT" }; } }
+        public IEnumerable<string> RejectTables { get { return new List<string>() { "HTZSTG.NOVA_ERRORS", "BP_HTZ.ERR_DF_FEED_CS_AGENTS" }; } }
         public string StatusQuery { get { return $"SELECT processing_state from {NovaLoadsModel.TableName} where FILE_NAME = '{Filename}'"; } }
         public string TriggerProcedure
         {
