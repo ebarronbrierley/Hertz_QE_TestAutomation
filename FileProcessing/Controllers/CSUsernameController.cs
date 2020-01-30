@@ -26,7 +26,9 @@ namespace Hertz.FileProcessing.Controllers
             get
             {
                 return $@"BEGIN 
-                            sla.qa_utils.gen_trigger_and_load_file(p_filename => '{Filename}', p_client_cd => 'HTZLW');
+                            sla.stg_utils.gen_trigger_file(p_filename => '{Filename}', 
+                                p_client_cd => 'HTZLW',
+                                p_directory_name => 'HTZ_LW_IN_AUTO');
                         END;";
             }
         }
@@ -40,8 +42,9 @@ namespace Hertz.FileProcessing.Controllers
         private NovaLoadsModel novaLoad => this.database.QuerySingleRow<NovaLoadsModel>($"SELECT * from {NovaLoadsModel.TableName} where FILE_NAME = '{Filename}'");
         private readonly List<CSUsernameRow> fileRows;
 
-        public CSUsernameController(IDatabase database = null, int createRandomRows = 0)
+        public CSUsernameController(IDatabase database = null, int createRandomRows = 0, bool generateHeaderRow = true)
         {
+            GenerateHeaderRow = generateHeaderRow;
             fileRows = new List<CSUsernameRow>();
             Filename = $"{fileNamePrefix}{DateTime.Now.ToString("yyyyMMdd_hhmmss")}.TXT.dec";
             for (int i = 0; i < createRandomRows; i++)

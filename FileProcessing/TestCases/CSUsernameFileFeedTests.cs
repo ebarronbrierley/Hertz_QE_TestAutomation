@@ -49,8 +49,8 @@ namespace Hertz.FileProcessing.TestCases
                 foreach (IDataFeedRow row in fileFeed.Rows)
                 {
                     TestStep.Start($"Verify Row Number {row.RowNumber} Scenario {row.Description}", "File row verification should pass");
-                    fileFeed.VerifyRow(row);
-                    TestStep.Pass("Files row verified successfully");
+                    Assert.DoesNotThrow( () => fileFeed.VerifyRow(row));
+                    TestStep.Pass("Files row verified successfully", row.Data.ToString());
                 }
             }
             catch (DatabaseException ex)

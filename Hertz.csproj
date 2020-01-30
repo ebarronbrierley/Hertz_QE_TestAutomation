@@ -92,6 +92,7 @@
     <Compile Include="FileProcessing\TestData\CSUsernameFileTestData.cs" />
     <Compile Include="FileProcessing\Utilities\DataFeedSerializer.cs" />
     <Compile Include="FileProcessing\Utilities\DataFeedTypeException.cs" />
+    <Compile Include="FileProcessing\Utilities\FileFeedVerificationException.cs" />
     <Compile Include="FileProcessing\Utilities\IDataFeed.cs" />
     <Compile Include="FileProcessing\Utilities\IDataFeedRow.cs" />
     <Compile Include="FileProcessing\Utilities\ProcessingStatus.cs" />
