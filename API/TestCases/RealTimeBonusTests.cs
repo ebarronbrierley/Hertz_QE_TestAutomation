@@ -39,7 +39,10 @@ namespace Hertz.API.TestCases
 
             try
             {
+                TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
                 member = memController.AssignUniqueLIDs(member);
+                TestStep.Pass("Unique LoyaltyIds assigned", member.VirtualCards.ReportDetail());
+
                 TestStep.Start($"Make AddMember Call", "Member should be added successfully and member object should be returned");
                 MemberModel memberOut = memController.AddMember(member);
                 Assert.IsNotNull(memberOut, "Expected populated member object, but member object returned was null");
@@ -170,7 +173,10 @@ namespace Hertz.API.TestCases
 
             try
             {
+                TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
                 MemberModel createMember = memController.AssignUniqueLIDs(member);
+                TestStep.Pass("Unique LoyaltyIds assigned", createMember.VirtualCards.ReportDetail());
+
                 TestStep.Start($"Make AddMember Call", "Member should be added successfully and member object should be returned");
                 MemberModel memberOut = memController.AddMember(createMember);
                 Assert.IsNotNull(memberOut, "Expected populated member object, but member object returned was null");

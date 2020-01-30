@@ -262,6 +262,8 @@ namespace Hertz.API.Controllers
             details.A_HBRACCOUNT = 0;
             details.A_MEMBERSTATUSCODE = 1;
 
+            if (String.IsNullOrEmpty(tier.Code)) details.A_TIERENDDATE = null;
+
             return details;
         }
         public static MemberPreferencesModel GenerateMemberPreferences(MemberModel member)

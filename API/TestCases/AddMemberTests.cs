@@ -17,6 +17,11 @@ namespace Hertz.API.TestCases
     [TestFixture]
     public class AddMemberTests : BrierleyTestFixture
     {
+        public void TommysTest()
+        {
+            
+        }
+
         [TestCaseSource(typeof(AddMemberTestData), "PositiveScenarios")]
         public void AddMember_Positive(MemberModel createMember)
         {
@@ -24,8 +29,9 @@ namespace Hertz.API.TestCases
 
             try
             {
-                //Generate unique LIDs for each virtual card in the member
+                TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
                 createMember = memController.AssignUniqueLIDs(createMember);
+                TestStep.Pass("Unique LoyaltyIds assigned", createMember.VirtualCards.ReportDetail());
 
                 TestStep.Start($"Make AddMember Call", "Member should be added successfully and member object should be returned");
                 MemberModel memberOut = memController.AddMember(createMember);
@@ -68,11 +74,18 @@ namespace Hertz.API.TestCases
         }
 
         [TestCaseSource(typeof(AddMemberTestData), "NegativeScenarios")]
-        public void AddMember_Negative(MemberModel member, int errorCode, string errorMessage)
+        public void AddMember_Negative(MemberModel member, bool generateLID, int errorCode, string errorMessage)
         {
             MemberController memController = new MemberController(Database, TestStep);
             try
             {
+                if (generateLID)
+                {
+                    TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
+                    member = memController.AssignUniqueLIDs(member);
+                    TestStep.Pass("Unique LoyaltyIds assigned", member.VirtualCards.ReportDetail());
+                }
+
                 TestStep.Start($"Make AddMember Call", $"Add member call should throw exception with error code = {errorCode}");
                 LWServiceException exception = Assert.Throws<LWServiceException>(() => memController.AddMember(member), "Excepted LWServiceException, exception was not thrown.");
                 Assert.AreEqual(errorCode, exception.ErrorCode);

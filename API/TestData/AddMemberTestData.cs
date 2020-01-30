@@ -37,25 +37,25 @@ namespace Hertz.API.TestData
                 member.VirtualCards = null;
                 int errorCode = 9993;
                 errorMessage.Clear().Append("Unable to find node VirtualCard");
-                yield return new TestCaseData(member, errorCode, errorMessage.ToString()).SetName($"Add Member Negative - No VirtualCard null");
+                yield return new TestCaseData(member, false, errorCode, errorMessage.ToString()).SetName($"Add Member Negative - No VirtualCard null");
 
                 member = MemberController.GenerateRandomMember(HertzLoyalty.GoldPointsRewards.RegularGold);
                 member.VirtualCards.First().LOYALTYIDNUMBER = "00000200";
                 errorCode = 9991;
                 errorMessage.Clear().Append("A member already exists");
-                yield return new TestCaseData(member,errorCode, errorMessage.ToString()).SetName($"Add Member Negative - Existing Loyalty ID");
+                yield return new TestCaseData(member,false, errorCode, errorMessage.ToString()).SetName($"Add Member Negative - Existing Loyalty ID");
 
                 member = MemberController.GenerateRandomMember(HertzLoyalty.GoldPointsRewards.RegularGold);
                 member.MemberDetails.A_TIERCODE = "abcd";
                 errorCode = 2;
                 errorMessage.Clear().Append("Invalid tier code");
-                yield return new TestCaseData(member, errorCode, errorMessage.ToString()).SetName($"Add Member Negative - Invalid Tier Code [{member.MemberDetails.A_TIERCODE}]");
+                yield return new TestCaseData(member, true, errorCode, errorMessage.ToString()).SetName($"Add Member Negative - Invalid Tier Code [{member.MemberDetails.A_TIERCODE}]");
 
                 member = MemberController.GenerateRandomMember(HertzLoyalty.GoldPointsRewards.RegularGold);
                 member.MemberDetails.A_EARNINGPREFERENCE = "invalid";
                 errorCode = 1;
                 errorMessage.Clear().Append("Object reference not set to an instance of an object");
-                yield return new TestCaseData(member, errorCode, errorMessage.ToString()).SetName($"Add Member Negative - Invalid Earning Preference [{member.MemberDetails.A_EARNINGPREFERENCE}]");
+                yield return new TestCaseData(member, true, errorCode, errorMessage.ToString()).SetName($"Add Member Negative - Invalid Earning Preference [{member.MemberDetails.A_EARNINGPREFERENCE}]");
             }
         }
     }

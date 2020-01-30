@@ -84,14 +84,21 @@
     <Compile Include="API\Utilities\LWServiceException.cs" />
     <Compile Include="AssemblyInitializer.cs" />
     <Compile Include="BrierleyTestFixture.cs" />
+    <Compile Include="Database\DataModels\CSAgentModel.cs" />
+    <Compile Include="Database\DataModels\NovaLoadsModel.cs" />
+    <Compile Include="FileProcessing\Controllers\CSUsernameController.cs" />
+    <Compile Include="FileProcessing\DataModels\CSUsernameFileModel.cs" />
+    <Compile Include="FileProcessing\TestCases\CSUsernameFileFeedTests.cs" />
+    <Compile Include="FileProcessing\TestData\CSUsernameFileTestData.cs" />
+    <Compile Include="FileProcessing\Utilities\DataFeedSerializer.cs" />
+    <Compile Include="FileProcessing\Utilities\DataFeedTypeException.cs" />
+    <Compile Include="FileProcessing\Utilities\IDataFeed.cs" />
+    <Compile Include="FileProcessing\Utilities\IDataFeedRow.cs" />
+    <Compile Include="FileProcessing\Utilities\ProcessingStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemotePath.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Database\DataModels\" />
-    <Folder Include="FIleProcessing\Controllers\" />
-    <Folder Include="FIleProcessing\DataModels\" />
-    <Folder Include="FIleProcessing\TestCases\" />
-    <Folder Include="FIleProcessing\TestData\" />
     <Folder Include="WebUI\Controllers\" />
     <Folder Include="WebUI\DataModels\" />
     <Folder Include="WebUI\TestCases\" />
@@ -102,22 +109,22 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Brierley.TestAutomation.Core.API">
-      <Version>1.0.1.5</Version>
+      <Version>1.0.1.6</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Database">
-      <Version>1.0.1.5</Version>
+      <Version>1.0.1.6</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Reporting">
-      <Version>1.0.1.5</Version>
+      <Version>1.0.1.6</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.SFTP">
-      <Version>1.0.1.5</Version>
+      <Version>1.0.1.6</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Utilities">
-      <Version>1.0.1.5</Version>
+      <Version>1.0.1.6</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.WebUI">
-      <Version>1.0.1.5</Version>
+      <Version>1.0.1.6</Version>
     </PackageReference>
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers">
       <Version>3.11.0</Version>

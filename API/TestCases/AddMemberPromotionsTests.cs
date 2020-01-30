@@ -25,6 +25,9 @@ namespace Hertz.API.TestCases
 
             try
             {
+                //Generate unique LIDs for each virtual card in the member
+                member = memController.AssignUniqueLIDs(member);
+
                 TestStep.Start($"Make AddMember Call", "Member should be added successfully");
                 MemberModel memberOut = memController.AddMember(member);
                 AssertModels.AreEqualOnly(member, memberOut, MemberModel.BaseVerify);
