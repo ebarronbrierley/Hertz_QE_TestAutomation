@@ -94,18 +94,21 @@ namespace Hertz
         private IEnumerable<string> GetJiraKeys(string className, string methodName = null)
         {
             Type classType = Type.GetType(className);
-            IEnumerable<JIRAKey> attrs;
+            JIRAKey attr;
 
             if (String.IsNullOrEmpty(methodName))
             {
-                attrs = classType.GetCustomAttributes<JIRAKey>();
+                attr = classType.GetCustomAttribute<JIRAKey>();
             }
             else
             {
                 var testType = classType.GetMethod(methodName);
-                attrs = testType.GetCustomAttributes<JIRAKey>();
+                attr = testType.GetCustomAttribute<JIRAKey>();
             }
-            return attrs.Select(x => x.Key);
+            if (attr != null)
+                return attr.Keys;
+            else
+                return new List<string>();
         }
     }
 }
