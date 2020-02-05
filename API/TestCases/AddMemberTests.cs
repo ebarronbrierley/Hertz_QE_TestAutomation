@@ -17,10 +17,6 @@ namespace Hertz.API.TestCases
     [TestFixture]
     public class AddMemberTests : BrierleyTestFixture
     {
-        public void TommysTest()
-        {
-            
-        }
 
         [TestCaseSource(typeof(AddMemberTestData), "PositiveScenarios")]
         public void AddMember_Positive(MemberModel createMember)

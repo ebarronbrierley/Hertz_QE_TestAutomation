@@ -132,6 +132,40 @@ namespace Hertz.API.Controllers
             }
             return memberPromoOut;
         }
+
+        public AddMemberRewardsResponseModel AddMemberReward(string alternateID, string rewardTypeCode)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                AddMemberRewardsResponseModel memberRewardsOut = default;
+                try
+                {
+                    double time = 0;
+                    RewardOrderInfoStruct[] rewardInfoStruct = new RewardOrderInfoStruct[1];
+                    RewardOrderInfoStruct rewardInfo = new RewardOrderInfoStruct();
+                    rewardInfo.TypeCode = rewardTypeCode;
+                    rewardInfoStruct[0] = rewardInfo;
+                    string changedBy = "oagwuegbo";
+                    var lwMemberReward = lwSvc.AddMemberRewards(alternateID, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, changedBy, rewardInfoStruct, string.Empty, out time);
+                    memberRewardsOut = LODConvert.FromLW<AddMemberRewardsResponseModel>(lwMemberReward);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("AddMemberRewards", capture.Output, Attachment.Type.Text));
+                }
+
+                return memberRewardsOut;
+            }
+            
+        }
         #endregion
 
         #region Database Methods
@@ -185,6 +219,24 @@ namespace Hertz.API.Controllers
 
             query.Append(String.Join(" and ", queryParams));
             return dbContext.Query<MemberPromotionModel>(query.ToString());
+        }
+
+        public IEnumerable<MemberRewardsModel> GetMemberRewardsFromDB(decimal? ipcode, long? memberrewardid)
+        {
+            string ipcodestring = ipcode.ToString();
+            string memberrewardidstring = memberrewardid.ToString();
+            StringBuilder query = new StringBuilder();
+            query.Append($"select * from {MemberRewardsModel.TableName}");
+
+            if (ipcode == null || memberrewardid == null) return new List<MemberRewardsModel>();
+
+            query.Append($" where ");
+            List<string> queryParams = new List<string>();
+            if (ipcode != null) queryParams.Add($" memberid = '{ipcode}' ");
+            if (memberrewardid != null) queryParams.Add($" id = '{memberrewardid}' ");
+
+            query.Append(String.Join(" and ", queryParams));
+            return dbContext.Query<MemberRewardsModel>(query.ToString());
         }
 
         public MemberModel AssignUniqueLIDs(MemberModel member)
