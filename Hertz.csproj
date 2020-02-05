@@ -61,11 +61,15 @@
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
     <Compile Include="API\TestCases\AddMemberPromotionsTests.cs" />
     <Compile Include="API\TestCases\AddMemberTests.cs" />
+    <Compile Include="API\TestCases\GetMemberPromotionsCountTests.cs" />
+    <Compile Include="API\TestData\GetMemberPromotionCountTestData.cs" />
+    <Compile Include="API\TestData\GetMemberPromotionTestData.cs" />
     <Compile Include="API\TestCases\GetMemberTests.cs" />
     <Compile Include="API\TestCases\RealTimeBonusTests.cs" />
     <Compile Include="API\TestCases\UpdateMemberTests.cs" />
     <Compile Include="API\TestData\AddMemberPromotionTestData.cs" />
     <Compile Include="API\TestData\AddMemberTestData.cs" />
+    <Compile Include="API\TestCases\GetMemberPromotionTests.cs" />
     <Compile Include="API\TestData\GetMembersTestData.cs" />
     <Compile Include="API\TestData\RealTimeBonuses\ACIActivation800Activity.cs" />
     <Compile Include="API\TestData\RealTimeBonuses\BonusTestCategory.cs" />
