@@ -132,6 +132,31 @@ namespace Hertz.API.Controllers
             }
             return memberPromoOut;
         }
+        public MemberAccountSummaryModel GetAccountSummary(string loyaltyId, string programCode, string externalId)
+        {
+            MemberAccountSummaryModel memberAccountSummaryOut = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwMemberPromo = lwSvc.GetAccountSummary(loyaltyId, programCode, externalId, out double time);
+                    memberAccountSummaryOut = LODConvert.FromLW<MemberAccountSummaryModel>(lwMemberPromo);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetAccountSummary", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return memberAccountSummaryOut;
+        }
         #endregion
 
         #region Database Methods
@@ -186,7 +211,32 @@ namespace Hertz.API.Controllers
             query.Append(String.Join(" and ", queryParams));
             return dbContext.Query<MemberPromotionModel>(query.ToString());
         }
+        public MemberAccountSummaryModel GetMemberAccountSummaryFromDB(string vckey)
+        {
+            StringBuilder query = new StringBuilder();
+            query.Append("select sum(pt.points) as currencybalance, lm.memberstatus, md.a_tiercode, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
+            query.Append(" from bp_htz.ats_memberdetails md");
+            query.Append(" inner join bp_htz.lw_virtualcard vc on vc.ipcode = md.a_ipcode");
+            query.Append(" inner join bp_htz.lw_loyaltymember lm on lm.ipcode = vc.ipcode");
+            query.Append(" inner join bp_htz.lw_pointtransaction pt on pt.vckey = vc.vckey");
+            query.Append($" where vc.vckey = {vckey} and pt.expirationdate > CURRENT_TIMESTAMP");
+            query.Append(" group by lm.memberstatus, md.a_tiercode, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
 
+            //string query = $@"select sum(pt.points) as currencybalance, lm.memberstatus, md.a_tiercode, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid 
+            //                    from bp_htz.ats_memberdetails md
+            //                    inner
+            //                    join bp_htz.lw_virtualcard vc on vc.ipcode = md.a_ipcode
+            //                    inner
+            //                    join bp_htz.lw_loyaltymember lm on lm.ipcode = vc.ipcode
+            //                    inner
+            //                    join bp_htz.lw_pointtransaction pt on pt.vckey = vc.vckey
+            //                    where vc.vckey = {vckey}
+            //                    group by lm.memberstatus, md.a_tiercode, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid";
+
+
+            IEnumerable<MemberAccountSummaryModel> memberAccountSummary = dbContext.Query<MemberAccountSummaryModel>(query.ToString());
+            return memberAccountSummary.FirstOrDefault();
+        }
         public MemberModel AssignUniqueLIDs(MemberModel member)
         {
             foreach(var virtualCard in member.VirtualCards)
