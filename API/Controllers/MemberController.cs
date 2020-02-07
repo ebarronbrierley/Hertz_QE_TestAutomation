@@ -213,29 +213,33 @@ namespace Hertz.API.Controllers
         }
         public MemberAccountSummaryModel GetMemberAccountSummaryFromDB(string vckey)
         {
-            StringBuilder query = new StringBuilder();
-            query.Append("select sum(pt.points) as currencybalance, lm.memberstatus, md.a_tiercode, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
+            StringBuilder query = new StringBuilder();    
+
+            query.Append("select SUM(p.points) as currencybalance, lm.memberstatus, vc.createdate, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
+            query.Append(" ,case when md.a_tiercode = 'RG' THEN 'Gold'");
+            query.Append(" when md.a_tiercode = 'FG' THEN 'Five star'");
+            query.Append(" when md.a_tiercode = 'PC' THEN 'Presidents Circle'");
+            query.Append(" when md.a_tiercode = 'PL' THEN 'Platinum'");
+            query.Append(" when md.a_tiercode = 'PS' THEN 'Platinum Select'");
+            query.Append(" when md.a_tiercode = 'VP' THEN 'Platinum VIP'");
+            query.Append(" else 'No Tier' END as CURRENTTIERNAME");
             query.Append(" from bp_htz.ats_memberdetails md");
             query.Append(" inner join bp_htz.lw_virtualcard vc on vc.ipcode = md.a_ipcode");
-            query.Append(" inner join bp_htz.lw_loyaltymember lm on lm.ipcode = vc.ipcode");
-            query.Append(" inner join bp_htz.lw_pointtransaction pt on pt.vckey = vc.vckey");
-            query.Append($" where vc.vckey = {vckey} and pt.expirationdate > CURRENT_TIMESTAMP");
-            query.Append(" group by lm.memberstatus, md.a_tiercode, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
+            query.Append(" inner join bp_htz.lw_loyaltymember lm on lm.ipcode = vc.ipcode ");
+            query.Append(" left join (select pt.vckey, pt.points, pt.expirationdate from bp_htz.lw_pointtransaction pt");
+            query.Append(" where pt.expirationdate > CURRENT_TIMESTAMP)p on p.vckey = vc.vckey");
+            query.Append($" where vc.vckey = {vckey}");
+            query.Append(" group by lm.memberstatus, vc.createdate, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
+            query.Append(" ,case when md.a_tiercode = 'RG' THEN 'Gold'");
+            query.Append(" when md.a_tiercode = 'FG' THEN 'Five star'");
+            query.Append(" when md.a_tiercode = 'PC' THEN 'Presidents Circle'");
+            query.Append(" when md.a_tiercode = 'PL' THEN 'Platinum'");
+            query.Append(" when md.a_tiercode = 'PS' THEN 'Platinum Select'");
+            query.Append(" when md.a_tiercode = 'VP' THEN 'Platinum VIP'");
+            query.Append(" else 'No Tier' END");
 
-            //string query = $@"select sum(pt.points) as currencybalance, lm.memberstatus, md.a_tiercode, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid 
-            //                    from bp_htz.ats_memberdetails md
-            //                    inner
-            //                    join bp_htz.lw_virtualcard vc on vc.ipcode = md.a_ipcode
-            //                    inner
-            //                    join bp_htz.lw_loyaltymember lm on lm.ipcode = vc.ipcode
-            //                    inner
-            //                    join bp_htz.lw_pointtransaction pt on pt.vckey = vc.vckey
-            //                    where vc.vckey = {vckey}
-            //                    group by lm.memberstatus, md.a_tiercode, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid";
-
-
-            IEnumerable<MemberAccountSummaryModel> memberAccountSummary = dbContext.Query<MemberAccountSummaryModel>(query.ToString());
-            return memberAccountSummary.FirstOrDefault();
+            MemberAccountSummaryModel memberAccountSummary = dbContext.QuerySingleRow<MemberAccountSummaryModel>(query.ToString());
+            return memberAccountSummary;
         }
         public MemberModel AssignUniqueLIDs(MemberModel member)
         {

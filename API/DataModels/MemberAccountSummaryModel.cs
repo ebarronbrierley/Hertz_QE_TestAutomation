@@ -10,25 +10,28 @@ namespace Hertz.API.DataModels
 {
     public class MemberAccountSummaryModel
     {
-        public const string TableName = "";
+        public const string TableName = null;
 
-        //API Fields
-        public long CURRENCYBALANCE { get; set; }
+        public decimal CURRENCYBALANCE { get; set; }
         public string MEMBERSTATUS { get; set; }
-        public DateTime MEMBERADDDATE { get; set; }
+        [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year)]
+        [ModelAttribute("MemberAddDate")]
+        public DateTime? CREATEDATE { get; set; }
         public string CURRENTTIERNAME { get; set; }
         public DateTime? CURRENTTIEREXPIRATIONDATE { get; set; }
-        public long? CURRENCYTONEXTTIER { get; set; }
-        public long? CURRENCYTONEXTREWARD { get; set; }
-        public long RENTALSTONEXTTIER { get; set; }
+        public decimal CURRENCYTONEXTTIER { get; set; }
+        public decimal CURRENCYTONEXTREWARD { get; set; }
+        public decimal RENTALSTONEXTTIER { get; set; }
         public decimal REVENUETONEXTTIER { get; set; }
-        public long TOTALRENTALSYTD { get; set; }
+        public decimal TOTALRENTALSYTD { get; set; }
         public decimal TOTALREVENUEYTD { get; set; }
-        [ModelAttribute("TIERENDDATE")]
+        [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year)]
+        [ModelAttribute("TierEndDate")]
         public DateTime? A_TIERENDDATE { get; set; }
-        [ModelAttribute("MARKETINGCODE")]
+        [ModelAttribute("MarketingCode")]
         public string A_MKTGPROGRAMID { get; set; }
-        [ModelAttribute("LASTACTIVITYDATE")]
+        [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year)]
+        [ModelAttribute("LastActivityDate")]
         public DateTime? A_LASTACTIVITYDATE { get; set; }
     }
 

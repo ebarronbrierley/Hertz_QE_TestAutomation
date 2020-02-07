@@ -26,7 +26,7 @@ namespace Hertz.API.TestData
                 {
                     foreach (IHertzTier tier in program.Tiers)
                     {
-                        yield return new TestCaseData(program, tier).SetName($"Add Member Positive - Program: [{program.Name}] Tier: [{tier.Name}]");
+                        yield return new TestCaseData(program, tier).SetName($"GetAccountSymmary Positive - Program: [{program.Name}] Tier: [{tier.Name}]");
                     }
                 }
             }
