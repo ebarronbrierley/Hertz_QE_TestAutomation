@@ -67,6 +67,7 @@ namespace Hertz.API.TestCases
                 TestStep.Abort(ex.Message);
                 Assert.Fail();
             }
+
         }
 
         [TestCaseSource(typeof(GetMembersTestData), "NegativeScenarios")]
