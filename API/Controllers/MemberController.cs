@@ -157,40 +157,6 @@ namespace Hertz.API.Controllers
             }
             return memberAccountSummaryOut;
         }
-        public MemberAccountSummaryModel GetAccountSummary(string loyaltyId, string programCode, string externalId)
-        {
-            MemberAccountSummaryModel memberAccountSummaryOut = default;
-
-            using (ConsoleCapture capture = new ConsoleCapture())
-            {
-                try
-                {
-
-                    var lwMemberPromotions = lwSvc.GetMemberPromotions(loyaltyId, startIndex, batchSize, returnDefinition, language, channel, returnAttributes, externalId, out double time);
-
-                    foreach (var lwMp in lwMemberPromotions)
-                    {
-                        memberPromoOut.Add(LODConvert.FromLW<MemberPromotionModel>(lwMp));
-                    }
-
-                    var lwMemberPromo = lwSvc.GetAccountSummary(loyaltyId, programCode, externalId, out double time);
-                    memberAccountSummaryOut = LODConvert.FromLW<MemberAccountSummaryModel>(lwMemberPromo);
-                }
-                catch (LWClientException ex)
-                {
-                    throw new LWServiceException(ex.Message, ex.ErrorCode);
-                }
-                catch (Exception ex)
-                {
-                    throw new LWServiceException(ex.Message, -1);
-                }
-                finally
-                {
-                    stepContext.AddAttachment(new Attachment("GetMemberPromotion", capture.Output, Attachment.Type.Text));
-                }
-            }
-            return memberPromoOut;
-        }
         public List<MemberPromotionModel> GetMemberPromotion(string loyaltyId, int? startIndex, int? batchSize, bool? returnDefinition, 
                                             string language, string channel, bool? returnAttributes, string externalId)
         {
