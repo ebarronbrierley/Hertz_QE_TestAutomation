@@ -132,6 +132,31 @@ namespace Hertz.API.Controllers
             }
             return memberPromoOut;
         }
+        public MemberAccountSummaryModel GetAccountSummary(string loyaltyId, string programCode, string externalId)
+        {
+            MemberAccountSummaryModel memberAccountSummaryOut = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwMemberPromo = lwSvc.GetAccountSummary(loyaltyId, programCode, externalId, out double time);
+                    memberAccountSummaryOut = LODConvert.FromLW<MemberAccountSummaryModel>(lwMemberPromo);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetAccountSummary", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return memberAccountSummaryOut;
+        }
         #endregion
 
         #region Database Methods
@@ -186,7 +211,36 @@ namespace Hertz.API.Controllers
             query.Append(String.Join(" and ", queryParams));
             return dbContext.Query<MemberPromotionModel>(query.ToString());
         }
+        public MemberAccountSummaryModel GetMemberAccountSummaryFromDB(string vckey)
+        {
+            StringBuilder query = new StringBuilder();    
 
+            query.Append("select SUM(p.points) as currencybalance, lm.memberstatus, vc.createdate, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
+            query.Append(" ,case when md.a_tiercode = 'RG' THEN 'Gold'");
+            query.Append(" when md.a_tiercode = 'FG' THEN 'Five star'");
+            query.Append(" when md.a_tiercode = 'PC' THEN 'Presidents Circle'");
+            query.Append(" when md.a_tiercode = 'PL' THEN 'Platinum'");
+            query.Append(" when md.a_tiercode = 'PS' THEN 'Platinum Select'");
+            query.Append(" when md.a_tiercode = 'VP' THEN 'Platinum VIP'");
+            query.Append(" else 'No Tier' END as CURRENTTIERNAME");
+            query.Append(" from bp_htz.ats_memberdetails md");
+            query.Append(" inner join bp_htz.lw_virtualcard vc on vc.ipcode = md.a_ipcode");
+            query.Append(" inner join bp_htz.lw_loyaltymember lm on lm.ipcode = vc.ipcode ");
+            query.Append(" left join (select pt.vckey, pt.points, pt.expirationdate from bp_htz.lw_pointtransaction pt");
+            query.Append(" where pt.expirationdate > CURRENT_TIMESTAMP)p on p.vckey = vc.vckey");
+            query.Append($" where vc.vckey = {vckey}");
+            query.Append(" group by lm.memberstatus, vc.createdate, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
+            query.Append(" ,case when md.a_tiercode = 'RG' THEN 'Gold'");
+            query.Append(" when md.a_tiercode = 'FG' THEN 'Five star'");
+            query.Append(" when md.a_tiercode = 'PC' THEN 'Presidents Circle'");
+            query.Append(" when md.a_tiercode = 'PL' THEN 'Platinum'");
+            query.Append(" when md.a_tiercode = 'PS' THEN 'Platinum Select'");
+            query.Append(" when md.a_tiercode = 'VP' THEN 'Platinum VIP'");
+            query.Append(" else 'No Tier' END");
+
+            MemberAccountSummaryModel memberAccountSummary = dbContext.QuerySingleRow<MemberAccountSummaryModel>(query.ToString());
+            return memberAccountSummary;
+        }
         public MemberModel AssignUniqueLIDs(MemberModel member)
         {
             foreach(var virtualCard in member.VirtualCards)
