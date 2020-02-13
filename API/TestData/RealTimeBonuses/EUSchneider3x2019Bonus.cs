@@ -16,8 +16,12 @@ namespace Hertz.API.TestData.RealTimeBonuses
         public const string ContractTypeCode = "COMM";
         public const decimal PointEventAmount = 550M;
         public const decimal BaseTxnAmount = 25M;
-        public static readonly DateTime StartDate = DateTime.Parse("04/01/2019 12:00:01 AM");
+        //April 9th is start, not April 1st due to the booking requirement 
+        public static readonly DateTime StartDate = DateTime.Parse("04/09/2019 12:00:01 AM");
         public static readonly DateTime EndDate = DateTime.Parse("12/31/2019 12:00:00 AM");
+
+        public static readonly DateTime[] ValidChkOutDates = { StartDate.Comparable(), EndDate.AddDays(-1).Comparable(), StartDate.AddDays(120).Comparable() };
+        public static readonly DateTime[] ValidChkInDates = { StartDate.AddDays(1).Comparable(), EndDate.Comparable(), StartDate.AddDays(121).Comparable() };
 
         public static readonly string[] ValidRSDNCTRYCDs = new string[] { "BE", "FR", "DE", "IT", "LU", "NL", "ES", "CH", "GB", "IE", "SE", "NO", "DK", "FI" };
        
@@ -41,7 +45,6 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                                                      529849M};
         public static readonly IHertzProgram[] ValidPrograms = new IHertzProgram[] { HertzLoyalty.GoldPointsRewards };
         public static readonly IHertzTier[] ValidTiers = new IHertzTier[] { HertzLoyalty.GoldPointsRewards.RegularGold, HertzLoyalty.GoldPointsRewards.FiveStar, HertzLoyalty.GoldPointsRewards.PresidentsCircle };
-        public static TimeSpan ValidRentalLength = TimeSpan.FromDays(1);
         public static TimeSpan ValidBookingDate = TimeSpan.FromDays(-8);
         public static ExpectedPointEvent[] ExpectedPointEvents = new ExpectedPointEvent[] { new ExpectedPointEvent("EUSchneider3x2019BonusActivity", BaseTxnAmount*2) };
         public const string ChkOutLocId = "00004";
@@ -59,9 +62,9 @@ namespace Hertz.API.TestData.RealTimeBonuses
                     yield return new TestCaseData(
                        member,
                         new TxnHeaderModel[] {
-                            TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
-                                        checkOutDate:DateTime.Now.Comparable(),
-                                        bookDate:DateTime.Now.AddTicks(ValidBookingDate.Ticks).Comparable(),
+                            TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkInDates[0],
+                                        checkOutDate:ValidChkOutDates[0],
+                                        bookDate:ValidChkOutDates[0].AddTicks(ValidBookingDate.Ticks).Comparable(),
                                         program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
                                         RSDNCTRYCD: rsdnCtry, HODIndicator: 0, rentalCharges: BaseTxnAmount)
                         },
@@ -80,9 +83,9 @@ namespace Hertz.API.TestData.RealTimeBonuses
                     yield return new TestCaseData(
                         member,
                         new TxnHeaderModel[] {
-                            TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
-                                        checkOutDate:DateTime.Now.Comparable(),
-                                        bookDate:DateTime.Now.AddTicks(ValidBookingDate.Ticks).Comparable(),
+                            TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkInDates[0],
+                                        checkOutDate:ValidChkOutDates[0],
+                                        bookDate:ValidChkOutDates[0].AddTicks(ValidBookingDate.Ticks).Comparable(),
                                         program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: validCDP,
                                         RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                         },
@@ -105,9 +108,9 @@ namespace Hertz.API.TestData.RealTimeBonuses
                         yield return new TestCaseData(
                             member,
                             new TxnHeaderModel[] {
-                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
-                                checkOutDate:DateTime.Now.Comparable(),
-                                bookDate:DateTime.Now.AddTicks(ValidBookingDate.Ticks).Comparable(),
+                                TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkInDates[0],
+                                        checkOutDate:ValidChkOutDates[0],
+                                bookDate:ValidChkOutDates[0].AddTicks(ValidBookingDate.Ticks).Comparable(),
                                 program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                             },
@@ -126,9 +129,9 @@ namespace Hertz.API.TestData.RealTimeBonuses
                         yield return new TestCaseData(
                           member,
                            new TxnHeaderModel[] {
-                                TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
-                                checkOutDate:DateTime.Now.Comparable(),
-                                bookDate:DateTime.Now.AddTicks(ValidBookingDate.Ticks).Comparable(),
+                                TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkInDates[0],
+                                        checkOutDate:ValidChkOutDates[0],
+                                bookDate:ValidChkOutDates[0].AddTicks(ValidBookingDate.Ticks).Comparable(),
                                 program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,chkoutlocnum: null,chkoutareanum: null,chkoutlocid: ChkOutLocId)
                            },
@@ -139,6 +142,48 @@ namespace Hertz.API.TestData.RealTimeBonuses
                         .SetCategory(BonusTestCategory.Positive)
                         .SetCategory(BonusTestCategory.Smoke);
                     }
+                }
+                foreach (DateTime chkoutdt in ValidChkOutDates)
+                {
+                    MemberModel member = MemberController.GenerateRandomMember(ValidTiers[0]);
+                    member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+                    member.MemberDetails.A_CDPNUMBER = ValidCDPs[0].ToString();
+
+                    yield return new TestCaseData(
+                        member,
+                        new TxnHeaderModel[] {
+                            TxnHeaderController.GenerateTransaction("", checkInDate: chkoutdt.AddDays(1),
+                                        checkOutDate:chkoutdt,
+                                        bookDate:chkoutdt.AddTicks(ValidBookingDate.Ticks).Comparable(),
+                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                        RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
+                        },
+                        ExpectedPointEvents,
+                        new string[] { }
+                    ).SetName($"{PointEventName}. CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, ChkOut={chkoutdt.ToShortDateString()}")
+                     .SetCategory(BonusTestCategory.Regression)
+                     .SetCategory(BonusTestCategory.Positive);
+                }
+                foreach (DateTime chkindt in ValidChkInDates)
+                {
+                    MemberModel member = MemberController.GenerateRandomMember(ValidTiers[0]);
+                    member.MemberDetails.A_COUNTRY = ValidRSDNCTRYCDs[0];
+                    member.MemberDetails.A_CDPNUMBER = ValidCDPs[0].ToString();
+
+                    yield return new TestCaseData(
+                        member,
+                        new TxnHeaderModel[] {
+                            TxnHeaderController.GenerateTransaction("", checkInDate: chkindt,
+                                        checkOutDate:chkindt.AddDays(-1),
+                                        bookDate:chkindt.AddDays(-1).AddTicks(ValidBookingDate.Ticks).Comparable(),
+                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                        RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
+                        },
+                        ExpectedPointEvents,
+                        new string[] { }
+                    ).SetName($"{PointEventName}. CDP = {ValidCDPs[0]},  RSDNCTRYCODE = {ValidRSDNCTRYCDs[0]}, EarningPref={ValidPrograms[0].EarningPreference}, Tier={ValidTiers[0].Code}, ChkIn={chkindt.ToShortDateString()}")
+                     .SetCategory(BonusTestCategory.Regression)
+                     .SetCategory(BonusTestCategory.Positive);
                 }
             }
         }
