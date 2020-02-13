@@ -132,7 +132,7 @@ namespace Hertz.API.Controllers
             }
             return memberPromoOut;
         }
-        public MemberAccountSummaryModel GetAccountSummary(string loyaltyId, string programCode, string externalId)
+       public MemberAccountSummaryModel GetAccountSummary(string loyaltyId, string programCode, string externalId)
         {
             MemberAccountSummaryModel memberAccountSummaryOut = default;
             using (ConsoleCapture capture = new ConsoleCapture())
@@ -156,6 +156,93 @@ namespace Hertz.API.Controllers
                 }
             }
             return memberAccountSummaryOut;
+        }
+        public MemberAccountSummaryModel GetAccountSummary(string loyaltyId, string programCode, string externalId)
+        {
+            MemberAccountSummaryModel memberAccountSummaryOut = default;
+
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+
+                    var lwMemberPromotions = lwSvc.GetMemberPromotions(loyaltyId, startIndex, batchSize, returnDefinition, language, channel, returnAttributes, externalId, out double time);
+
+                    foreach (var lwMp in lwMemberPromotions)
+                    {
+                        memberPromoOut.Add(LODConvert.FromLW<MemberPromotionModel>(lwMp));
+                    }
+
+                    var lwMemberPromo = lwSvc.GetAccountSummary(loyaltyId, programCode, externalId, out double time);
+                    memberAccountSummaryOut = LODConvert.FromLW<MemberAccountSummaryModel>(lwMemberPromo);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberPromotion", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return memberPromoOut;
+        }
+        public List<MemberPromotionModel> GetMemberPromotion(string loyaltyId, int? startIndex, int? batchSize, bool? returnDefinition, 
+                                            string language, string channel, bool? returnAttributes, string externalId)
+        {
+            List<MemberPromotionModel> memberPromoOut = new List<MemberPromotionModel>();
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwMemberPromotions = lwSvc.GetMemberPromotions(loyaltyId, startIndex, batchSize, returnDefinition, language, channel, returnAttributes, externalId, out double time);
+
+                    foreach (var lwMp in lwMemberPromotions)
+                    {
+                        memberPromoOut.Add(LODConvert.FromLW<MemberPromotionModel>(lwMp));
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberPromotion", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return memberPromoOut;
+        }      
+        public int GetMemberPromotionCount(string ipCode)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwMemberPromoCount = lwSvc.GetMemberPromotionsCount(ipCode, null, out double time);
+                    return lwMemberPromoCount;
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberPromotionCount", capture.Output, Attachment.Type.Text));
+                }
+            }
         }
         #endregion
 
@@ -210,6 +297,21 @@ namespace Hertz.API.Controllers
 
             query.Append(String.Join(" and ", queryParams));
             return dbContext.Query<MemberPromotionModel>(query.ToString());
+        }
+        public IEnumerable<MemberModel> GetMembersFromDB(decimal? ipCode = null, string ipCodeQuery = null)
+        {
+            string query = String.Empty;
+
+            if (ipCode == null && !String.IsNullOrEmpty(ipCodeQuery))
+            {
+                query = ipCodeQuery;
+            }
+            else
+            {
+                query = $"select * from {MemberModel.TableName} where IPCODE = {ipCode.Value}";
+            }
+
+            return dbContext.Query<MemberModel>(query);
         }
         public MemberAccountSummaryModel GetMemberAccountSummaryFromDB(string vckey)
         {
