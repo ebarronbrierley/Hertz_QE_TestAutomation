@@ -11,6 +11,7 @@ using Hertz.API.Utilities;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Framework;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
 using System.Diagnostics;
+using System.Collections;
 
 namespace Hertz.API.Controllers
 {
@@ -133,7 +134,7 @@ namespace Hertz.API.Controllers
             return memberPromoOut;
         }
 
-        public AddMemberRewardsResponseModel AddMemberReward(string alternateID, string rewardTypeCode)
+        public AddMemberRewardsResponseModel AddMemberReward(string alternateID, string rewardTypeCode, IHertzProgram program)
         {
             using (ConsoleCapture capture = new ConsoleCapture())
             {
@@ -146,11 +147,13 @@ namespace Hertz.API.Controllers
                     rewardInfo.TypeCode = rewardTypeCode;
                     rewardInfoStruct[0] = rewardInfo;
                     string changedBy = "oagwuegbo";
-                    var lwMemberReward = lwSvc.AddMemberRewards(alternateID, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, changedBy, rewardInfoStruct, string.Empty, out time);
+                    string programcode = program.EarningPreference.ToString();
+                    var lwMemberReward = lwSvc.AddMemberRewards(alternateID, null, programcode, null, null, null, null, null, null, null, null, null, null, null, null, null, changedBy, rewardInfoStruct, string.Empty, out time);
                     memberRewardsOut = LODConvert.FromLW<AddMemberRewardsResponseModel>(lwMemberReward);
                 }
                 catch (LWClientException ex)
                 {
+
                     throw new LWServiceException(ex.Message, ex.ErrorCode);
                 }
                 catch (Exception ex)
@@ -165,6 +168,36 @@ namespace Hertz.API.Controllers
                 return memberRewardsOut;
             }
             
+        }
+
+        public AwardLoyaltyCurrencyResponseModel AwardLoyaltyCurrency(string loyaltyID, decimal points)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                AwardLoyaltyCurrencyResponseModel awardLoyaltyCurrencyOut = default;
+                try
+                {
+                    double time = 0;
+                    string changedBy = "oagwuegbo";
+                    long pointeventID = 6263265;
+                    DateTime pointExpirationDate = DateTime.Now.AddMonths(18);
+                    var lwAwardLoyalty = lwSvc.HertzAwardLoyaltyCurrency(loyaltyID, changedBy, points, pointeventID, "Automated Appeasement", null, null, out time);
+                    awardLoyaltyCurrencyOut = LODConvert.FromLW<AwardLoyaltyCurrencyResponseModel>(lwAwardLoyalty);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("AwardLoyaltyCurrency", capture.Output, Attachment.Type.Text));
+                }
+                return awardLoyaltyCurrencyOut;
+            }
         }
         #endregion
 
@@ -237,6 +270,15 @@ namespace Hertz.API.Controllers
 
             query.Append(String.Join(" and ", queryParams));
             return dbContext.Query<MemberRewardsModel>(query.ToString());
+        }
+
+        public decimal GetPointSumFromDB(string loyaltyid)
+        {
+            StringBuilder query = new StringBuilder();
+            query.Append($"SELECT SUM(PTT.POINTS) FROM BP_HTZ.LW_POINTTRANSACTION PTT INNER JOIN BP_HTZ.LW_VIRTUALCARD VC ON VC.VCKEY = PTT.VCKEY WHERE 1=1 AND VC.LOYALTYIDNUMBER = '{loyaltyid}'");
+            Hashtable ht = dbContext.QuerySingleRow(query.ToString());
+            decimal pointsOut = (decimal)ht["SUM(PTT.POINTS)"];
+            return pointsOut;
         }
 
         public MemberModel AssignUniqueLIDs(MemberModel member)

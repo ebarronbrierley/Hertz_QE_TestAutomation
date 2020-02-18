@@ -8,7 +8,6 @@ namespace Hertz.API.DataModels
 {
     public class AddMemberRewardsResponseModel
     {
-
         public long CurrencyBalance { get; set; }
         public long MemberRewardID { get; set; }
     }

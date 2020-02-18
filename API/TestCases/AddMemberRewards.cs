@@ -47,7 +47,42 @@ namespace Hertz.API.TestCases
                 }
             }
         }
+
+        public static IEnumerable NegativeScenarios
+        {
+            get
+            {
+                foreach (IHertzProgram program in HertzLoyalty.Programs)
+                {
+                    foreach (IHertzTier tier in program.Tiers)
+                    {
+                        MemberModel gprMember = MemberController.GenerateRandomMember(tier);
+                        if (program.EarningPreference == HertzLoyalty.GoldPointsRewards.EarningPreference)
+                        {
+                            string certificatetypecode = "166703";
+                            string dxcertificatetypecode = "101033";
+                            decimal pointsToEarn = 800M;
+                            yield return new TestCaseData(gprMember, certificatetypecode, pointsToEarn, program).SetName($"Add Member Reward Negative - Not Enough Points to Redeem Reward - Program: [{program.Name}] Tier: [{tier.Name}] Reward: [{certificatetypecode}]");
+                            yield return new TestCaseData(gprMember, dxcertificatetypecode, pointsToEarn, program).SetName($"Add Member Reward Negative - Redeeming a DX Reward - Program: [{program.Name}] Tier: [{tier.Name}] Reward: [{certificatetypecode}]");
+                        }
+                        else if (program.EarningPreference == HertzLoyalty.DollarExpressRenters.EarningPreference)
+                        {
+                            string certificatetypecode = "101033";
+                            decimal pointsToEarn = 625M;
+                            yield return new TestCaseData(gprMember, certificatetypecode, pointsToEarn, program).SetName($"Add Member Reward Negative - Program: [{program.Name}] Tier: [{tier.Name}] Reward: [{certificatetypecode}]");
+                        }
+                        else if (program.EarningPreference == HertzLoyalty.ThriftyBlueChip.EarningPreference)
+                        {
+                            string certificatetypecode = "101034";
+                            decimal pointsToEarn = 625M;
+                            yield return new TestCaseData(gprMember, certificatetypecode, pointsToEarn, program).SetName($"Add Member Reward Negative - Program: [{program.Name}] Tier: [{tier.Name}] Reward: [{certificatetypecode}]");
+                        }
+                    }
+                }
+            }
+        }
     }
+
     [TestFixture]
     public class AddMemberRewards : BrierleyTestFixture
     {
@@ -69,23 +104,36 @@ namespace Hertz.API.TestCases
 
                 string loyaltyID = createMember.VirtualCards[0].LOYALTYIDNUMBER;
                 string alternateID = createMember.ALTERNATEID;
+                string vckey = createMember.VirtualCards[0].VCKEY.ToString();
 
                 TestStep.Start($"Make AddMember Call", "Member should be added successfully and member object should be returned");
                 MemberModel memberOut = memController.AddMember(createMember);
                 AssertModels.AreEqualOnly(createMember, memberOut, MemberModel.BaseVerify);
                 TestStep.Pass("Member was added successfully and member object was returned", memberOut.ReportDetail());
 
-                TestStep.Start($"Make UpdateMember Call", $"Member should be updated successfully and earn {points} points");
-                TxnHeaderModel txn = TxnHeaderController.GenerateTransaction(loyaltyID, checkInDt, checkOutDt, origBkDt, null, program, null, "US", points, null, null, "N", "US", null);
-                txnList.Add(txn);
-                createMember.VirtualCards[0].Transactions = txnList;
-                MemberModel updatedMember = memController.UpdateMember(createMember);
-                txnList.Clear();
-                Assert.IsNotNull(updatedMember, "Expected non null Member object to be returned");
-                TestStep.Pass("Member was successfully updated");
+                if(program.EarningPreference == HertzLoyalty.GoldPointsRewards.EarningPreference)
+                {
+                    TestStep.Start($"Make UpdateMember Call", $"Member should be updated successfully and earn {points} points");
+                    TxnHeaderModel txn = TxnHeaderController.GenerateTransaction(loyaltyID, checkInDt, checkOutDt, origBkDt, null, program, null, "US", points, null, null, "N", "US", null);
+                    txnList.Add(txn);
+                    createMember.VirtualCards[0].Transactions = txnList;
+                    MemberModel updatedMember = memController.UpdateMember(createMember);
+                    txnList.Clear();
+                    Assert.IsNotNull(updatedMember, "Expected non null Member object to be returned");
+                    TestStep.Pass("Member was successfully updated");
+                }
+                else //Dollar and Thrifty Members Cannot be updated with the UpdateMember API so we use the HertzAwardLoyatlyCurrency API instead
+                {
+                    TestStep.Start($"Make AwardLoyaltyCurrency Call", $"Member should be updated successfully and earn {points} points");
+                    AwardLoyaltyCurrencyResponseModel currencyOut = memController.AwardLoyaltyCurrency(loyaltyID, points);
+                    decimal pointsOut = memController.GetPointSumFromDB(loyaltyID);
+                    Assert.AreEqual(points, pointsOut, "Expected points and pointsOut values to be equal, but the points awarded to the member and the point summary taken from the DB are not equal");
+                    Assert.AreEqual(currencyOut.CurrencyBalance, points, "Expected point value put into AwardLoyaltyCurrency API Call to be equal to the member's current balance, but the point values are not equal");
+                    TestStep.Pass("Points are successfully awarded");
+                }
 
                 TestStep.Start("Make AddMemberReward Call", "AddMemberReward Call is successfully made");
-                AddMemberRewardsResponseModel rewardResponse =  memController.AddMemberReward(alternateID, certificateTypeCode);
+                AddMemberRewardsResponseModel rewardResponse =  memController.AddMemberReward(alternateID, certificateTypeCode, program);
                 Assert.IsNotNull(rewardResponse, "Expected populated AddMemberRewardsResponse object from AddMemberRewards call, but AddMemberRewardsResponse object returned was null");
                 TestStep.Pass("Reward is added.");
 
