@@ -32,14 +32,15 @@ namespace Hertz.API.TestCases
         [TestCaseSource(typeof(LapsedOnGoingActivity), "PositiveScenarios")]
         public void RealTime_Bonus_Positive(MemberModel member, TxnHeaderModel[] transactionsIn, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes)
         {
-            int ruleTriggerWaitMS = 1000;
+            //Currently there are no async rules for Hertz should be all ran by return of UpdateMember
+            int ruleTriggerWaitMS = 1;
             MemberController memController = new MemberController(Database, TestStep);
             TxnHeaderController txnController = new TxnHeaderController(Database, TestStep);
             PointController pointController = new PointController(Database, TestStep);
 
             try
             {
-                TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
+                TestStep.Start("Assigning Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
                 member = memController.AssignUniqueLIDs(member);
                 TestStep.Pass("Unique LoyaltyIds assigned", member.VirtualCards.ReportDetail());
 

@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Brierley.LoyaltyWare.ClientLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -52,6 +54,7 @@
     <Compile Include="API\DataModels\AwardLoyaltyCurrencyResponseModel.cs" />
     <Compile Include="API\DataModels\ExpectedPointEvent.cs" />
     <Compile Include="API\DataModels\HertzProgram.cs" />
+    <Compile Include="API\DataModels\MemberAccountSummaryModel.cs" />
     <Compile Include="API\DataModels\MemberDetailsModel.cs" />
     <Compile Include="API\DataModels\MemberModel.cs" />
     <Compile Include="API\DataModels\MemberPreferencesModel.cs" />
@@ -66,12 +69,18 @@
     <Compile Include="API\TestCases\AddMemberPromotionsTests.cs" />
     <Compile Include="API\TestCases\AddMemberRewards.cs" />
     <Compile Include="API\TestCases\AddMemberTests.cs" />
+    <Compile Include="API\TestCases\GetMemberPromotionsCountTests.cs" />
+    <Compile Include="API\TestData\GetMemberPromotionCountTestData.cs" />
+    <Compile Include="API\TestData\GetMemberPromotionTestData.cs" />
+    <Compile Include="API\TestCases\GetAccountSummaryTests.cs" />
     <Compile Include="API\TestCases\GetMemberTests.cs" />
     <Compile Include="API\TestCases\MultiThreadingTests.cs" />
     <Compile Include="API\TestCases\RealTimeBonusTests.cs" />
     <Compile Include="API\TestCases\UpdateMemberTests.cs" />
     <Compile Include="API\TestData\AddMemberPromotionTestData.cs" />
     <Compile Include="API\TestData\AddMemberTestData.cs" />
+    <Compile Include="API\TestCases\GetMemberPromotionTests.cs" />
+    <Compile Include="API\TestData\GetAccountSummaryTestData.cs" />
     <Compile Include="API\TestData\GetMembersTestData.cs" />
     <Compile Include="API\TestData\RealTimeBonuses\ACIActivation800Activity.cs" />
     <Compile Include="API\TestData\RealTimeBonuses\BonusTestCategory.cs" />
