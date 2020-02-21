@@ -70,6 +70,7 @@
     <Compile Include="API\TestCases\AddMemberRewards.cs" />
     <Compile Include="API\TestCases\AddMemberTests.cs" />
     <Compile Include="API\TestCases\GetMemberPromotionsCountTests.cs" />
+    <Compile Include="API\TestData\AddMemberRewardsData.cs" />
     <Compile Include="API\TestData\GetMemberPromotionCountTestData.cs" />
     <Compile Include="API\TestData\GetMemberPromotionTestData.cs" />
     <Compile Include="API\TestCases\GetAccountSummaryTests.cs" />
