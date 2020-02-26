@@ -132,18 +132,15 @@ namespace Hertz.API.Controllers
             }
             return memberPromoOut;
         }
-
-
-        public HertzAwardLoyaltyCurrencyResponseModel HertzAwardLoyaltyCurrency(string loyaltyId, string agent, decimal points, long pointeventid, string reasoncode, string rentalagreementnumber)
+       public MemberAccountSummaryModel GetAccountSummary(string loyaltyId, string programCode, string externalId)
         {
-            HertzAwardLoyaltyCurrencyResponseModel memberAwardCurrency = default;
+            MemberAccountSummaryModel memberAccountSummaryOut = default;
             using (ConsoleCapture capture = new ConsoleCapture())
             {
                 try
                 {
-                    var lwAwardCurrency = lwSvc.HertzAwardLoyaltyCurrency(loyaltyId, agent, points, pointeventid, reasoncode, rentalagreementnumber, String.Empty, out double time);
-                   
-                    memberAwardCurrency = LODConvert.FromLW<HertzAwardLoyaltyCurrencyResponseModel>(lwAwardCurrency);
+                    var lwMemberPromo = lwSvc.GetAccountSummary(loyaltyId, programCode, externalId, out double time);
+                    memberAccountSummaryOut = LODConvert.FromLW<MemberAccountSummaryModel>(lwMemberPromo);
                 }
                 catch (LWClientException ex)
                 {
@@ -155,10 +152,63 @@ namespace Hertz.API.Controllers
                 }
                 finally
                 {
-                    stepContext.AddAttachment(new Attachment("HertzAwardLoyaltyCurrency", capture.Output, Attachment.Type.Text));
+                    stepContext.AddAttachment(new Attachment("GetAccountSummary", capture.Output, Attachment.Type.Text));
                 }
             }
-            return memberAwardCurrency;
+            return memberAccountSummaryOut;
+        }
+        public List<MemberPromotionModel> GetMemberPromotion(string loyaltyId, int? startIndex, int? batchSize, bool? returnDefinition, 
+                                            string language, string channel, bool? returnAttributes, string externalId)
+        {
+            List<MemberPromotionModel> memberPromoOut = new List<MemberPromotionModel>();
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwMemberPromotions = lwSvc.GetMemberPromotions(loyaltyId, startIndex, batchSize, returnDefinition, language, channel, returnAttributes, externalId, out double time);
+
+                    foreach (var lwMp in lwMemberPromotions)
+                    {
+                        memberPromoOut.Add(LODConvert.FromLW<MemberPromotionModel>(lwMp));
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberPromotion", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return memberPromoOut;
+        }      
+        public int GetMemberPromotionCount(string ipCode)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwMemberPromoCount = lwSvc.GetMemberPromotionsCount(ipCode, null, out double time);
+                    return lwMemberPromoCount;
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberPromotionCount", capture.Output, Attachment.Type.Text));
+                }
+            }
         }
         #endregion
 
@@ -214,7 +264,51 @@ namespace Hertz.API.Controllers
             query.Append(String.Join(" and ", queryParams));
             return dbContext.Query<MemberPromotionModel>(query.ToString());
         }
+        public IEnumerable<MemberModel> GetMembersFromDB(decimal? ipCode = null, string ipCodeQuery = null)
+        {
+            string query = String.Empty;
 
+            if (ipCode == null && !String.IsNullOrEmpty(ipCodeQuery))
+            {
+                query = ipCodeQuery;
+            }
+            else
+            {
+                query = $"select * from {MemberModel.TableName} where IPCODE = {ipCode.Value}";
+            }
+
+            return dbContext.Query<MemberModel>(query);
+        }
+        public MemberAccountSummaryModel GetMemberAccountSummaryFromDB(string vckey)
+        {
+            StringBuilder query = new StringBuilder();    
+
+            query.Append("select SUM(p.points) as currencybalance, lm.memberstatus, vc.createdate, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
+            query.Append(" ,case when md.a_tiercode = 'RG' THEN 'Gold'");
+            query.Append(" when md.a_tiercode = 'FG' THEN 'Five star'");
+            query.Append(" when md.a_tiercode = 'PC' THEN 'Presidents Circle'");
+            query.Append(" when md.a_tiercode = 'PL' THEN 'Platinum'");
+            query.Append(" when md.a_tiercode = 'PS' THEN 'Platinum Select'");
+            query.Append(" when md.a_tiercode = 'VP' THEN 'Platinum VIP'");
+            query.Append(" else 'No Tier' END as CURRENTTIERNAME");
+            query.Append(" from bp_htz.ats_memberdetails md");
+            query.Append(" inner join bp_htz.lw_virtualcard vc on vc.ipcode = md.a_ipcode");
+            query.Append(" inner join bp_htz.lw_loyaltymember lm on lm.ipcode = vc.ipcode ");
+            query.Append(" left join (select pt.vckey, pt.points, pt.expirationdate from bp_htz.lw_pointtransaction pt");
+            query.Append(" where pt.expirationdate > CURRENT_TIMESTAMP)p on p.vckey = vc.vckey");
+            query.Append($" where vc.vckey = {vckey}");
+            query.Append(" group by lm.memberstatus, vc.createdate, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
+            query.Append(" ,case when md.a_tiercode = 'RG' THEN 'Gold'");
+            query.Append(" when md.a_tiercode = 'FG' THEN 'Five star'");
+            query.Append(" when md.a_tiercode = 'PC' THEN 'Presidents Circle'");
+            query.Append(" when md.a_tiercode = 'PL' THEN 'Platinum'");
+            query.Append(" when md.a_tiercode = 'PS' THEN 'Platinum Select'");
+            query.Append(" when md.a_tiercode = 'VP' THEN 'Platinum VIP'");
+            query.Append(" else 'No Tier' END");
+
+            MemberAccountSummaryModel memberAccountSummary = dbContext.QuerySingleRow<MemberAccountSummaryModel>(query.ToString());
+            return memberAccountSummary;
+        }
         public MemberModel AssignUniqueLIDs(MemberModel member)
         {
             foreach(var virtualCard in member.VirtualCards)
@@ -312,6 +406,32 @@ namespace Hertz.API.Controllers
             return vc;
         }
         #endregion
-    
+
+        public HertzAwardLoyaltyCurrencyResponseModel HertzAwardLoyaltyCurrency(string loyaltyId, string agent, decimal points, long pointeventid, string reasoncode, string rentalagreementnumber)
+        {
+            HertzAwardLoyaltyCurrencyResponseModel memberAwardCurrency = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwAwardCurrency = lwSvc.HertzAwardLoyaltyCurrency(loyaltyId, agent, points, pointeventid, reasoncode, rentalagreementnumber, String.Empty, out double time);
+
+                    memberAwardCurrency = LODConvert.FromLW<HertzAwardLoyaltyCurrencyResponseModel>(lwAwardCurrency);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("HertzAwardLoyaltyCurrency", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return memberAwardCurrency;
+        }
     }
 }
