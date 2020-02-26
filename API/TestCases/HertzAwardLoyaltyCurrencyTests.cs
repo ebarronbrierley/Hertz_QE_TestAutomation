@@ -36,9 +36,8 @@ namespace Hertz.API.TestCases
                 TestStep.Pass("Member was added successfully and member object was returned", memberOut.ReportDetail());
 
                 VirtualCardModel vc = memberOut.VirtualCards.First();
-
-                TestStep.Start($"Add Transaction to the member", "Transactions added successfully");
-      
+                //Transactions are added to test the API with ranum and also to test the negative points scenario
+                TestStep.Start($"Add Transaction to the member", "Transactions added successfully");      
                 vc.Transactions = TxnHeaderController.GenerateRandomTransactions(vc, program, 1, 200);
                 if (useRanum)
                 {
@@ -48,7 +47,6 @@ namespace Hertz.API.TestCases
                 {
                     ranum = null;
                 }
-
                 Assert.IsNotNull(vc.Transactions, "Expected populated transaction object, but transaction object returned was null");
                 TestStep.Pass("Transaction added to the member", vc.Transactions.ReportDetail());
 
