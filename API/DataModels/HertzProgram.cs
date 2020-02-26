@@ -120,6 +120,7 @@ namespace Hertz.API.DataModels
             this.Name = Name;
             this.Code = Code;
             this.EarningRateModifier = EarningRateModifier;
+            
         }
     }
 

@@ -132,6 +132,34 @@ namespace Hertz.API.Controllers
             }
             return memberPromoOut;
         }
+
+
+        public HertzAwardLoyaltyCurrencyResponseModel HertzAwardLoyaltyCurrency(string loyaltyId, string agent, decimal points, long pointeventid, string reasoncode, string rentalagreementnumber)
+        {
+            HertzAwardLoyaltyCurrencyResponseModel memberAwardCurrency = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwAwardCurrency = lwSvc.HertzAwardLoyaltyCurrency(loyaltyId, agent, points, pointeventid, reasoncode, rentalagreementnumber, String.Empty, out double time);
+                   
+                    memberAwardCurrency = LODConvert.FromLW<HertzAwardLoyaltyCurrencyResponseModel>(lwAwardCurrency);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("HertzAwardLoyaltyCurrency", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return memberAwardCurrency;
+        }
         #endregion
 
         #region Database Methods
@@ -284,5 +312,6 @@ namespace Hertz.API.Controllers
             return vc;
         }
         #endregion
+    
     }
 }
