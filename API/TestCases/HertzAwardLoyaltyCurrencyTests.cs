@@ -136,11 +136,7 @@ namespace Hertz.API.TestCases
                 vc.Transactions = TxnHeaderController.GenerateRandomTransactions(vc, HertzLoyalty.GoldPointsRewards, 1, 200);
                 Assert.IsNotNull(vc.Transactions, "Expected populated transaction object, but transaction object returned was null");
                 TestStep.Pass("Transaction added to the member", vc.Transactions.ReportDetail());
-                ranum = txnRanum ?? vc.Transactions.Select(x => x.A_RANUM).First();
-                //if (txnRanum != null)
-                //{
-                //    ranum = txnRanum;
-                //}              
+                ranum = txnRanum ?? vc.Transactions.Select(x => x.A_RANUM).First();                 
              
                 TestStep.Start("Update Existing Member with added transaction", "Member object should be returned from UpdateMember call");
                 MemberModel updatedMember = memController.UpdateMember(memberOut);
@@ -152,16 +148,7 @@ namespace Hertz.API.TestCases
                 decimal pointEventId = txnPointEventID ?? pointEvent.Select(x => x.POINTEVENTID).First();
                 Assert.IsTrue(pointEvent.Any(x => x.NAME.Equals(pointeventname)), "Expected pointevent name was not found in database");
                 TestStep.Pass("Pointevent name was found in the Database", pointEvent.ReportDetail());
-                //if (invalidLID)
-                //{
-                //    vc.LOYALTYIDNUMBER = "invalidlid";
-                //}
-
-                //if (invalidPointEventID)
-                //{
-                //    pointEventId = 12345678;
-                //}
-
+       
                 var loyaltyId = memLoyaltyID ?? memberOut.VirtualCards.First().LOYALTYIDNUMBER;
                 TestStep.Start($"Make AddMember Call", $"Add member call should throw exception with error code = {errorCode}");
                 LWServiceException exception = Assert.Throws<LWServiceException>(() => memController.HertzAwardLoyaltyCurrency(loyaltyId, "csadmin", 100, Convert.ToInt64(pointEventId), "automation", ranum), "Expected LWServiceException, exception was not thrown.");
