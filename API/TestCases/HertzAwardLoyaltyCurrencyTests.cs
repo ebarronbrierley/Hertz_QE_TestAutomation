@@ -65,7 +65,7 @@ namespace Hertz.API.TestCases
                 TestStep.Start($"Make HertzAwardLoyaltyCurrency Call", "HertzAwardLoyaltyCurrency call should return HertzAwardLoyaltyCurrency object");
                 HertzAwardLoyaltyCurrencyResponseModel memberAwardLoyaltyCurrency = memController.HertzAwardLoyaltyCurrency(loyaltyId, "csadmin", points, Convert.ToInt64(pointEventId), "automation", ranum);
                 Assert.IsNotNull(memberAwardLoyaltyCurrency, "Expected populated AwardLoyaltyCurrency object, but AwardLoyaltyCurrency object returned was null");
-                TestStep.Pass("AwardLoyaltyCurrency object was returned", memberAwardLoyaltyCurrency.ReportDetail());
+                TestStep.Pass("HertzAwardLoyaltyCurrency object was returned", memberAwardLoyaltyCurrency.ReportDetail());
               
                 TestStep.Start("Verify Points awarded matches the points in DB", "Points awarded matches the points in DB");
                 var vckey = memberOut.VirtualCards.First().VCKEY;
@@ -88,7 +88,7 @@ namespace Hertz.API.TestCases
                     Assert.AreEqual(vc.Transactions.Sum(x => x.A_GRSREVNAMT), memberAwardLoyaltyCurrency.TotalRevenueYTD, $"TotalRentalsYTD does not match {memberAwardLoyaltyCurrency.TotalRentalsYTD}");
                     Assert.AreEqual("Gold", memberAwardLoyaltyCurrency.CurrentTierName, $"CurrentTierName does not match {memberAwardLoyaltyCurrency.CurrentTierName}");
                 }
-                TestStep.Pass("AwardLoyaltyCurrency response is as expcted for GPR", memberAwardLoyaltyCurrency.ReportDetail());
+                TestStep.Pass("HertzAwardLoyaltyCurrency response is as expcted for GPR", memberAwardLoyaltyCurrency.ReportDetail());
             }
             catch(AssertionException ex)
             {
@@ -113,7 +113,7 @@ namespace Hertz.API.TestCases
         }
 
         [TestCaseSource(typeof(HertzAwardLoyaltyCurrencyTestData), "NegativeScenarios")]
-        public void HertzAwardLoyaltyCurrency_Negative(MemberModel member, int errorCode, string errorMessage,string memLoyaltyID = null, string txnRanum = null, decimal? txnPointEventID = null)
+        public void HertzAwardLoyaltyCurrency_Negative(MemberModel member, int errorCode, string errorMessage, decimal points,string memLoyaltyID = null, string txnRanum = null, decimal? txnPointEventID = null)
         {
             MemberController memController = new MemberController(Database, TestStep);
             PointController pointController = new PointController(Database, TestStep);   
@@ -121,27 +121,12 @@ namespace Hertz.API.TestCases
             try
             {
                 //Generate unique LIDs for each virtual card in the member
-                member = memController.AssignUniqueLIDs(member);
-                string ranum;
+                member = memController.AssignUniqueLIDs(member);                
 
                 TestStep.Start($"Make AddMember Call", "Member should be added successfully");
                 MemberModel memberOut = memController.AddMember(member);
                 AssertModels.AreEqualOnly(member, memberOut, MemberModel.BaseVerify);
                 TestStep.Pass("Member was added successfully and member object was returned", memberOut.ReportDetail());
-
-                VirtualCardModel vc = memberOut.VirtualCards.First();
-             
-                //Transactions are added to test the API with ranum and also to test the negative points scenario
-                TestStep.Start($"Add Transaction to the member", "Transactions added successfully");
-                vc.Transactions = TxnHeaderController.GenerateRandomTransactions(vc, HertzLoyalty.GoldPointsRewards, 1, 200);
-                Assert.IsNotNull(vc.Transactions, "Expected populated transaction object, but transaction object returned was null");
-                TestStep.Pass("Transaction added to the member", vc.Transactions.ReportDetail());
-                ranum = txnRanum ?? vc.Transactions.Select(x => x.A_RANUM).First();                 
-             
-                TestStep.Start("Update Existing Member with added transaction", "Member object should be returned from UpdateMember call");
-                MemberModel updatedMember = memController.UpdateMember(memberOut);
-                Assert.IsNotNull(updatedMember, "Expected non null Member object to be returned");
-                TestStep.Pass("Member object returned from UpdateMember API call", updatedMember.ReportDetail());
 
                 TestStep.Start("Find PointEventId in database", $"PointEventId should be found {pointeventname}");
                 IEnumerable<PointEventModel> pointEvent = pointController.GetPointEventIdsFromDb(pointeventname);
@@ -150,11 +135,11 @@ namespace Hertz.API.TestCases
                 TestStep.Pass("Pointevent name was found in the Database", pointEvent.ReportDetail());
        
                 var loyaltyId = memLoyaltyID ?? memberOut.VirtualCards.First().LOYALTYIDNUMBER;
-                TestStep.Start($"Make AddMember Call", $"Add member call should throw exception with error code = {errorCode}");
-                LWServiceException exception = Assert.Throws<LWServiceException>(() => memController.HertzAwardLoyaltyCurrency(loyaltyId, "csadmin", 100, Convert.ToInt64(pointEventId), "automation", ranum), "Expected LWServiceException, exception was not thrown.");
+                TestStep.Start($"Make HertzAwardLoyaltyCurrency Call", $"Add member call should throw exception with error code = {errorCode}");
+                LWServiceException exception = Assert.Throws<LWServiceException>(() => memController.HertzAwardLoyaltyCurrency(loyaltyId, "csadmin", points, Convert.ToInt64(pointEventId), "automation", txnRanum), "Expected LWServiceException, exception was not thrown.");
                 Assert.AreEqual(errorCode, exception.ErrorCode);
                 Assert.IsTrue(exception.Message.Contains(errorMessage));
-                TestStep.Pass("Add Member call threw expected exception", exception.ReportDetail());
+                TestStep.Pass("HertzAwardLoyaltyCurrency call threw expected exception", exception.ReportDetail());
             }
             catch (AssertModelEqualityException ex)
             {

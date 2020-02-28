@@ -55,17 +55,24 @@ namespace Hertz.API.TestData
                 MemberModel member = MemberController.GenerateRandomMember(HertzLoyalty.GoldPointsRewards.RegularGold);              
                 int errorCode = 101; 
                 errorMessage.Clear().Append("Invalid Loyalty Member Id");
-                yield return new TestCaseData(member, errorCode, errorMessage.ToString(), "inavlidLoyaltyID", null, null).SetName($"Hertz Award Loyalty Currency  Negative - Invalid Loyalty Member Id");
+                yield return new TestCaseData(member, errorCode, errorMessage.ToString(), 100m,"invalidLoyaltyID", null, null).SetName($"Hertz Award Loyalty Currency  Negative - Invalid Loyalty Member Id");
 
                 member = MemberController.GenerateRandomMember(HertzLoyalty.GoldPointsRewards.RegularGold);
                 errorCode = 601; 
                 errorMessage.Clear().Append("Invalid Point Event Id");
-                yield return new TestCaseData(member, errorCode, errorMessage.ToString(), null, null, 1234567m).SetName($"Hertz Award Loyalty Currency  Negative - Invalid Point Event Id");
+                yield return new TestCaseData(member, errorCode, errorMessage.ToString(), 100m, null, null, 1234567m).SetName($"Hertz Award Loyalty Currency  Negative - Invalid Point Event Id");
                                                                
                 member = MemberController.GenerateRandomMember(HertzLoyalty.GoldPointsRewards.RegularGold);
                 errorCode = 602; 
                 errorMessage.Clear().Append("Invalid Rental Agreement Number");
-                yield return new TestCaseData(member, errorCode, errorMessage.ToString(),null,"inavlidranum",null).SetName($"Hertz Award Loyalty Currency  Negative - Invalid Rental Agreement Number");
+                yield return new TestCaseData(member, errorCode, errorMessage.ToString(), 100m,null,"inavlidranum",null).SetName($"Hertz Award Loyalty Currency  Negative - Invalid Rental Agreement Number");
+
+                member = MemberController.GenerateRandomMember(HertzLoyalty.GoldPointsRewards.RegularGold);
+                errorCode = 607; 
+                errorMessage.Clear().Append("Balance cannot go below zero, current balance is less than points to deduct");
+                yield return new TestCaseData(member, errorCode, errorMessage.ToString(), -100m, null, null, null).SetName($"Balance cannot go below zero, current balance is less than points to deduct");
+
+
             }
         }
 
