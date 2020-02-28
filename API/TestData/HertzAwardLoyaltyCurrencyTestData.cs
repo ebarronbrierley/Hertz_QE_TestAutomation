@@ -18,17 +18,18 @@ namespace Hertz.API.TestData
             get
             {
                 foreach (IHertzProgram program in HertzLoyalty.Programs)
-                { 
-                    if (program.EarningPreference == "DX" ) continue;
+                {
+                    IHertzTier tier = program.Tiers.First();
+                    // if (program.EarningPreference == "DX" ) continue;
                     foreach (var awardPoints in points)
                     {
-                        MemberModel member = MemberController.GenerateRandomMember(program.Tiers.First());
+                       
+                        MemberModel member = MemberController.GenerateRandomMember(tier);
                         member.MemberDetails.A_COUNTRY = "US";
                         string pointeventname = "AwardNotApplied-CSAdjustment";
                         bool useRanum = true;
-                        yield return new TestCaseData(member, program, pointeventname, awardPoints, useRanum)
-
-                    .SetName($"Hertz Award Loyalty Currency Positive - Program:[{program.Tiers.First().ParentProgram.Name}] Tier:[{program.Tiers.First().Name}] Points:[{awardPoints}] With Ranum {useRanum}");
+                        yield return new TestCaseData(member, tier, pointeventname, awardPoints, useRanum)
+                    .SetName($"Hertz Award Loyalty Currency Positive - Program:[{program.Name}] Tier:[{tier.Name}] Points:[{awardPoints}] With Ranum {useRanum}");
                     }
                     foreach (var awardPoints in points)
                     {
@@ -36,14 +37,36 @@ namespace Hertz.API.TestData
                         member.MemberDetails.A_COUNTRY = "US";
                         string pointeventname = "AwardNotApplied-CSAdjustment";
                         bool useRanum = false;
-                        yield return new TestCaseData(member, program, pointeventname, awardPoints, useRanum)
-
+                        yield return new TestCaseData(member, tier, pointeventname, awardPoints, useRanum)
                     .SetName($"Hertz Award Loyalty Currency Positive - Program:[{program.Tiers.First().ParentProgram.Name}] Tier:[{program.Tiers.First().Name}] Points:[{awardPoints}] With Ranum {useRanum}");
                     }
 
                 }
             }
 
+        }
+
+        public static IEnumerable NegativeScenarios
+        {
+            get
+            {
+                StringBuilder errorMessage = new StringBuilder();
+
+                MemberModel member = MemberController.GenerateRandomMember(HertzLoyalty.GoldPointsRewards.RegularGold);              
+                int errorCode = 101; 
+                errorMessage.Clear().Append("Invalid Loyalty Member Id");
+                yield return new TestCaseData(member, errorCode, errorMessage.ToString(), "inavlidLoyaltyID", null, null).SetName($"Hertz Award Loyalty Currency  Negative - Invalid Loyalty Member Id");
+
+                member = MemberController.GenerateRandomMember(HertzLoyalty.GoldPointsRewards.RegularGold);
+                errorCode = 601; 
+                errorMessage.Clear().Append("Invalid Point Event Id");
+                yield return new TestCaseData(member, errorCode, errorMessage.ToString(), null, null, 1234567m).SetName($"Hertz Award Loyalty Currency  Negative - Invalid Point Event Id");
+                                                               
+                member = MemberController.GenerateRandomMember(HertzLoyalty.GoldPointsRewards.RegularGold);
+                errorCode = 602; 
+                errorMessage.Clear().Append("Invalid Rental Agreement Number");
+                yield return new TestCaseData(member, errorCode, errorMessage.ToString(),null,"inavlidranum",null).SetName($"Hertz Award Loyalty Currency  Negative - Invalid Rental Agreement Number");
+            }
         }
 
     }
