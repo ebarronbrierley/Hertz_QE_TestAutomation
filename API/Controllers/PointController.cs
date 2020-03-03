@@ -37,6 +37,15 @@ namespace Hertz.API.Controllers
             query.Append($" where pointeventid in ({String.Join(",", pointEventIds)})");
             return dbContext.Query<PointEventModel>(query.ToString());
         }
+
+        public IEnumerable<PointEventModel> GetPointEventIdsFromDb(string pointEventName)
+        {
+            StringBuilder query = new StringBuilder();
+            query.Append($"select * from {PointEventModel.TableName} where NAME = '{pointEventName}'");
+
+            return dbContext.Query<PointEventModel>(query.ToString());
+        }
+
         public IEnumerable<PointTransactionModel> GetPointTransactionsFromDb(decimal vcKey)
         {
             StringBuilder query = new StringBuilder();

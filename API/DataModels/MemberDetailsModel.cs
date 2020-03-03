@@ -32,7 +32,7 @@ namespace Hertz.API.DataModels
 
         [ModelAttribute("ZipOrPostalCode")]
         public string A_ZIPORPOSTALCODE { get; set; }
-
+               
         [Randomizer(DataType = RandomDataType.CountryAbbreviation)]
         [ModelAttribute("Country")]
         public string A_COUNTRY { get; set; }
