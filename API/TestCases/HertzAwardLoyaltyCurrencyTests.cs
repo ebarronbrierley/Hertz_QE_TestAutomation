@@ -21,9 +21,7 @@ namespace Hertz.API.TestCases
         public void HertzAwardLoyaltyCurrency_Positive(MemberModel member, IHertzTier tier,string pointeventname,decimal points,bool useRanum)
         {           
             MemberController memController = new MemberController(Database, TestStep);
-            PointController pointController = new PointController(Database, TestStep);
-            //int rentalsToNextTierFG = 12;
-            //int revenueToNextTierFG = 2400;
+            PointController pointController = new PointController(Database, TestStep);        
             try
             {
                 //Generate unique LIDs for each virtual card in the member
@@ -66,27 +64,36 @@ namespace Hertz.API.TestCases
                 HertzAwardLoyaltyCurrencyResponseModel memberAwardLoyaltyCurrency = memController.HertzAwardLoyaltyCurrency(loyaltyId, "csadmin", points, Convert.ToInt64(pointEventId), "automation", ranum);
                 Assert.IsNotNull(memberAwardLoyaltyCurrency, "Expected populated AwardLoyaltyCurrency object, but AwardLoyaltyCurrency object returned was null");
                 TestStep.Pass("HertzAwardLoyaltyCurrency object was returned", memberAwardLoyaltyCurrency.ReportDetail());
-              
-                TestStep.Start("Verify Points awarded matches the points in DB", "Points awarded matches the points in DB");
-                var vckey = memberOut.VirtualCards.First().VCKEY;
-                IEnumerable<PointTransactionModel> dbPointTransaction = pointController.GetPointTransactionsFromDb(vckey).ToList();                
+
+                var vckey = memberOut.VirtualCards.First().VCKEY.ToString();
+                TestStep.Start("Get Account Summary from DB", "Account Summary retrieved from DB");
+                MemberAccountSummaryModel memberAccountSummaryOutDb = memController.GetMemberAccountSummaryFromDB(vckey);
+                Assert.IsNotNull(memberAccountSummaryOutDb, "Account Summary could not be retrieved from DB");
+                TestStep.Pass("Existing member was found", memberAccountSummaryOutDb.ReportDetail());
+
+                TestStep.Start("Verify Points awarded matches the points in DB", "Points awarded matches the points in DB");             
+                IEnumerable<PointTransactionModel> dbPointTransaction = pointController.GetPointTransactionsFromDb(decimal.Parse(vckey)).ToList();                
                 Assert.IsNotNull(dbPointTransaction, "Expected populated PointTransaction object from database query, but PointTransaction object returned was null");
                 Assert.AreEqual(points, dbPointTransaction.Where(x => x.POINTEVENTID == pointEventId && x.POINTS == points).Select(x => x.POINTS).First(), $"Points awarded does not match database points{dbPointTransaction.Select(x => x.POINTS)} ");             
                 TestStep.Pass("Points awarded are added to the DB", dbPointTransaction.ReportDetail());
 
                 TestStep.Start($"Verify CurrencyBalance of HertzAwardLoyaltyCurrency", "CurrencyBalance returned should be correct");
-                Assert.AreEqual(dbPointTransaction.Sum(x => x.POINTS), memberAwardLoyaltyCurrency.CurrencyBalance, $"CurrencyBalance does not match database points{dbPointTransaction.Select(x => x.POINTS)} ");
-                Assert.AreEqual(0,memberAwardLoyaltyCurrency.CurrencyToNextTier, "CurrencyToNextTier does not match 0");
+                Assert.AreEqual(dbPointTransaction.Sum(x => x.POINTS), memberAwardLoyaltyCurrency.CURRENCYBALANCE, $"CurrencyBalance does not match database points{dbPointTransaction.Select(x => x.POINTS)} ");
+                Assert.AreEqual(0,memberAwardLoyaltyCurrency.CURRENCYTONEXTTIER, "CurrencyToNextTier does not match 0");
                 TestStep.Pass("CurrencyBalance response is as expcted", memberAwardLoyaltyCurrency.ReportDetail());
-            
+
+                TestStep.Start("Compare Account Summary between DB and API", "Account Summary matches");
+                AssertModels.AreEqualWithAttribute(memberAccountSummaryOutDb, memberAwardLoyaltyCurrency);
+                TestStep.Pass("Account Summary matches between DB and API", memberAccountSummaryOutDb.ReportDetail());
+
                 TestStep.Start($"Verify response of HertzAwardLoyaltyCurrency for GPR", "Response returned should be correct");
                 if (tier.ParentProgram.EarningPreference == "N1")
                 {
-                    Assert.AreEqual(tier.RentalsToNextTier - vc.Transactions.Count(), memberAwardLoyaltyCurrency.RentalsToNextTier, $"RentalsToNextTier does not match {tier.RentalsToNextTier - vc.Transactions.Count()}");
-                    Assert.AreEqual(tier.RevenueToNextTier - vc.Transactions.First().A_GRSREVNAMT, memberAwardLoyaltyCurrency.RevenueToNextTier, $"RentalsToNextTier does not match {tier.RevenueToNextTier - vc.Transactions.First().A_GRSREVNAMT}");
-                    Assert.AreEqual(vc.Transactions.Count(), memberAwardLoyaltyCurrency.TotalRentalsYTD, $"TotalRentalsYTD does not match {memberAwardLoyaltyCurrency.TotalRentalsYTD}");
-                    Assert.AreEqual(vc.Transactions.Sum(x => x.A_GRSREVNAMT), memberAwardLoyaltyCurrency.TotalRevenueYTD, $"TotalRentalsYTD does not match {memberAwardLoyaltyCurrency.TotalRentalsYTD}");
-                    Assert.AreEqual("Gold", memberAwardLoyaltyCurrency.CurrentTierName, $"CurrentTierName does not match {memberAwardLoyaltyCurrency.CurrentTierName}");
+                    Assert.AreEqual(tier.RentalsToNextTier - vc.Transactions.Count(), memberAwardLoyaltyCurrency.RENTALSTONEXTTIER, $"RentalsToNextTier does not match {tier.RentalsToNextTier - vc.Transactions.Count()}");
+                    Assert.AreEqual(tier.RevenueToNextTier - vc.Transactions.First().A_GRSREVNAMT, memberAwardLoyaltyCurrency.REVENUETONEXTTIER, $"RentalsToNextTier does not match {tier.RevenueToNextTier - vc.Transactions.First().A_GRSREVNAMT}");
+                    Assert.AreEqual(vc.Transactions.Count(), memberAwardLoyaltyCurrency.TOTALRENTALSYTD, $"TotalRentalsYTD does not match {memberAwardLoyaltyCurrency.TOTALRENTALSYTD}");
+                    Assert.AreEqual(vc.Transactions.Sum(x => x.A_GRSREVNAMT), memberAwardLoyaltyCurrency.TOTALREVENUEYTD, $"TotalRentalsYTD does not match {memberAwardLoyaltyCurrency.TOTALREVENUEYTD}");
+                    Assert.AreEqual("Gold", memberAwardLoyaltyCurrency.CURRENTTIERNAME, $"CurrentTierName does not match {memberAwardLoyaltyCurrency.CURRENCYBALANCE}");
                 }
                 TestStep.Pass("HertzAwardLoyaltyCurrency response is as expcted for GPR", memberAwardLoyaltyCurrency.ReportDetail());
             }
@@ -113,7 +120,7 @@ namespace Hertz.API.TestCases
         }
 
         [TestCaseSource(typeof(HertzAwardLoyaltyCurrencyTestData), "NegativeScenarios")]
-        public void HertzAwardLoyaltyCurrency_Negative(MemberModel member, int errorCode, string errorMessage, decimal points,string memLoyaltyID = null, string txnRanum = null, decimal? txnPointEventID = null)
+        public void HertzAwardLoyaltyCurrency_Negative(MemberModel member, int errorCode, string errorMessage, decimal points,string csagent,string memLoyaltyID = null, string txnRanum = null, decimal? txnPointEventID = null)
         {
             MemberController memController = new MemberController(Database, TestStep);
             PointController pointController = new PointController(Database, TestStep);   
@@ -136,7 +143,7 @@ namespace Hertz.API.TestCases
        
                 var loyaltyId = memLoyaltyID ?? memberOut.VirtualCards.First().LOYALTYIDNUMBER;
                 TestStep.Start($"Make HertzAwardLoyaltyCurrency Call", $"Add member call should throw exception with error code = {errorCode}");
-                LWServiceException exception = Assert.Throws<LWServiceException>(() => memController.HertzAwardLoyaltyCurrency(loyaltyId, "csadmin", points, Convert.ToInt64(pointEventId), "automation", txnRanum), "Expected LWServiceException, exception was not thrown.");
+                LWServiceException exception = Assert.Throws<LWServiceException>(() => memController.HertzAwardLoyaltyCurrency(loyaltyId, csagent, points, Convert.ToInt64(pointEventId), "automationNeg", txnRanum), "Expected LWServiceException, exception was not thrown.");
                 Assert.AreEqual(errorCode, exception.ErrorCode);
                 Assert.IsTrue(exception.Message.Contains(errorMessage));
                 TestStep.Pass("HertzAwardLoyaltyCurrency call threw expected exception", exception.ReportDetail());

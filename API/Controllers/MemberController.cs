@@ -285,12 +285,15 @@ namespace Hertz.API.Controllers
 
             query.Append("select SUM(p.points) as currencybalance, lm.memberstatus, vc.createdate, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
             query.Append(" ,case when md.a_tiercode = 'RG' THEN 'Gold'");
-            query.Append(" when md.a_tiercode = 'FG' THEN 'Five star'");
+            query.Append(" when md.a_tiercode = 'FG' THEN 'Five Star'");
             query.Append(" when md.a_tiercode = 'PC' THEN 'Presidents Circle'");
             query.Append(" when md.a_tiercode = 'PL' THEN 'Platinum'");
             query.Append(" when md.a_tiercode = 'PS' THEN 'Platinum Select'");
-            query.Append(" when md.a_tiercode = 'VP' THEN 'Platinum VIP'");
-            query.Append(" else 'No Tier' END as CURRENTTIERNAME");
+            query.Append(" when md.a_tiercode = 'VP' THEN 'Platinum VIP'");         
+            query.Append(" END as CURRENTTIERNAME");
+            query.Append(",case when lm.memberstatus = 1 THEN 'Active'");
+            query.Append(" when lm.memberstatus = 2 THEN 'Disabled'");
+            query.Append(" END as MEMBERSTATUS");
             query.Append(" from bp_htz.ats_memberdetails md");
             query.Append(" inner join bp_htz.lw_virtualcard vc on vc.ipcode = md.a_ipcode");
             query.Append(" inner join bp_htz.lw_loyaltymember lm on lm.ipcode = vc.ipcode ");
@@ -299,12 +302,14 @@ namespace Hertz.API.Controllers
             query.Append($" where vc.vckey = {vckey}");
             query.Append(" group by lm.memberstatus, vc.createdate, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
             query.Append(" ,case when md.a_tiercode = 'RG' THEN 'Gold'");
-            query.Append(" when md.a_tiercode = 'FG' THEN 'Five star'");
+            query.Append(" when md.a_tiercode = 'FG' THEN 'Five Star'");
             query.Append(" when md.a_tiercode = 'PC' THEN 'Presidents Circle'");
             query.Append(" when md.a_tiercode = 'PL' THEN 'Platinum'");
             query.Append(" when md.a_tiercode = 'PS' THEN 'Platinum Select'");
-            query.Append(" when md.a_tiercode = 'VP' THEN 'Platinum VIP'");
-            query.Append(" else 'No Tier' END");
+            query.Append(" when md.a_tiercode = 'VP' THEN 'Platinum VIP' END");
+            query.Append(" ,case when lm.memberstatus = 1 THEN 'Active'");
+            query.Append(" when lm.memberstatus = 2 THEN 'Disabled'");
+            query.Append(" END");         
 
             MemberAccountSummaryModel memberAccountSummary = dbContext.QuerySingleRow<MemberAccountSummaryModel>(query.ToString());
             return memberAccountSummary;
