@@ -9,7 +9,7 @@ public class AssemblyIntializer
     [OneTimeSetUp]
     public void AssemblyInitialize()
     {
-        manager.EnableRestReporting("http://CY2CAUT01:5000");
+        //manager.EnableRestReporting("http://CY2CAUT01:5000");
         manager.IntializeExecution(EnvironmentManager.Get.ExecutionName,
                                     EnvironmentManager.Get.EnvironmentName,
                                     EnvironmentManager.Get.ApplicationVersion,

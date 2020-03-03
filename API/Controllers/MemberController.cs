@@ -134,7 +134,7 @@ namespace Hertz.API.Controllers
             return memberPromoOut;
         }
 
-        public AddMemberRewardsResponseModel AddMemberReward(string alternateID, string rewardTypeCode, IHertzProgram program)
+        public AddMemberRewardsResponseModel AddMemberReward(string alternateID, string rewardTypeCode, string programCode)
         {
             using (ConsoleCapture capture = new ConsoleCapture())
             {
@@ -147,8 +147,7 @@ namespace Hertz.API.Controllers
                     rewardInfo.TypeCode = rewardTypeCode;
                     rewardInfoStruct[0] = rewardInfo;
                     string changedBy = "oagwuegbo";
-                    string programcode = program.EarningPreference.ToString();
-                    var lwMemberReward = lwSvc.AddMemberRewards(alternateID, null, programcode, null, null, null, null, null, null, null, null, null, null, null, null, null, changedBy, rewardInfoStruct, string.Empty, out time);
+                    var lwMemberReward = lwSvc.AddMemberRewards(alternateID, null, programCode, null, null, null, null, null, null, null, null, null, null, null, null, null, changedBy, rewardInfoStruct, string.Empty, out time);
                     memberRewardsOut = LODConvert.FromLW<AddMemberRewardsResponseModel>(lwMemberReward);
                 }
                 catch (LWClientException ex)
@@ -349,6 +348,8 @@ namespace Hertz.API.Controllers
             query.Append(String.Join(" and ", queryParams));
             return dbContext.Query<MemberRewardsModel>(query.ToString());
         }
+
+
 
         public decimal GetPointSumFromDB(string loyaltyid)
         {

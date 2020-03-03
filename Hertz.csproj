@@ -49,6 +49,7 @@
     <Compile Include="API\Controllers\PointController.cs" />
     <Compile Include="API\Controllers\PromotionController.cs" />
     <Compile Include="API\Controllers\RANUMController.cs" />
+    <Compile Include="API\Controllers\RewardController.cs" />
     <Compile Include="API\Controllers\TxnHeaderController.cs" />
     <Compile Include="API\DataModels\AddMemberRewardsResponseModel.cs" />
     <Compile Include="API\DataModels\AwardLoyaltyCurrencyResponseModel.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="API\DataModels\PointEventModel.cs" />
     <Compile Include="API\DataModels\PointTransactionModel.cs" />
     <Compile Include="API\DataModels\PromotionModel.cs" />
+    <Compile Include="API\DataModels\RewardDefModel.cs" />
     <Compile Include="API\DataModels\TestClass.cs" />
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
