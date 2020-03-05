@@ -204,8 +204,7 @@ namespace Hertz.API.TestCases
                 }
 
                 TestStep.Start("Make AddMemberReward Call", "AddMemberReward Call is unsuccessful and throws an exception");
-                LWServiceException exception = null;
-                exception = Assert.Throws<LWServiceException>(() => memController.AddMemberReward(alternateID, reward.CERTIFICATETYPECODE, testMember.MemberDetails.A_EARNINGPREFERENCE), "Excepted LWServiceException, exception was not thrown.");
+                LWServiceException exception = Assert.Throws<LWServiceException>(() => memController.AddMemberReward(alternateID, reward.CERTIFICATETYPECODE, testMember.MemberDetails.A_EARNINGPREFERENCE), "Excepted LWServiceException, exception was not thrown.");
                 Assert.AreEqual(errorCode, exception.ErrorCode);
                 Assert.IsTrue(exception.Message.Contains(errorMessage));
                 TestStep.Pass("AddMemberReward Call is unsuccessful and error codes are validated");
