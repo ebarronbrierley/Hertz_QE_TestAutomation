@@ -33,7 +33,7 @@ namespace Hertz.API.Controllers
 
         public RewardDefModel GetRandomRewardDef(IHertzProgram program)
         {
-            string query = $"select * from bp_htz.lw_rewardsdef sample(50) rd where rd.smallimagefile = '{program.EarningPreference}' and rd.active = '1'";
+            string query = $"select * from {RewardDefModel.TableName} sample(50) rd where rd.smallimagefile = '{program.EarningPreference}' and rd.active = '1'";
             RewardDefModel rewardDef = dbContext.QuerySingleRow<RewardDefModel>(query);
             return rewardDef;
         }

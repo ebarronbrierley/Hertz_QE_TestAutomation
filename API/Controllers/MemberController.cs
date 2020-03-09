@@ -152,12 +152,7 @@ namespace Hertz.API.Controllers
                 }
                 catch (LWClientException ex)
                 {
-
                     throw new LWServiceException(ex.Message, ex.ErrorCode);
-                }
-                catch (Exception ex)
-                {
-                    throw new LWServiceException(ex.Message, -1);
                 }
                 finally
                 {
@@ -354,7 +349,7 @@ namespace Hertz.API.Controllers
         public decimal GetPointSumFromDB(string loyaltyid)
         {
             StringBuilder query = new StringBuilder();
-            query.Append($"SELECT SUM(PTT.POINTS) FROM BP_HTZ.LW_POINTTRANSACTION PTT INNER JOIN BP_HTZ.LW_VIRTUALCARD VC ON VC.VCKEY = PTT.VCKEY WHERE 1=1 AND VC.LOYALTYIDNUMBER = '{loyaltyid}'");
+            query.Append($"SELECT SUM(PTT.POINTS) FROM {PointTransactionModel.TableName} PTT INNER JOIN BP_HTZ.LW_VIRTUALCARD VC ON VC.VCKEY = PTT.VCKEY WHERE 1=1 AND VC.LOYALTYIDNUMBER = '{loyaltyid}'");
             Hashtable ht = dbContext.QuerySingleRow(query.ToString());
             decimal pointsOut = (decimal)ht["SUM(PTT.POINTS)"];
             return pointsOut;
