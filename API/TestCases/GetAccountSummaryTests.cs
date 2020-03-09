@@ -18,32 +18,54 @@ namespace Hertz.API.TestCases
     public class GetAccountSummaryTests : BrierleyTestFixture
     {
         [TestCaseSource(typeof(GetAccountSummaryTestData), "PositiveScenarios")]
-        public void GetAccountSummaryTestsTest_Positive(IHertzProgram program, IHertzTier tier)
+        public void GetAccountSummaryTestsTest_Positive(MemberModel createMember, IHertzProgram program)
         {
             MemberController memController = new MemberController(Database, TestStep);
             try
             {
-                TestStep.Start("Get Existing Member from the database", "Existing member should be found");
-                MemberModel dbMember = memController.GetRandomFromDB(MemberModel.Status.Active, tier);
-                Assert.IsNotNull(dbMember, "Member could not be retrieved from DB");
-                TestStep.Pass("Existing member was found", dbMember.ReportDetail());
+                TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
+                createMember = memController.AssignUniqueLIDs(createMember);
+                TestStep.Pass("Unique LoyaltyIds assigned", createMember.VirtualCards.ReportDetail());
 
-                var vckey = dbMember.VirtualCards.First().VCKEY.ToString();
+                TestStep.Start($"Make AddMember Call", "Member should be added successfully and member object should be returned");
+                MemberModel memberOut = memController.AddMember(createMember);
+                AssertModels.AreEqualOnly(createMember, memberOut, MemberModel.BaseVerify);
+                TestStep.Pass("Member was added successfully and member object was returned", memberOut.ReportDetail());
+
+                int transactionCount = 1;
+                var memVirtualCard = memberOut.VirtualCards.First();
+                TestStep.Start($"Add random transaction(s) to members virtual card with VCKEY = {memVirtualCard.VCKEY}", "Transaction(s) should be added to members virtual card");
+                memVirtualCard.Transactions = TxnHeaderController.GenerateRandomTransactions(memVirtualCard, program, transactionCount, 500M);
+                Assert.AreEqual(transactionCount, memVirtualCard.Transactions.Count, $"Expected {transactionCount} TxnHeader(s) to be present in members vitual card");
+                TestStep.Pass("Transaction(s) is added to members virtual card", memVirtualCard.Transactions.ReportDetail());
+
+                foreach (var transaction in memVirtualCard.Transactions)
+                {
+                    transaction.A_TXNQUALPURCHASEAMT = TxnHeaderController.CalculateQualifyingPurchaseAmount(transaction);
+                    transaction.A_QUALTOTAMT = TxnHeaderController.CalculateQualifyingPurchaseAmount(transaction);
+                }
+
+                TestStep.Start("Update Existing Member with added transaction", "Member object should be returned from UpdateMember call");
+                MemberModel updatedMember = memController.UpdateMember(memberOut);
+                Assert.IsNotNull(updatedMember, "Expected non null Member object to be returned");
+                TestStep.Pass("Member object returned from UpdateMember API call", updatedMember.ReportDetail());
+
+                var vckey = memVirtualCard.VCKEY.ToString();
                 TestStep.Start("Get Account Summary from DB", "Account Summary retrieved from DB");
                 MemberAccountSummaryModel memberAccountSummaryOutDb = memController.GetMemberAccountSummaryFromDB(vckey);
                 Assert.IsNotNull(memberAccountSummaryOutDb, "Account Summary could not be retrieved from DB");
-                TestStep.Pass("Existing member was found", dbMember.ReportDetail());
+                TestStep.Pass("Existing member was found", memberOut.ReportDetail());
 
-                var loyaltyId = dbMember.VirtualCards.First().LOYALTYIDNUMBER;
+                var loyaltyId = memVirtualCard.LOYALTYIDNUMBER;
                 var programCode = program != null ? program.EarningPreference : null;
                 TestStep.Start("GetAccountSummary API call", "Account Summary retruned from API");
                 MemberAccountSummaryModel memberAccountSummaryOut = memController.GetAccountSummary(loyaltyId, programCode, null);
                 Assert.IsNotNull(memberAccountSummaryOut, "Account Summary not returned from API");
-                TestStep.Pass("Account Summary was returned from API", dbMember.ReportDetail());
+                TestStep.Pass("Account Summary was returned from API", memberOut.ReportDetail());
 
                 TestStep.Start("Compare Account Summary between DB and API", "Account Summary matches");
                 AssertModels.AreEqualWithAttribute(memberAccountSummaryOutDb, memberAccountSummaryOut);
-                TestStep.Pass("Account Summary matches between DB and API", dbMember.ReportDetail());
+                TestStep.Pass("Account Summary matches between DB and API", memberOut.ReportDetail());
 
             }
             catch (LWServiceException ex)

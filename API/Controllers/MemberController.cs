@@ -246,6 +246,17 @@ namespace Hertz.API.Controllers
                     query.Append($"(select a_tiercode from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) is null");
             }
             return GetFromDB(ipCodeQuery: query.ToString());
+        } 
+        public MemberModel GetRandomMemberDBForMemberPromotion(long memberStatus)
+        {
+            string query = string.Format($@"select lm.ipcode from BP_HTZ.lw_loyaltymember lm
+                            where not exists (select NULL from BP_HTZ.Lw_Memberpromotion mp where mp.memberid = lm.ipcode)
+                            and lm.memberstatus = {memberStatus}
+                            and rownum <=1");
+
+            var retVal = dbContext.QuerySingleRow(query);
+
+            return GetFromDB((decimal)retVal["IPCODE"]);
         }
         public IEnumerable<MemberPromotionModel> GetMemberPromotionsFromDB(decimal? id = null, string code = null, decimal? memberId = null)
         {

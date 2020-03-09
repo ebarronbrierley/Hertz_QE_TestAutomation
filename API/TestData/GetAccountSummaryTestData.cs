@@ -20,13 +20,12 @@ namespace Hertz.API.TestData
         {
             get
             {
-                yield return new TestCaseData(null, null);
-
                 foreach (IHertzProgram program in HertzLoyalty.Programs)
                 {
                     foreach (IHertzTier tier in program.Tiers)
                     {
-                        yield return new TestCaseData(program, tier).SetName($"GetAccountSymmary Positive - Program: [{program.Name}] Tier: [{tier.Name}]");
+                        MemberModel gprMember = MemberController.GenerateRandomMember(tier);
+                        yield return new TestCaseData(gprMember, program).SetName($"GetAccountSymmary Positive - Program: [{program.Name}] Tier: [{tier.Name}]");
                     }
                 }
             }

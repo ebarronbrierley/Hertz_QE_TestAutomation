@@ -18,16 +18,20 @@ namespace Hertz.API.TestCases
     public class GetMemberPromotionTests : BrierleyTestFixture
     {
         [TestCaseSource(typeof(GetMemberPromotionTestData), "PositiveScenarios")]
-        public void GetMemberPromotion_Positive(string promotionCode)
+        public void GetMemberPromotion_Positive(MemberModel createMember, string promotionCode)
         {
             MemberController memController = new MemberController(Database, TestStep);
             PromotionController promoController = new PromotionController(Database, TestStep);
             try
             {
-                TestStep.Start("Get Existing Member from the database", "Existing member should be found");
-                MemberModel dbMember = memController.GetRandomFromDB(MemberModel.Status.Active);
-                Assert.IsNotNull(dbMember, "Member could not be retrieved from DB");
-                TestStep.Pass("Existing member was found", dbMember.ReportDetail());
+                TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
+                createMember = memController.AssignUniqueLIDs(createMember);
+                TestStep.Pass("Unique LoyaltyIds assigned", createMember.VirtualCards.ReportDetail());
+
+                TestStep.Start($"Make AddMember Call", "Member should be added successfully and member object should be returned");
+                MemberModel memberOut = memController.AddMember(createMember);
+                AssertModels.AreEqualOnly(createMember, memberOut, MemberModel.BaseVerify);
+                TestStep.Pass("Member was added successfully and member object was returned", memberOut.ReportDetail());
 
                 TestStep.Start("Find promotion in database", "Promotion should be found");
                 IEnumerable<PromotionModel> promos = promoController.GetFromDB(code: promotionCode);
@@ -35,40 +39,31 @@ namespace Hertz.API.TestCases
                 Assert.IsTrue(promos.Any(x => x.CODE.Equals(promotionCode)), "Expected promotion code was not found in database");
                 TestStep.Pass("Promotion was found", promos.ReportDetail());
                 
-                TestStep.Start($"Verify member promotion exists in {MemberPromotionModel.TableName}", $"Member promotion should be in {MemberPromotionModel.TableName}");
-                IEnumerable<MemberPromotionModel> dbMemberPromo = memController.GetMemberPromotionsFromDB(null, null, dbMember.IPCODE);
+                var loyaltyId = memberOut.VirtualCards.First().LOYALTYIDNUMBER;
+                TestStep.Start("Make AddMemberPromotion Call", "AddMemberPromotion call should return MemberPromotion object");
+                MemberPromotionModel memberPromoOut = memController.AddMemberPromotion(loyaltyId, promotionCode, null, null, false, null, null, false);
+                Assert.IsNotNull(memberPromoOut, "Expected populated MemberPromotion object, but MemberPromotion object returned was null");
+                TestStep.Pass("MemberPromotion object was returned", memberPromoOut.ReportDetail());
+
+                TestStep.Start($"Verify added member promotion exists in {MemberPromotionModel.TableName}", $"Member promotion should be in {MemberPromotionModel.TableName}");
+                IEnumerable<MemberPromotionModel>  dbMemberPromo = memController.GetMemberPromotionsFromDB(null, null, memberOut.IPCODE);
                 Assert.IsNotNull(dbMemberPromo, "Expected populated MemberPromotion object from database query, but MemberPromotion object returned was null");
                 Assert.Greater(dbMemberPromo.Count(), 0, "Expected at least one MemberPromotion to be returned from query");
+                AssertModels.AreEqualOnly(memberPromoOut, dbMemberPromo.OrderByDescending(x => x.CREATEDATE).First(), MemberPromotionModel.BaseVerify);
                 TestStep.Pass("MemberPromotion object exists in table", dbMemberPromo.ReportDetail());
 
-                var loyaltyId = dbMember.VirtualCards.First().LOYALTYIDNUMBER;
-                if (dbMemberPromo.Where(p => p.CODE.Equals(promotionCode)).Count() == 0)
-                {
-                    TestStep.Start("Make AddMemberPromotion Call", "AddMemberPromotion call should return MemberPromotion object");
-                    MemberPromotionModel memberPromoOut = memController.AddMemberPromotion(loyaltyId, promotionCode, null, null, false, null, null, false);
-                    Assert.IsNotNull(memberPromoOut, "Expected populated MemberPromotion object, but MemberPromotion object returned was null");
-                    TestStep.Pass("MemberPromotion object was returned", memberPromoOut.ReportDetail());
-
-                    TestStep.Start($"Verify added member promotion exists in {MemberPromotionModel.TableName}", $"Member promotion should be in {MemberPromotionModel.TableName}");
-                    dbMemberPromo = memController.GetMemberPromotionsFromDB(null, null, dbMember.IPCODE);
-                    Assert.IsNotNull(dbMemberPromo, "Expected populated MemberPromotion object from database query, but MemberPromotion object returned was null");
-                    Assert.Greater(dbMemberPromo.Count(), 0, "Expected at least one MemberPromotion to be returned from query");
-                    AssertModels.AreEqualOnly(memberPromoOut, dbMemberPromo.OrderByDescending(x => x.CREATEDATE).First(), MemberPromotionModel.BaseVerify);
-                    TestStep.Pass("MemberPromotion object exists in table", dbMemberPromo.ReportDetail());
-                }
-
                 TestStep.Start("Make GetMemberPromotion call", "Member promotion should be returned");
-                IEnumerable<MemberPromotionModel> memberPromotionStructModelOut = memController.GetMemberPromotion(loyaltyId, null, null, false, string.Empty, string.Empty, false, null);
-                Assert.Greater(memberPromotionStructModelOut.Count(), 0, "Expected at least one MemberPromotion to be returned from API");
-                TestStep.Pass("MemberPromotion object was returned from API", memberPromotionStructModelOut.ReportDetail());
+                IEnumerable<MemberPromotionModel> memberPromotionModelOut = memController.GetMemberPromotion(loyaltyId, null, null, false, string.Empty, string.Empty, false, null);
+                Assert.Greater(memberPromotionModelOut.Count(), 0, "Expected at least one MemberPromotion to be returned from API");
+                TestStep.Pass("MemberPromotion object was returned from API", memberPromotionModelOut.ReportDetail());
 
                 TestStep.Start("Compare Member Promotion Count", "Member promotion count from API should match count from DB");
-                Assert.AreEqual(memberPromotionStructModelOut.Count(), dbMemberPromo.Count(), "Expected Member Promotion count to match");
+                Assert.AreEqual(memberPromotionModelOut.Count(), dbMemberPromo.Count(), "Expected Member Promotion count to match");
                 TestStep.Pass("MemberPromotion count match completed");
 
                 TestStep.Start($"Verify Member Promotion  in {MemberPromotionModel.TableName} table", "Member Promo from API GetMemberPromotion");
-                AssertModels.AreEqualWithAttribute(dbMemberPromo, memberPromotionStructModelOut);
-                TestStep.Pass("API Member promotion created matches member promotions in database", dbMember.MemberPreferences.ReportDetail());
+                AssertModels.AreEqualWithAttribute(memberPromotionModelOut, dbMemberPromo);
+                TestStep.Pass("API Member promotion created matches member promotions in database", memberOut.MemberPreferences.ReportDetail());
 
             }
             catch (AssertionException ex)
@@ -111,13 +106,8 @@ namespace Hertz.API.TestCases
                 else if (string.Equals(loyaltyId, string.Empty))
                 {
                     TestStep.Start("Get Existing Member without promotion from the database", "Existing member should be found");
-                    MemberModel dbMember = memController.GetRandomFromDB(MemberModel.Status.Active);
+                    MemberModel dbMember = memController.GetRandomMemberDBForMemberPromotion(MemberModel.Status.Active);
                     IEnumerable<MemberPromotionModel> dbMemPromo = memController.GetMemberPromotionsFromDB(memberId: dbMember.IPCODE);
-                    while (dbMemPromo.Count() > 0)
-                    {
-                        dbMember = memController.GetRandomFromDB(MemberModel.Status.Active);
-                        dbMemPromo = memController.GetMemberPromotionsFromDB(memberId: dbMember.IPCODE);
-                    }
                     Assert.IsNotNull(dbMember, "Member could not be retrieved from DB");
                     Assert.IsNotNull(dbMemPromo, "MemberPromotion could not be retrieved from DB");
                     TestStep.Pass("Existing member without promotion was found", dbMember.ReportDetail());
