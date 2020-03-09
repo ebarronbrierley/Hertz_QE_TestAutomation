@@ -45,12 +45,12 @@ namespace Hertz.API.DataModels
             } 
         }
 
-        public IHertzTier RegularGold { get { return new Tier(this, "Regular Gold", "RG", 0M); } }
-        public IHertzTier FiveStar { get { return new Tier( this, "5-Star", "FG", 0.25M); } }
-        public IHertzTier PresidentsCircle { get { return new Tier(this, "Presidents Circle", "PC", 0.5M); } }
-        public IHertzTier Platinum { get { return new Tier(this, "Platinum", "PL", 0.5M); } }
-        public IHertzTier PlatinumSelect {  get { return new Tier(this, "Platinum Select", "PS", 0.5M); } }
-        public IHertzTier PlatinumVIP { get { return new Tier(this, "Platinum VIP", "VP", 0M); } }
+        public IHertzTier RegularGold { get { return new Tier(this, "Regular Gold", "RG", 0M, 12, 2400); } }
+        public IHertzTier FiveStar { get { return new Tier( this, "5-Star", "FG", 0.25M, 20, 4000); } }
+        public IHertzTier PresidentsCircle { get { return new Tier(this, "Presidents Circle", "PC", 0.5M, 0, 0); } }
+        public IHertzTier Platinum { get { return new Tier(this, "Platinum", "PL", 0.5M, 0, 0); } }
+        public IHertzTier PlatinumSelect {  get { return new Tier(this, "Platinum Select", "PS", 0.5M, 0, 0); } }
+        public IHertzTier PlatinumVIP { get { return new Tier(this, "Platinum VIP", "VP", 0M, 0, 0); } }
 
 
         public GoldPointsRewards()
@@ -75,7 +75,7 @@ namespace Hertz.API.DataModels
 
         public IEnumerable<IHertzTier> Tiers { get { yield return DefaultTier; } }
 
-        public IHertzTier DefaultTier { get { return new Tier(this, "No Tier", null, 0M); } }
+        public IHertzTier DefaultTier { get { return new Tier(this, "No Tier", null, 0M, 0, 0); } }
 
         public ThriftyBlueChip()
         {
@@ -97,7 +97,7 @@ namespace Hertz.API.DataModels
 
         public IEnumerable<IHertzTier> Tiers { get { yield return DefaultTier; } }
 
-        public IHertzTier DefaultTier { get { return new Tier(this, "No Tier", null, 0M); } }
+        public IHertzTier DefaultTier { get { return new Tier(this, "No Tier", null, 0M, 0, 0); } }
 
         public DollarExpressRenters()
         {
@@ -114,12 +114,18 @@ namespace Hertz.API.DataModels
 
         public decimal EarningRateModifier { get; private set; }
 
-        public Tier(IHertzProgram parent, string Name, string Code, decimal EarningRateModifier)
+        public int RentalsToNextTier { get; private set; }
+
+        public int RevenueToNextTier { get; private set; }
+
+        public Tier(IHertzProgram parent, string Name, string Code, decimal EarningRateModifier , int rentalsToNextTier, int revenueToNextTier)
         {
             this.ParentProgram = parent;
             this.Name = Name;
             this.Code = Code;
             this.EarningRateModifier = EarningRateModifier;
+            this.RentalsToNextTier = rentalsToNextTier;
+            this.RevenueToNextTier = revenueToNextTier;
         }
     }
 
@@ -139,5 +145,8 @@ namespace Hertz.API.DataModels
         string Name { get; }
         string Code { get; }
         decimal EarningRateModifier { get; }
+        int RentalsToNextTier { get; }
+        int RevenueToNextTier { get; }
+
     }
 }
