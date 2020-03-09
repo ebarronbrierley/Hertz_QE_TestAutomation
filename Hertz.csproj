@@ -50,6 +50,7 @@
     <Compile Include="API\Controllers\PromotionController.cs" />
     <Compile Include="API\Controllers\RANUMController.cs" />
     <Compile Include="API\Controllers\TxnHeaderController.cs" />
+    <Compile Include="API\DataModels\CsAgent.cs" />
     <Compile Include="API\DataModels\ExpectedPointEvent.cs" />
     <Compile Include="API\DataModels\HertzAwardLoyaltyCurrencyResponseModel.cs" />
     <Compile Include="API\DataModels\HertzProgram.cs" />
