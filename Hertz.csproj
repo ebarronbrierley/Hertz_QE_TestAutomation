@@ -65,7 +65,6 @@
     <Compile Include="API\DataModels\PointTransactionModel.cs" />
     <Compile Include="API\DataModels\PromotionModel.cs" />
     <Compile Include="API\DataModels\RewardDefModel.cs" />
-    <Compile Include="API\DataModels\TestClass.cs" />
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
     <Compile Include="API\TestCases\AddMemberPromotionsTests.cs" />

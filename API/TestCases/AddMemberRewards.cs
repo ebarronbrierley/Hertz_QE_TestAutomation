@@ -182,29 +182,15 @@ namespace Hertz.API.TestCases
                 AssertModels.AreEqualOnly(testMember, memberOut, MemberModel.BaseVerify);
                 TestStep.Pass("Member was added successfully and member object was returned", memberOut.ReportDetail());
 
-                if (testMember.MemberDetails.A_EARNINGPREFERENCE == HertzLoyalty.GoldPointsRewards.EarningPreference)
-                {
-                    TestStep.Start($"Make UpdateMember Call", $"Member should be updated successfully and earn {points} points");
-                    TxnHeaderModel txn = TxnHeaderController.GenerateTransaction(loyaltyID, checkInDt, checkOutDt, origBkDt, null, program, null, "US", points, null, null, "N", "US", null);
-                    txnList.Add(txn);
-                    testMember.VirtualCards[0].Transactions = txnList;
-                    MemberModel updatedMember = memController.UpdateMember(testMember);
-                    txnList.Clear();
-                    Assert.IsNotNull(updatedMember, "Expected non null Member object to be returned");
-                    TestStep.Pass("Member was successfully updated and Points are successfully awarded");
-                }
-                else //Dollar and Thrifty Members Cannot be updated with the UpdateMember API so we use the HertzAwardLoyatlyCurrency API instead
-                {
-                    TestStep.Start($"Make AwardLoyaltyCurrency Call", $"Member should be updated successfully and earn {points} points");
-                    AwardLoyaltyCurrencyResponseModel currencyOut = memController.AwardLoyaltyCurrency(loyaltyID, points);
-                    decimal pointsOut = memController.GetPointSumFromDB(loyaltyID);
-                    Assert.AreEqual(points, pointsOut, "Expected points and pointsOut values to be equal, but the points awarded to the member and the point summary taken from the DB are not equal");
-                    Assert.AreEqual(currencyOut.CurrencyBalance, points, "Expected point value put into AwardLoyaltyCurrency API Call to be equal to the member's current balance, but the point values are not equal");
-                    TestStep.Pass("Points are successfully awarded");
-                }
+                TestStep.Start($"Make AwardLoyaltyCurrency Call", $"Member should be updated successfully and earn {points} points");
+                AwardLoyaltyCurrencyResponseModel currencyOut = memController.AwardLoyaltyCurrency(loyaltyID, points);
+                decimal pointsOut = memController.GetPointSumFromDB(loyaltyID);
+                Assert.AreEqual(points, pointsOut, "Expected points and pointsOut values to be equal, but the points awarded to the member and the point summary taken from the DB are not equal");
+                Assert.AreEqual(currencyOut.CurrencyBalance, points, "Expected point value put into AwardLoyaltyCurrency API Call to be equal to the member's current balance, but the point values are not equal");
+                TestStep.Pass("Points are successfully awarded");
 
                 TestStep.Start("Make AddMemberReward Call", "AddMemberReward Call is unsuccessful and throws an exception");
-                LWServiceException exception = Assert.Throws<LWServiceException>(() => memController.AddMemberReward(alternateID, reward.CERTIFICATETYPECODE, testMember.MemberDetails.A_EARNINGPREFERENCE), "Excepted LWServiceException, exception was not thrown.");
+                LWServiceException exception = Assert.Throws<LWServiceException>(() => memController.AddMemberReward(loyaltyID, reward.CERTIFICATETYPECODE, testMember.MemberDetails.A_EARNINGPREFERENCE), "Excepted LWServiceException, exception was not thrown.");
                 Assert.AreEqual(errorCode, exception.ErrorCode);
                 Assert.IsTrue(exception.Message.Contains(errorMessage));
                 TestStep.Pass("AddMemberReward Call is unsuccessful and error codes are validated");
