@@ -19,7 +19,7 @@ namespace Hertz.API.TestCases
     public class AddMemberRewards : BrierleyTestFixture
     {
         [TestCaseSource(typeof(AddMemberRewardsData), "PositiveScenarios")]
-        public void AddMemberRewards_Positive(MemberModel createMember, IHertzProgram program)
+        public void AddMemberRewards_Positive(MemberModel testMember, IHertzProgram program)
         {
             MemberController memController = new MemberController(Database, TestStep);
             TxnHeaderController txnController = new TxnHeaderController(Database, TestStep);
@@ -34,16 +34,16 @@ namespace Hertz.API.TestCases
             try
             {
                 TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
-                createMember = memController.AssignUniqueLIDs(createMember);
-                TestStep.Pass("Unique LoyaltyIds assigned", createMember.VirtualCards.ReportDetail());
+                testMember = memController.AssignUniqueLIDs(testMember);
+                TestStep.Pass("Unique LoyaltyIds assigned", testMember.VirtualCards.ReportDetail());
 
-                string loyaltyID = createMember.VirtualCards[0].LOYALTYIDNUMBER;
-                string alternateID = createMember.ALTERNATEID;
-                string vckey = createMember.VirtualCards[0].VCKEY.ToString();
+                string loyaltyID = testMember.VirtualCards[0].LOYALTYIDNUMBER;
+                string alternateID = testMember.ALTERNATEID;
+                string vckey = testMember.VirtualCards[0].VCKEY.ToString();
 
                 TestStep.Start($"Make AddMember Call", $"Member with LID {loyaltyID} should be added successfully and member object should be returned");
-                MemberModel memberOut = memController.AddMember(createMember);
-                AssertModels.AreEqualOnly(createMember, memberOut, MemberModel.BaseVerify);
+                MemberModel memberOut = memController.AddMember(testMember);
+                AssertModels.AreEqualOnly(testMember, memberOut, MemberModel.BaseVerify);
                 TestStep.Pass("Member was added successfully and member object was returned", memberOut.ReportDetail());
 
                 if(program.EarningPreference == HertzLoyalty.GoldPointsRewards.EarningPreference)
@@ -51,8 +51,8 @@ namespace Hertz.API.TestCases
                     TestStep.Start($"Make UpdateMember Call", $"Member should be updated successfully and earn {points} points");
                     TxnHeaderModel txn = TxnHeaderController.GenerateTransaction(loyaltyID, checkInDt, checkOutDt, origBkDt, null, program, null, "US", points, null, null, "N", "US", null);
                     txnList.Add(txn);
-                    createMember.VirtualCards[0].Transactions = txnList;
-                    MemberModel updatedMember = memController.UpdateMember(createMember);
+                    testMember.VirtualCards[0].Transactions = txnList;
+                    MemberModel updatedMember = memController.UpdateMember(testMember);
                     txnList.Clear();
                     Assert.IsNotNull(updatedMember, "Expected non null Member object to be returned");
                     TestStep.Pass("Member was successfully updated");
@@ -68,7 +68,7 @@ namespace Hertz.API.TestCases
                 }
 
                 TestStep.Start("Make AddMemberReward Call", "AddMemberReward Call is successfully made");
-                AddMemberRewardsResponseModel rewardResponse =  memController.AddMemberReward(loyaltyID, reward.CERTIFICATETYPECODE, program);
+                AddMemberRewardsResponseModel rewardResponse =  memController.AddMemberReward(loyaltyID, reward.CERTIFICATETYPECODE, testMember.MemberDetails.A_EARNINGPREFERENCE);
                 Assert.IsNotNull(rewardResponse, "Expected populated AddMemberRewardsResponse object from AddMemberRewards call, but AddMemberRewardsResponse object returned was null");
                 TestStep.Pass("Reward is added.");
 
@@ -97,7 +97,7 @@ namespace Hertz.API.TestCases
         }
       
         [TestCaseSource(typeof(AddMemberRewardsData), "FlashSaleScenarios")]
-        public void AddMemberRewards_FlashSale(MemberModel createMember, string[] typeCodes, decimal points, IHertzProgram program)
+        public void AddMemberRewards_FlashSale(MemberModel testMember, string[] typeCodes, decimal points, IHertzProgram program)
         {
             MemberController memController = new MemberController(Database, TestStep);
             TxnHeaderController txnController = new TxnHeaderController(Database, TestStep);
@@ -109,16 +109,16 @@ namespace Hertz.API.TestCases
             try
             {
                 TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
-                createMember = memController.AssignUniqueLIDs(createMember);
-                TestStep.Pass("Unique LoyaltyIds assigned", createMember.VirtualCards.ReportDetail());
+                testMember = memController.AssignUniqueLIDs(testMember);
+                TestStep.Pass("Unique LoyaltyIds assigned", testMember.VirtualCards.ReportDetail());
 
-                string loyaltyID = createMember.VirtualCards[0].LOYALTYIDNUMBER;
-                string alternateID = createMember.ALTERNATEID;
-                string vckey = createMember.VirtualCards[0].VCKEY.ToString();
+                string loyaltyID = testMember.VirtualCards[0].LOYALTYIDNUMBER;
+                string alternateID = testMember.ALTERNATEID;
+                string vckey = testMember.VirtualCards[0].VCKEY.ToString();
 
                 TestStep.Start($"Make AddMember Call", $"Member with LID {loyaltyID} should be added successfully and member object should be returned");
-                MemberModel memberOut = memController.AddMember(createMember);
-                AssertModels.AreEqualOnly(createMember, memberOut, MemberModel.BaseVerify);
+                MemberModel memberOut = memController.AddMember(testMember);
+                AssertModels.AreEqualOnly(testMember, memberOut, MemberModel.BaseVerify);
                 TestStep.Pass("Member was added successfully and member object was returned", memberOut.ReportDetail());
 
                 TestStep.Start($"Make AwardLoyaltyCurrency Call", $"Member should be updated successfully and earn {points} points");
@@ -131,7 +131,7 @@ namespace Hertz.API.TestCases
                 TestStep.Start("Redeem all the rewards in the list", "Member should be able to redeem all rewards");
                 foreach(string certificateTypeCode in typeCodes)
                 {
-                    AddMemberRewardsResponseModel rewardResponse = memController.AddMemberReward(alternateID, certificateTypeCode, program);
+                    AddMemberRewardsResponseModel rewardResponse = memController.AddMemberReward(loyaltyID, certificateTypeCode, testMember.MemberDetails.A_EARNINGPREFERENCE);
                     Assert.IsNotNull(rewardResponse, "Expected populated AddMemberRewardsResponse object from AddMemberRewards call, but AddMemberRewardsResponse object returned was null");
                 }
                 TestStep.Pass("Member is able to redeem all rewards");
