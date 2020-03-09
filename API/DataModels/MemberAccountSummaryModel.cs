@@ -13,11 +13,13 @@ namespace Hertz.API.DataModels
         public const string TableName = null;
 
         public decimal CURRENCYBALANCE { get; set; }
+        [ModelAttribute("MemberStatus", ReportOption.Print)]
         public string MEMBERSTATUS { get; set; }
         [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year)]
-        [ModelAttribute("MemberAddDate")]
+        [ModelAttribute("MemberAddDate", ReportOption.Print)]
         public DateTime? CREATEDATE { get; set; }
-        public string CURRENTTIERNAME { get; set; }
+        [ModelAttribute("CurrentTierName", ReportOption.Print)]
+        public string CURRENTTIERNAME { get; set; }        
         public DateTime? CURRENTTIEREXPIRATIONDATE { get; set; }
         public decimal CURRENCYTONEXTTIER { get; set; }
         public decimal CURRENCYTONEXTREWARD { get; set; }
@@ -26,12 +28,12 @@ namespace Hertz.API.DataModels
         public decimal TOTALRENTALSYTD { get; set; }
         public decimal TOTALREVENUEYTD { get; set; }
         [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year)]
-        [ModelAttribute("TierEndDate")]
+        [ModelAttribute("TierEndDate", ReportOption.Print)]
         public DateTime? A_TIERENDDATE { get; set; }
-        [ModelAttribute("MarketingCode")]
+        [ModelAttribute("MarketingCode", ReportOption.Print)]
         public string A_MKTGPROGRAMID { get; set; }
         [DateTimeCompare(TimeCompare.Day | TimeCompare.Month | TimeCompare.Year)]
-        [ModelAttribute("LastActivityDate")]
+        [ModelAttribute("LastActivityDate", ReportOption.Print)]
         public DateTime? A_LASTACTIVITYDATE { get; set; }
     }
 
