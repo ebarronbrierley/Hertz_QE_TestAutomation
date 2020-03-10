@@ -9,6 +9,8 @@ using Brierley.TestAutomation.Core.Database;
 using Brierley.TestAutomation.Core.Utilities;
 using Brierley.TestAutomation.Core.SFTP;
 using Brierley.TestAutomation.Core.WebUI;
+using Hertz.API.DataModels;
+using Hertz.API.Controllers;
 
 namespace Hertz.API.TestData
 {
@@ -18,7 +20,15 @@ namespace Hertz.API.TestData
         {
             get
             {
-                yield return new TestCaseData();
+                foreach (IHertzProgram program in HertzLoyalty.Programs)
+                {
+                    foreach (IHertzTier tier in program.Tiers)
+                    {
+                        MemberModel createMember = MemberController.GenerateRandomMember(tier);
+                        yield return new TestCaseData(createMember, program).SetName($"Cancel Member Reward Positive - Program: [{program.Name}] Tier: [{tier.Name}]");
+
+                    }
+                }
             }
         }
         public static IEnumerable NegativeScenarios
