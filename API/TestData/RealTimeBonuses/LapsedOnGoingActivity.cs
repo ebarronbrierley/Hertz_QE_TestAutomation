@@ -41,7 +41,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidTimeFromPromotion.Ticks).Comparable(),
                                         checkOutDate:DateTime.Now.AddTicks(ValidTimeFromPromotion.Ticks).Comparable(),
                                         bookDate:DateTime.Now.AddTicks(ValidTimeFromPromotion.Ticks).Comparable(),
-                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"),
+                                        program: ValidPrograms[0],
                                         RSDNCTRYCD: rsdnCtryCd, HODIndicator: 0, rentalCharges: BaseTxnAmount,
                                         contractTypeCode: ContractTypeCode, checkoutWorldWideISO: rsdnCtryCd)
                         },
@@ -65,7 +65,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                     TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
                                     checkOutDate:DateTime.Now.AddDays(1).Comparable(),
                                     bookDate:DateTime.Now.AddDays(1).Comparable(),
-                                    program: validProgram.Set(validTier.Code,"SpecificTier"),
+                                    program: validProgram,
                                     RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
                                     contractTypeCode: ContractTypeCode, checkoutWorldWideISO: ValidRSDNCTRYCDs[0])
                             },
@@ -85,7 +85,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                     TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddDays(2).Comparable(),
                                     checkOutDate:DateTime.Now.AddDays(1).Comparable(),
                                     bookDate:DateTime.Now.AddDays(1).Comparable(),
-                                    program: validProgram.Set(validTier.Code,"SpecificTier"),
+                                    program: validProgram,
                                     RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
                                     contractTypeCode: ContractTypeCode, checkoutWorldWideISO: ValidRSDNCTRYCDs[0],chkoutlocnum:null,chkoutareanum:null,chkoutlocid: ChkOutLocId)
                            },

@@ -47,7 +47,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).Comparable(),
                                 bookDate:DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).Comparable(),
-                                program: validProgram.Set(validTier.Code,"SpecificTier"),
+                                program: validProgram,
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                             },
                             ExpectedPointEvents,
@@ -65,7 +65,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).Comparable(),
                                 bookDate:DateTime.Now.AddTicks(ValidBookingDateFromEnroll.Ticks).Comparable(),
-                                program: validProgram.Set(validTier.Code,"SpecificTier"),
+                                program: validProgram,
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,chkoutlocnum:null,chkoutareanum:null,chkoutlocid: ChkOutLocId)
                           },
                           ExpectedPointEvents,
@@ -86,7 +86,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
-                                program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"),
+                                program: ValidPrograms[0],
                                 RSDNCTRYCD: validRSDN, HODIndicator: 0, rentalCharges: BaseTxnAmount)
                             },
                             ExpectedPointEvents,
