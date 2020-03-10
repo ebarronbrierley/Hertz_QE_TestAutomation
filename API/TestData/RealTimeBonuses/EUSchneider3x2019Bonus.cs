@@ -65,7 +65,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkInDates[0],
                                         checkOutDate:ValidChkOutDates[0],
                                         bookDate:ValidChkOutDates[0].AddTicks(ValidBookingDate.Ticks).Comparable(),
-                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                        program: ValidPrograms[0], CDP: ValidCDPs[0],
                                         RSDNCTRYCD: rsdnCtry, HODIndicator: 0, rentalCharges: BaseTxnAmount)
                         },
                         ExpectedPointEvents,
@@ -86,7 +86,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkInDates[0],
                                         checkOutDate:ValidChkOutDates[0],
                                         bookDate:ValidChkOutDates[0].AddTicks(ValidBookingDate.Ticks).Comparable(),
-                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: validCDP,
+                                        program: ValidPrograms[0], CDP: validCDP,
                                         RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                         },
                         ExpectedPointEvents,
@@ -111,7 +111,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkInDates[0],
                                         checkOutDate:ValidChkOutDates[0],
                                 bookDate:ValidChkOutDates[0].AddTicks(ValidBookingDate.Ticks).Comparable(),
-                                program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                program: validProgram, CDP: ValidCDPs[0],
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                             },
                             ExpectedPointEvents,
@@ -132,7 +132,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkInDates[0],
                                         checkOutDate:ValidChkOutDates[0],
                                 bookDate:ValidChkOutDates[0].AddTicks(ValidBookingDate.Ticks).Comparable(),
-                                program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                program: validProgram, CDP: ValidCDPs[0],
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,chkoutlocnum: null,chkoutareanum: null,chkoutlocid: ChkOutLocId)
                            },
                            ExpectedPointEvents,
@@ -155,7 +155,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             TxnHeaderController.GenerateTransaction("", checkInDate: chkoutdt.AddDays(1),
                                         checkOutDate:chkoutdt,
                                         bookDate:chkoutdt.AddTicks(ValidBookingDate.Ticks).Comparable(),
-                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                        program: ValidPrograms[0], CDP: ValidCDPs[0],
                                         RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                         },
                         ExpectedPointEvents,
@@ -176,7 +176,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             TxnHeaderController.GenerateTransaction("", checkInDate: chkindt,
                                         checkOutDate:chkindt.AddDays(-1),
                                         bookDate:chkindt.AddDays(-1).AddTicks(ValidBookingDate.Ticks).Comparable(),
-                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                        program: ValidPrograms[0], CDP: ValidCDPs[0],
                                         RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                         },
                         ExpectedPointEvents,

@@ -48,7 +48,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkIns[0],
                                         checkOutDate:ValidChkOuts[0],
                                         bookDate:ValidChkOuts[0],
-                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                        program: ValidPrograms[0], CDP: ValidCDPs[0],
                                         RSDNCTRYCD: validRSDNCTRY, HODIndicator: 0, rentalCharges: BaseTxnAmount)
                         },
                         ExpectedPointEvents,
@@ -68,7 +68,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkIns[0],
                                         checkOutDate:ValidChkOuts[0],
                                         bookDate:ValidChkOuts[0],
-                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: validCDP,
+                                        program: ValidPrograms[0], CDP: validCDP,
                                         RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                         },
                         ExpectedPointEvents,
@@ -93,7 +93,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: ValidChkIns[0],
                                 checkOutDate:ValidChkOuts[0],
                                 bookDate:ValidChkOuts[0],
-                                program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                program: validProgram, CDP: ValidCDPs[0],
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                             },
                             ExpectedPointEvents,
@@ -116,7 +116,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             TxnHeaderController.GenerateTransaction("", checkInDate: chkout.AddDays(1).Comparable(),
                                         checkOutDate:chkout,
                                         bookDate:chkout,
-                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                        program: ValidPrograms[0], CDP: ValidCDPs[0],
                                         RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                         },
                         ExpectedPointEvents,
@@ -137,7 +137,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                             TxnHeaderController.GenerateTransaction("", checkInDate: chkin,
                                         checkOutDate:chkin.AddDays(-1),
                                         bookDate:chkin.AddDays(-1),
-                                        program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                        program: ValidPrograms[0], CDP: ValidCDPs[0],
                                         RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount)
                         },
                         ExpectedPointEvents,

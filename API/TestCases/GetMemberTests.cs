@@ -93,7 +93,8 @@ namespace Hertz.API.TestCases
             }
             catch(AssertionException ex)
             {
-
+                TestStep.Fail(ex.Message);
+                Assert.Fail();
             }
             catch (AssertModelEqualityException ex)
             {
