@@ -49,6 +49,7 @@
     <Compile Include="API\Controllers\PointController.cs" />
     <Compile Include="API\Controllers\PromotionController.cs" />
     <Compile Include="API\Controllers\RANUMController.cs" />
+    <Compile Include="API\Controllers\RewardsController.cs" />
     <Compile Include="API\Controllers\TxnHeaderController.cs" />
     <Compile Include="API\DataModels\ExpectedPointEvent.cs" />
     <Compile Include="API\DataModels\HertzAwardLoyaltyCurrencyResponseModel.cs" />
@@ -58,15 +59,18 @@
     <Compile Include="API\DataModels\MemberModel.cs" />
     <Compile Include="API\DataModels\MemberPreferencesModel.cs" />
     <Compile Include="API\DataModels\MemberPromotionModel.cs" />
+    <Compile Include="API\DataModels\MemberRewardModel.cs" />
     <Compile Include="API\DataModels\PointEventModel.cs" />
     <Compile Include="API\DataModels\PointTransactionModel.cs" />
     <Compile Include="API\DataModels\PromotionModel.cs" />
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
+    <Compile Include="API\TestCases\CancelMemberRewardTests.cs" />
     <Compile Include="API\TestCases\HertzAwardLoyaltyCurrencyTests.cs" />
     <Compile Include="API\TestCases\AddMemberPromotionsTests.cs" />
     <Compile Include="API\TestCases\AddMemberTests.cs" />
     <Compile Include="API\TestCases\GetMemberPromotionsCountTests.cs" />
+    <Compile Include="API\TestData\CancelMemberRewardsTestData.cs" />
     <Compile Include="API\TestData\GetMemberPromotionCountTestData.cs" />
     <Compile Include="API\TestData\GetMemberPromotionTestData.cs" />
     <Compile Include="API\TestCases\GetAccountSummaryTests.cs" />
