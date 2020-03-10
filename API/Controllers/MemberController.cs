@@ -11,6 +11,7 @@ using Hertz.API.Utilities;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Framework;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
 using System.Diagnostics;
+using System.Collections;
 
 namespace Hertz.API.Controllers
 {
@@ -132,7 +133,67 @@ namespace Hertz.API.Controllers
             }
             return memberPromoOut;
         }
-       public MemberAccountSummaryModel GetAccountSummary(string loyaltyId, string programCode, string externalId)
+
+        public AddMemberRewardsResponseModel AddMemberReward(string alternateID, string rewardTypeCode, string programCode)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                AddMemberRewardsResponseModel memberRewardsOut = default;
+                try
+                {
+                    double time = 0;
+                    RewardOrderInfoStruct[] rewardInfoStruct = new RewardOrderInfoStruct[1];
+                    RewardOrderInfoStruct rewardInfo = new RewardOrderInfoStruct();
+                    rewardInfo.TypeCode = rewardTypeCode;
+                    rewardInfoStruct[0] = rewardInfo;
+                    string changedBy = "oagwuegbo";
+                    var lwMemberReward = lwSvc.AddMemberRewards(alternateID, null, programCode, null, null, null, null, null, null, null, null, null, null, null, null, null, changedBy, rewardInfoStruct, string.Empty, out time);
+                    memberRewardsOut = LODConvert.FromLW<AddMemberRewardsResponseModel>(lwMemberReward);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("AddMemberRewards", capture.Output, Attachment.Type.Text));
+                }
+
+                return memberRewardsOut;
+            }
+            
+        }
+
+        public AwardLoyaltyCurrencyResponseModel AwardLoyaltyCurrency(string loyaltyID, decimal points)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                AwardLoyaltyCurrencyResponseModel awardLoyaltyCurrencyOut = default;
+                try
+                {
+                    double time = 0;
+                    string changedBy = "oagwuegbo";
+                    long pointeventID = 6263265;
+                    DateTime pointExpirationDate = DateTime.Now.AddMonths(18);
+                    var lwAwardLoyalty = lwSvc.HertzAwardLoyaltyCurrency(loyaltyID, changedBy, points, pointeventID, "Automated Appeasement", null, null, out time);
+                    awardLoyaltyCurrencyOut = LODConvert.FromLW<AwardLoyaltyCurrencyResponseModel>(lwAwardLoyalty);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("AwardLoyaltyCurrency", capture.Output, Attachment.Type.Text));
+                }
+                return awardLoyaltyCurrencyOut;
+            }
+        }
+        public MemberAccountSummaryModel GetAccountSummary(string loyaltyId, string programCode, string externalId)
         {
             MemberAccountSummaryModel memberAccountSummaryOut = default;
             using (ConsoleCapture capture = new ConsoleCapture())
@@ -157,7 +218,7 @@ namespace Hertz.API.Controllers
             }
             return memberAccountSummaryOut;
         }
-        public List<MemberPromotionModel> GetMemberPromotion(string loyaltyId, int? startIndex, int? batchSize, bool? returnDefinition, 
+        public List<MemberPromotionModel> GetMemberPromotion(string loyaltyId, int? startIndex, int? batchSize, bool? returnDefinition,
                                             string language, string channel, bool? returnAttributes, string externalId)
         {
             List<MemberPromotionModel> memberPromoOut = new List<MemberPromotionModel>();
@@ -186,7 +247,7 @@ namespace Hertz.API.Controllers
                 }
             }
             return memberPromoOut;
-        }      
+        }
         public int GetMemberPromotionCount(string ipCode)
         {
             using (ConsoleCapture capture = new ConsoleCapture())
@@ -275,6 +336,36 @@ namespace Hertz.API.Controllers
             query.Append(String.Join(" and ", queryParams));
             return dbContext.Query<MemberPromotionModel>(query.ToString());
         }
+
+        public IEnumerable<MemberRewardsModel> GetMemberRewardsFromDB(decimal? ipcode, long? memberrewardid)
+        {
+            string ipcodestring = ipcode.ToString();
+            string memberrewardidstring = memberrewardid.ToString();
+            StringBuilder query = new StringBuilder();
+            query.Append($"select * from {MemberRewardsModel.TableName}");
+
+            if (ipcode == null || memberrewardid == null) return new List<MemberRewardsModel>();
+
+            query.Append($" where ");
+            List<string> queryParams = new List<string>();
+            if (ipcode != null) queryParams.Add($" memberid = '{ipcode}' ");
+            if (memberrewardid != null) queryParams.Add($" id = '{memberrewardid}' ");
+
+            query.Append(String.Join(" and ", queryParams));
+            return dbContext.Query<MemberRewardsModel>(query.ToString());
+        }
+
+
+
+        public decimal GetPointSumFromDB(string loyaltyid)
+        {
+            StringBuilder query = new StringBuilder();
+            query.Append($"SELECT SUM(PTT.POINTS) FROM {PointTransactionModel.TableName} PTT INNER JOIN BP_HTZ.LW_VIRTUALCARD VC ON VC.VCKEY = PTT.VCKEY WHERE 1=1 AND VC.LOYALTYIDNUMBER = '{loyaltyid}'");
+            Hashtable ht = dbContext.QuerySingleRow(query.ToString());
+            decimal pointsOut = (decimal)ht["SUM(PTT.POINTS)"];
+            return pointsOut;
+        }
+
         public IEnumerable<MemberModel> GetMembersFromDB(decimal? ipCode = null, string ipCodeQuery = null)
         {
             string query = String.Empty;
@@ -292,7 +383,7 @@ namespace Hertz.API.Controllers
         }
         public MemberAccountSummaryModel GetMemberAccountSummaryFromDB(string vckey)
         {
-            StringBuilder query = new StringBuilder();    
+            StringBuilder query = new StringBuilder();
 
             query.Append("select SUM(p.points) as currencybalance, lm.memberstatus, vc.createdate, md.a_tierenddate, md.a_lastactivitydate, md.a_mktgprogramid");
             query.Append(" ,case when md.a_tiercode = 'RG' THEN 'Gold'");
@@ -325,6 +416,7 @@ namespace Hertz.API.Controllers
             MemberAccountSummaryModel memberAccountSummary = dbContext.QuerySingleRow<MemberAccountSummaryModel>(query.ToString());
             return memberAccountSummary;
         }
+
         public MemberModel AssignUniqueLIDs(MemberModel member)
         {
             foreach(var virtualCard in member.VirtualCards)
