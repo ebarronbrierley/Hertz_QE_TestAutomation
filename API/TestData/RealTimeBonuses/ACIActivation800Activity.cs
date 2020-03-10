@@ -55,7 +55,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
-                                program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                program: validProgram, CDP: ValidCDPs[0],
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
                                 contractTypeCode: ValidContractTypeCode,chkoutlocnum:null,chkoutareanum:null,chkoutlocid: ChkOutLocId)
                             },
@@ -76,7 +76,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
-                                program: validProgram.Set(validTier.Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                program: validProgram, CDP: ValidCDPs[0],
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
                                 contractTypeCode: ValidContractTypeCode)
                             },
@@ -101,7 +101,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
-                                program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: validCDP,
+                                program: ValidPrograms[0], CDP: validCDP,
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
                                 contractTypeCode: ValidContractTypeCode)
                             },
@@ -123,7 +123,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
-                                program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: ValidCDPs[0],
+                                program: ValidPrograms[0], CDP: ValidCDPs[0],
                                 RSDNCTRYCD: validRSDN, HODIndicator: 0, rentalCharges: BaseTxnAmount,
                                 contractTypeCode: ValidContractTypeCode)
                             },
@@ -180,7 +180,7 @@ namespace Hertz.API.TestData.RealTimeBonuses
                                 TxnHeaderController.GenerateTransaction("", checkInDate: DateTime.Now.AddTicks(ValidRentalLength.Ticks).Comparable(),
                                 checkOutDate:DateTime.Now.Comparable(),
                                 bookDate:DateTime.Now.Comparable(),
-                                program: ValidPrograms[0].Set(ValidTiers[0].Code,"SpecificTier"), CDP: invalidCDP,
+                                program: ValidPrograms[0], CDP: invalidCDP,
                                 RSDNCTRYCD: ValidRSDNCTRYCDs[0], HODIndicator: 0, rentalCharges: BaseTxnAmount,
                                 contractTypeCode: ValidContractTypeCode)
                                 },

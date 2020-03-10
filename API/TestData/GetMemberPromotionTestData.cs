@@ -18,8 +18,15 @@ namespace Hertz.API.TestData
             get
             {
                 string promoCode = "EMEA60DayBirthdayEM";
-                yield return new TestCaseData(promoCode)
-                    .SetName($"Get Member Promotion Positive - Promo Code:[{promoCode}]");
+
+                foreach (IHertzProgram program in HertzLoyalty.Programs)
+                {
+                    foreach (IHertzTier tier in program.Tiers)
+                    {
+                        MemberModel gprMember = MemberController.GenerateRandomMember(tier);
+                        yield return new TestCaseData(gprMember, promoCode).SetName($"GetAccountSymmary Positive - Program: [{program.Name}] Tier: [{tier.Name}] Promo Code:[{promoCode}]");
+                    }
+                }
             }
         }
 
