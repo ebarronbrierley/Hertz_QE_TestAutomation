@@ -49,7 +49,6 @@
     <Compile Include="API\Controllers\PointController.cs" />
     <Compile Include="API\Controllers\PromotionController.cs" />
     <Compile Include="API\Controllers\RANUMController.cs" />
-    <Compile Include="API\Controllers\RewardsController.cs" />
     <Compile Include="API\Controllers\RewardController.cs" />
     <Compile Include="API\Controllers\TxnHeaderController.cs" />
     <Compile Include="API\DataModels\AddMemberRewardsResponseModel.cs" />
@@ -67,7 +66,6 @@
     <Compile Include="API\DataModels\PointTransactionModel.cs" />
     <Compile Include="API\DataModels\PromotionModel.cs" />
     <Compile Include="API\DataModels\RewardDefModel.cs" />
-    <Compile Include="API\DataModels\TestClass.cs" />
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
     <Compile Include="API\TestCases\CancelMemberRewardTests.cs" />
@@ -134,22 +132,22 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Brierley.TestAutomation.Core.API">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.10</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Database">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.10</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Reporting">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.10</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.SFTP">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.10</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Utilities">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.10</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.WebUI">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.10</Version>
     </PackageReference>
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers">
       <Version>3.11.0</Version>

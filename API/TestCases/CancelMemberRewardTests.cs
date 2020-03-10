@@ -21,15 +21,16 @@ namespace Hertz.API.TestCases
     public class CancelMemberRewardTests : BrierleyTestFixture
     {
         [TestCaseSource(typeof(CancelMemberRewardsTestData), "NegativeScenarios")]
-        public void CancelMemberRewardTestCaseTest(decimal? memberRewardId, int errorCode, string errorMessage)
+        public void CancelMemberRewardTestCaseTest(string memberRewardId, int errorCode, string errorMessage)
         {
             try
             {
-                RewardsController rewardsController = new RewardsController(Database, TestStep);
+                MemberController memberController = new MemberController(Database, TestStep);
+                RewardController rewardController = new RewardController(Database, TestStep);
                 if (memberRewardId == null)
                 {
                     TestStep.Start("Make GetAccountSummary Call", $"GetAccountSummary call should throw exception with error code = {errorCode}");
-                    LWServiceException exception = Assert.Throws<LWServiceException>(() => rewardsController.CancelMemberReward(memberRewardId, null, null, null, null, null, null, null),
+                    LWServiceException exception = Assert.Throws<LWServiceException>(() => memberController.CancelMemberReward(memberRewardId, null, null, null, null, null, null, null),
                                                                  "Expected LWServiceException, exception was not thrown.");
                     Assert.AreEqual(errorCode, exception.ErrorCode, $"Expected Error Code: {errorCode}");
                     Assert.IsTrue(exception.Message.Contains(errorMessage), $"Expected Error Message to contain: {errorMessage}");
@@ -37,9 +38,10 @@ namespace Hertz.API.TestCases
                 }
                 else
                 {
-                    memberRewardId = rewardsController.GetMemberRewardIdFormDB(MemberRewardModel.OrderStatus.Cancelled);
+                    memberRewardId = rewardController.GetMemberRewardIdFormDB(MemberRewardsModel.OrderStatus.Cancelled);
+                    errorMessage = $"Reward with id {memberRewardId} has already been cancelled";
                     TestStep.Start("Make GetAccountSummary Call", $"GetAccountSummary call should throw exception with error code = {errorCode}");
-                    LWServiceException exception = Assert.Throws<LWServiceException>(() => rewardsController.CancelMemberReward(memberRewardId, null, null, null, null, null, null, null),
+                    LWServiceException exception = Assert.Throws<LWServiceException>(() => memberController.CancelMemberReward(memberRewardId, null, null, null, null, null, null, null),
                                                                  "Expected LWServiceException, exception was not thrown.");
                     Assert.AreEqual(errorCode, exception.ErrorCode, $"Expected Error Code: {errorCode}");
                     Assert.IsTrue(exception.Message.Contains(errorMessage), $"Expected Error Message to contain: {errorMessage}");

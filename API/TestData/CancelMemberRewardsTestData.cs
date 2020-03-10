@@ -25,15 +25,15 @@ namespace Hertz.API.TestData
         {
             get
             {
-                decimal? memberRewardId = null;
-                int errorCode = 3350;
+                string memberRewardId = null;
+                int errorCode = 3356;
                 string errorMessage = "Invalid member reward id";
                 yield return new TestCaseData(memberRewardId, errorCode, errorMessage)
                     .SetName($"Cancel Member Rewards Negative - Error Code:[{errorCode}]");
 
-                memberRewardId = 0;
+                memberRewardId = string.Empty;
                 errorCode = 6013;
-                errorMessage = "Reward with id has already been cancelled";
+                errorMessage = null; ;
                 yield return new TestCaseData(memberRewardId, errorCode, errorMessage)
                     .SetName($"Cancel Member Rewards Negative - Error Code:[{errorCode}]");
             }

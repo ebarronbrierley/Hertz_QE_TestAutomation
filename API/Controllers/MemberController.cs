@@ -163,7 +163,32 @@ namespace Hertz.API.Controllers
             }
             
         }
-
+        public AddMemberRewardsResponseModel CancelMemberReward(string memberRewardId, string programCode, string resvId, DateTime? chkoutDt,
+                                        string chkoutAreanum, string chkoutLocNum, string chkoutLocId, string externalId)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                AddMemberRewardsResponseModel rewardsResponseModel = null;
+                try
+                {
+                    var retVal = lwSvc.CancelMemberReward(Convert.ToInt64(memberRewardId), resvId, chkoutDt, chkoutAreanum, chkoutLocNum, chkoutLocId, programCode, externalId, out double time);
+                    rewardsResponseModel = LODConvert.FromLW<AddMemberRewardsResponseModel>(retVal);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("CancelMemberReward", capture.Output, Attachment.Type.Text));
+                }
+                return rewardsResponseModel;
+            }
+        }
         public AwardLoyaltyCurrencyResponseModel AwardLoyaltyCurrency(string loyaltyID, decimal points)
         {
             using (ConsoleCapture capture = new ConsoleCapture())
