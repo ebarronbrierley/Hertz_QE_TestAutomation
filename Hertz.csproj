@@ -68,6 +68,7 @@
     <Compile Include="API\DataModels\RewardDefModel.cs" />
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
+    <Compile Include="API\TestCases\GetMemberRewardsTests.cs" />
     <Compile Include="API\TestCases\HertzAwardLoyaltyCurrencyTests.cs" />
     <Compile Include="API\TestCases\AddMemberPromotionsTests.cs" />
     <Compile Include="API\TestCases\AddMemberRewards.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="API\Utilities\LODConvert.cs" />
     <Compile Include="API\Utilities\LWServiceException.cs" />
     <Compile Include="AssemblyInitializer.cs" />
+    <Compile Include="BrierleyParallelTestFixture.cs" />
     <Compile Include="BrierleyTestFixture.cs" />
     <Compile Include="Database\DataModels\CSAgentModel.cs" />
     <Compile Include="Database\DataModels\NovaLoadsModel.cs" />

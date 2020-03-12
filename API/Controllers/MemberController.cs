@@ -271,6 +271,25 @@ namespace Hertz.API.Controllers
                 }
             }
         }
+        public void GetMemberRewards(string loyaltyID)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwGetMemberRewards = lwSvc.GetMemberRewards(loyaltyID, null, null, null, null, null, null, out double time);
+                    //return lwGetMemberRewards;
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberPromotionCount", capture.Output, Attachment.Type.Text));
+                }
+            }
+        }
         #endregion
 
         #region Database Methods
