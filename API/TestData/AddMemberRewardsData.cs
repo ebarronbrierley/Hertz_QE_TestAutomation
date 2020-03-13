@@ -48,7 +48,7 @@ namespace Hertz.API.TestData
                         int errorCode2 = 1234;
                         string errorMessage2 = "Incorrect program code and reward combination.";
                         yield return new TestCaseData(gprMember, program, errorCode1, errorMessage1).SetName($"Add Member Reward Negative - Not Enough Points to Redeem Reward - Program: [{program.Name}] Tier: [{tier.Name}]");
-                        yield return new TestCaseData(gprMember2, HertzLoyalty.Programs.ToList().Find(x => x.Name != program.Name), errorCode2, errorMessage2).SetName($"Add Member Reward Negative - DX Redeeming a GPR Reward - Program: [{program.Name}] Tier: [{tier.Name}]");
+                        yield return new TestCaseData(gprMember2, HertzLoyalty.Programs.ToList().Find(x => x.Name != program.Name), errorCode2, errorMessage2).SetName($"Add Member Reward Negative - Redeeming a Reward of the wrong Program - Program: [{program.Name}] Tier: [{tier.Name}]");
                     }
                 }
             }
