@@ -33,6 +33,7 @@ namespace Hertz.API.TestCases
             RewardController rewardController = new RewardController(Database, TestStep);
             RewardDefModel reward = rewardController.GetRandomRewardDef(program);
             decimal points = reward.HOWMANYPOINTSTOEARN;
+            decimal pointsOutDb = 0;
             try
             {
                 TestStep.Start("Adding Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
@@ -63,8 +64,8 @@ namespace Hertz.API.TestCases
                 {
                     TestStep.Start($"Make AwardLoyaltyCurrency Call", $"Member should be updated successfully and earn {points} points");
                     AwardLoyaltyCurrencyResponseModel currencyOut = memberController.AwardLoyaltyCurrency(loyaltyID, points);
-                    decimal pointsOut = memberController.GetPointSumFromDB(loyaltyID);
-                    Assert.AreEqual(points, pointsOut, "Expected points and pointsOut values to be equal, but the points awarded to the member and the point summary taken from the DB are not equal");
+                    pointsOutDb = memberController.GetPointSumFromDB(loyaltyID);
+                    Assert.AreEqual(points, pointsOutDb, "Expected points and pointsOut values to be equal, but the points awarded to the member and the point summary taken from the DB are not equal");
                     Assert.AreEqual(currencyOut.CurrencyBalance, points, "Expected point value put into AwardLoyaltyCurrency API Call to be equal to the member's current balance, but the point values are not equal");
                     TestStep.Pass("Points are successfully awarded");
                 }
@@ -82,14 +83,14 @@ namespace Hertz.API.TestCases
 
                 var memberRewardId = rewardResponse.MemberRewardID.ToString();
                 TestStep.Start("Call CancelMemberreward API", "Member reward is cancelled");
-                AddMemberRewardsResponseModel rewardsResponseModel = memberController.CancelMemberReward(memberRewardId, null, null, null, null, null, null, null);
-                Assert.IsNotNull(rewardsResponseModel, "Expected Member Reward cancelled");
+                var currencyBalance = memberController.CancelMemberReward(memberRewardId, null, null, null, null, null, null, null);
+                Assert.IsNotNull(currencyBalance, "Expected Member Point Balance");
                 TestStep.Pass("Successfully cancelled member reward");
 
-                TestStep.Start("Get Total points from DB", "Expected Total points for the member");
-                decimal pointsOutDb = memberController.GetPointSumFromDB(loyaltyID);
+                TestStep.Start("Get Total points from PointTransaction table in DB", "Expected Total points for the member");
+                pointsOutDb = memberController.GetPointSumFromDB(loyaltyID);
                 Assert.IsNotNull(pointsOutDb, "Expected non null point value");
-                Assert.AreEqual(rewardsResponseModel.CurrencyBalance, pointsOutDb, "Expected CurrencyBalance after cancellation to be equal to sum of points from DB");
+                Assert.AreEqual(currencyBalance, pointsOutDb, "Expected API Point Balance after cancellation to be equal to sum of points from DB");
                 TestStep.Pass("Point successfully credited to member");
             }
             catch (LWServiceException ex)
