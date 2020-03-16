@@ -295,18 +295,21 @@ namespace Hertz.API.Controllers
         }
         public  MemberModel GetRandomFromDB(long memberStatus, IHertzTier tier = null)
         {
-            StringBuilder query = new StringBuilder($"select * from {MemberModel.TableName} SAMPLE(10) mem where mem.MEMBERSTATUS = {memberStatus}");
-            if(tier != null)
+            StringBuilder sb = new StringBuilder();
+            //sample is percentage
+            string sql = @"
+select lm.*
+  from BP_HTZ.LW_LOYALTYMEMBER SAMPLE(1) lm 
+  join bp_htz.ats_memberdetails md on lm.ipcode = md.a_ipcode
+
+ where lm.MEMBERSTATUS = 1
+";
+            sb.Append(sql);
+            if (tier != null)
             {
-                query.Append(" and ");
-                query.Append($"(select a_earningpreference from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) = '{tier.ParentProgram.EarningPreference}'");
-                query.Append(" and ");
-                if(!String.IsNullOrEmpty(tier.Code))
-                    query.Append($"(select a_tiercode from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) = '{tier.Code}'");
-                else
-                    query.Append($"(select a_tiercode from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) is null");
+                sb.Append(String.Format(" and md.a_earningpreference = 'N1' and md.a_tiercode = '{0}'  ", tier.Code));
             }
-            return GetFromDB(ipCodeQuery: query.ToString());
+            return GetFromDB(ipCodeQuery: sb.ToString());
         } 
         public MemberModel GetRandomMemberDBForMemberPromotion(long memberStatus)
         {
@@ -475,6 +478,7 @@ namespace Hertz.API.Controllers
             member.ALTERNATEID = vc.LOYALTYIDNUMBER;
             return member;
         }
+
         public static MemberDetailsModel GenerateMemberDetails(MemberModel member, IHertzTier tier = null)
         {
             MemberDetailsModel details = StrongRandom.GenerateRandom<MemberDetailsModel>();
