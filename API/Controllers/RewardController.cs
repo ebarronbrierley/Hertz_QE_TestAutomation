@@ -31,11 +31,23 @@ namespace Hertz.API.Controllers
             lwSvc.MaxStringContentLength = 2147483647;
         }
 
+        #region Database Methods
         public RewardDefModel GetRandomRewardDef(IHertzProgram program)
         {
             string query = $"select * from {RewardDefModel.TableName} sample(50) rd where rd.smallimagefile = '{program.EarningPreference}' and rd.active = '1'";
             RewardDefModel rewardDef = dbContext.QuerySingleRow<RewardDefModel>(query);
             return rewardDef;
         }
+        public string GetMemberRewardIdFormDB(string memberRewardStatus)
+        {
+            string query = $@"Select mr.id From bp_htz.lw_memberrewards mr
+                                Where mr.orderstatus = '{memberRewardStatus}' And mr.redemptiondate Is Not Null 
+                                Order By mr.expiration Desc";
+
+            var retVal = dbContext.QuerySingleRow(query);
+            return retVal["ID"].ToString();
+        }
+
+        #endregion
     }
 }

@@ -11,6 +11,11 @@ namespace Hertz.API.DataModels
 {
     public class MemberRewardsModel
     {
+        public sealed class OrderStatus
+        {
+            public static readonly string Cancelled = "Cancelled";
+        }
+
         public const string TableName = "BP_HTZ.LW_MEMBERREWARDS";
         [ModelAttribute("Id", ReportOption.Print)]
         public decimal ID { get; set; }

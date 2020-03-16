@@ -68,11 +68,13 @@
     <Compile Include="API\DataModels\RewardDefModel.cs" />
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
+    <Compile Include="API\TestCases\CancelMemberRewardTests.cs" />
     <Compile Include="API\TestCases\HertzAwardLoyaltyCurrencyTests.cs" />
     <Compile Include="API\TestCases\AddMemberPromotionsTests.cs" />
     <Compile Include="API\TestCases\AddMemberRewards.cs" />
     <Compile Include="API\TestCases\AddMemberTests.cs" />
     <Compile Include="API\TestCases\GetMemberPromotionsCountTests.cs" />
+    <Compile Include="API\TestData\CancelMemberRewardsTestData.cs" />
     <Compile Include="API\TestData\AddMemberRewardsData.cs" />
     <Compile Include="API\TestData\GetMemberPromotionCountTestData.cs" />
     <Compile Include="API\TestData\GetMemberPromotionTestData.cs" />
@@ -130,22 +132,22 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Brierley.TestAutomation.Core.API">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.11</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Database">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.11</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Reporting">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.11</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.SFTP">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.11</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.Utilities">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.11</Version>
     </PackageReference>
     <PackageReference Include="Brierley.TestAutomation.Core.WebUI">
-      <Version>1.0.1.6</Version>
+      <Version>1.0.1.11</Version>
     </PackageReference>
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers">
       <Version>3.11.0</Version>
