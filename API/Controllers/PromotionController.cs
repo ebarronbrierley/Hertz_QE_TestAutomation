@@ -41,5 +41,11 @@ namespace Hertz.API.Controllers
 
             return dbContext.Query<PromotionModel>(query.ToString());
         }
+
+        public IEnumerable<PromotionModel> GetRandomExpiredPromotionFromDB()
+        {
+            string query = $"select * from {PromotionModel.TableName} SAMPLE(1) pm where pm.enddate < sysdate";
+            return dbContext.Query<PromotionModel>(query.ToString());
+        }
     }
 }
