@@ -40,12 +40,27 @@ namespace Hertz.API.TestData
                 string errorMessage = "Invalid member reward id";
                 yield return new TestCaseData(memberRewardId, errorCode, errorMessage)
                     .SetName($"Cancel Member Rewards Negative - Error Code:[{errorCode}]");
+            }
+        }
+        public static IEnumerable NegativeCancelledScenarios
+        {
+            get
+            {
+                MemberModel createMember = null;
+                string memberRewardId = null;
+                int errorCode = 6013;
+                string errorMessage = null;
 
-                memberRewardId = string.Empty;
-                errorCode = 6013;
-                errorMessage = null; ;
-                yield return new TestCaseData(memberRewardId, errorCode, errorMessage)
-                    .SetName($"Cancel Member Rewards Negative - Error Code:[{errorCode}]");
+                foreach (IHertzProgram program in HertzLoyalty.Programs)
+                {
+                    foreach (IHertzTier tier in program.Tiers)
+                    {
+                        createMember = MemberController.GenerateRandomMember(tier);
+                        yield return new TestCaseData(createMember, program, memberRewardId, errorCode, errorMessage)
+                            .SetName($"Cancel Member Rewards Negative - Error Code:[{errorCode}] Program: [{program.Name}] Tier: [{tier.Name}]");
+
+                    }
+                }
             }
         }
     }
