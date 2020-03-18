@@ -31,6 +31,7 @@ namespace Hertz.API.TestCases
             RewardController rewardController = new RewardController(Database, TestStep);
             RewardDefModel reward = rewardController.GetRandomRewardDef(program);
             decimal points = reward.HOWMANYPOINTSTOEARN;
+            long pointeventid = 6263265;
             try
             {
                 TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
@@ -60,7 +61,7 @@ namespace Hertz.API.TestCases
                 else //Dollar and Thrifty Members Cannot be updated with the UpdateMember API so we use the HertzAwardLoyatlyCurrency API instead
                 {
                     TestStep.Start($"Make AwardLoyaltyCurrency Call", $"Member should be updated successfully and earn {points} points");
-                    AwardLoyaltyCurrencyResponseModel currencyOut = memController.AwardLoyaltyCurrency(loyaltyID, points);
+                    HertzAwardLoyaltyCurrencyResponseModel currencyOut = memController.HertzAwardLoyaltyCurrency(loyaltyID, "oagwuegbo", points, pointeventid, "Automated Appeasement", null); 
                     decimal pointsOut = memController.GetPointSumFromDB(loyaltyID);
                     Assert.AreEqual(points, pointsOut, "Expected points and pointsOut values to be equal, but the points awarded to the member and the point summary taken from the DB are not equal");
                     Assert.AreEqual(currencyOut.CurrencyBalance, points, "Expected point value put into AwardLoyaltyCurrency API Call to be equal to the member's current balance, but the point values are not equal");
@@ -69,6 +70,7 @@ namespace Hertz.API.TestCases
 
                 TestStep.Start("Make AddMemberReward Call", "AddMemberReward Call is successfully made");
                 AddMemberRewardsResponseModel rewardResponse =  memController.AddMemberReward(loyaltyID, reward.CERTIFICATETYPECODE, testMember.MemberDetails.A_EARNINGPREFERENCE);
+
                 Assert.IsNotNull(rewardResponse, "Expected populated AddMemberRewardsResponse object from AddMemberRewards call, but AddMemberRewardsResponse object returned was null");
                 TestStep.Pass("Reward is added.");
 
@@ -96,7 +98,7 @@ namespace Hertz.API.TestCases
             }
         }
       
-        [TestCaseSource(typeof(AddMemberRewardsData), "FlashSaleScenarios")]
+        //[TestCaseSource(typeof(AddMemberRewardsData), "FlashSaleScenarios")]
         public void AddMemberRewards_FlashSale(MemberModel testMember, string[] typeCodes, decimal points, IHertzProgram program)
         {
             MemberController memController = new MemberController(Database, TestStep);
@@ -105,7 +107,7 @@ namespace Hertz.API.TestCases
             DateTime checkOutDt = new DateTime(2020, 02, 25);
             DateTime checkInDt = checkOutDt.AddDays(daysAfterCheckOut);
             DateTime origBkDt = checkOutDt;
-
+            long pointeventid = 6263265;
             try
             {
                 TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
@@ -122,7 +124,7 @@ namespace Hertz.API.TestCases
                 TestStep.Pass("Member was added successfully and member object was returned", memberOut.ReportDetail());
 
                 TestStep.Start($"Make AwardLoyaltyCurrency Call", $"Member should be updated successfully and earn {points} points");
-                AwardLoyaltyCurrencyResponseModel currencyOut = memController.AwardLoyaltyCurrency(loyaltyID, points);
+                HertzAwardLoyaltyCurrencyResponseModel currencyOut = memController.HertzAwardLoyaltyCurrency(loyaltyID, "oagwuegbo", points, pointeventid, "Automated Appeasement", null);
                 decimal pointsOut = memController.GetPointSumFromDB(loyaltyID);
                 Assert.AreEqual(points, pointsOut, "Expected points and pointsOut values to be equal, but the points awarded to the member and the point summary taken from the DB are not equal");
                 Assert.AreEqual(currencyOut.CurrencyBalance, points, "Expected point value put into AwardLoyaltyCurrency API Call to be equal to the member's current balance, but the point values are not equal");
@@ -167,6 +169,7 @@ namespace Hertz.API.TestCases
             RewardController rewardController = new RewardController(Database, TestStep);
             RewardDefModel reward = rewardController.GetRandomRewardDef(program);
             decimal points = Math.Round(Math.Max(0, (reward.HOWMANYPOINTSTOEARN - (reward.HOWMANYPOINTSTOEARN * 0.5M))));
+            long pointeventid = 6263265;
             try
             {
                 TestStep.Start("Assing Member unique LoyaltyIds for each virtual card", "Unique LoyaltyIds should be assigned");
@@ -183,7 +186,7 @@ namespace Hertz.API.TestCases
                 TestStep.Pass("Member was added successfully and member object was returned", memberOut.ReportDetail());
 
                 TestStep.Start($"Make AwardLoyaltyCurrency Call", $"Member should be updated successfully and earn {points} points");
-                AwardLoyaltyCurrencyResponseModel currencyOut = memController.AwardLoyaltyCurrency(loyaltyID, points);
+                HertzAwardLoyaltyCurrencyResponseModel currencyOut = memController.HertzAwardLoyaltyCurrency(loyaltyID, "oagwuegbo", points, pointeventid, "Automated Appeasement", null);
                 decimal pointsOut = memController.GetPointSumFromDB(loyaltyID);
                 Assert.AreEqual(points, pointsOut, "Expected points and pointsOut values to be equal, but the points awarded to the member and the point summary taken from the DB are not equal");
                 Assert.AreEqual(currencyOut.CurrencyBalance, points, "Expected point value put into AwardLoyaltyCurrency API Call to be equal to the member's current balance, but the point values are not equal");

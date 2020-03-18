@@ -271,14 +271,24 @@ namespace Hertz.API.Controllers
                 }
             }
         }
-        public void GetMemberRewards(string loyaltyID)
+        public List<GetMemberRewardsResponseModel> GetMemberRewards(string loyaltyID)
         {
             using (ConsoleCapture capture = new ConsoleCapture())
             {
+                List<GetMemberRewardsResponseModel> getMemberRewardsOut = new List<GetMemberRewardsResponseModel>();
+                MemberRewardsModel memberRewardsOut = default;
                 try
                 {
-                    var lwGetMemberRewards = lwSvc.GetMemberRewards(loyaltyID, null, null, null, null, null, null, out double time);
-                    //return lwGetMemberRewards;
+                    var lwGetMemberRewards = lwSvc.GetMemberRewards("0809688", null, null, null, null, null, null, out double time);
+                    foreach (var lwGMR in lwGetMemberRewards)
+                    {
+                        GetMemberRewardsResponseModel temp = LODConvert.FromLW<GetMemberRewardsResponseModel>(lwGMR);
+                        memberRewardsOut = LODConvert.FromLW<MemberRewardsModel>(lwGMR.MemberRewardInfo[0]);
+                        temp.MemberRewardsInfo = new List<MemberRewardsModel>();
+                        temp.MemberRewardsInfo.Add(memberRewardsOut);
+                        getMemberRewardsOut.Add(temp);
+                        memberRewardsOut = default;
+                    }
                 }
                 catch (LWClientException ex)
                 {
@@ -288,6 +298,8 @@ namespace Hertz.API.Controllers
                 {
                     stepContext.AddAttachment(new Attachment("GetMemberPromotionCount", capture.Output, Attachment.Type.Text));
                 }
+                return getMemberRewardsOut;
+
             }
         }
         #endregion

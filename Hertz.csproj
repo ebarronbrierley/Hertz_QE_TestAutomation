@@ -54,6 +54,7 @@
     <Compile Include="API\DataModels\AddMemberRewardsResponseModel.cs" />
     <Compile Include="API\DataModels\AwardLoyaltyCurrencyResponseModel.cs" />
     <Compile Include="API\DataModels\ExpectedPointEvent.cs" />
+    <Compile Include="API\DataModels\GetMemberRewardsResponseModel.cs" />
     <Compile Include="API\DataModels\HertzAwardLoyaltyCurrencyResponseModel.cs" />
     <Compile Include="API\DataModels\HertzProgram.cs" />
     <Compile Include="API\DataModels\MemberAccountSummaryModel.cs" />
