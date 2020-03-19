@@ -163,7 +163,29 @@ namespace Hertz.API.Controllers
             }
             
         }
-
+        public long CancelMemberReward(string memberRewardId, string programCode, string resvId, DateTime? chkoutDt,
+                                        string chkoutAreanum, string chkoutLocNum, string chkoutLocId, string externalId)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    return lwSvc.CancelMemberReward(Convert.ToInt64(memberRewardId), resvId, chkoutDt, chkoutAreanum, chkoutLocNum, chkoutLocId, programCode, externalId, out double time);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("CancelMemberReward", capture.Output, Attachment.Type.Text));
+                }
+            }
+        }
         public AwardLoyaltyCurrencyResponseModel AwardLoyaltyCurrency(string loyaltyID, decimal points)
         {
             using (ConsoleCapture capture = new ConsoleCapture())
@@ -279,7 +301,7 @@ namespace Hertz.API.Controllers
                 MemberRewardsModel memberRewardsOut = default;
                 try
                 {
-                    var lwGetMemberRewards = lwSvc.GetMemberRewards("0809688", null, null, null, null, null, null, out double time);
+                    var lwGetMemberRewards = lwSvc.GetMemberRewards(loyaltyID, null, null, null, null, null, null, out double time);
                     foreach (var lwGMR in lwGetMemberRewards)
                     {
                         GetMemberRewardsResponseModel temp = LODConvert.FromLW<GetMemberRewardsResponseModel>(lwGMR);
@@ -296,7 +318,7 @@ namespace Hertz.API.Controllers
                 }
                 finally
                 {
-                    stepContext.AddAttachment(new Attachment("GetMemberPromotionCount", capture.Output, Attachment.Type.Text));
+                    stepContext.AddAttachment(new Attachment("GetMemberRewards", capture.Output, Attachment.Type.Text));
                 }
                 return getMemberRewardsOut;
 
@@ -326,18 +348,21 @@ namespace Hertz.API.Controllers
         }
         public  MemberModel GetRandomFromDB(long memberStatus, IHertzTier tier = null)
         {
-            StringBuilder query = new StringBuilder($"select * from {MemberModel.TableName} SAMPLE(10) mem where mem.MEMBERSTATUS = {memberStatus}");
-            if(tier != null)
+            StringBuilder sb = new StringBuilder();
+            //sample is percentage
+            string sql = @"
+select lm.*
+  from BP_HTZ.LW_LOYALTYMEMBER SAMPLE(1) lm 
+  join bp_htz.ats_memberdetails md on lm.ipcode = md.a_ipcode
+
+ where lm.MEMBERSTATUS = 1
+";
+            sb.Append(sql);
+            if (tier != null)
             {
-                query.Append(" and ");
-                query.Append($"(select a_earningpreference from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) = '{tier.ParentProgram.EarningPreference}'");
-                query.Append(" and ");
-                if(!String.IsNullOrEmpty(tier.Code))
-                    query.Append($"(select a_tiercode from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) = '{tier.Code}'");
-                else
-                    query.Append($"(select a_tiercode from {MemberDetailsModel.TableName} where A_IPCODE = mem.IPCODE) is null");
+                sb.Append(String.Format(" and md.a_earningpreference = 'N1' and md.a_tiercode = '{0}'  ", tier.Code));
             }
-            return GetFromDB(ipCodeQuery: query.ToString());
+            return GetFromDB(ipCodeQuery: sb.ToString());
         } 
         public MemberModel GetRandomMemberDBForMemberPromotion(long memberStatus)
         {
@@ -375,7 +400,7 @@ namespace Hertz.API.Controllers
             StringBuilder query = new StringBuilder();
             query.Append($"select * from {MemberRewardsModel.TableName}");
 
-            if (ipcode == null || memberrewardid == null) return new List<MemberRewardsModel>();
+            if (ipcode == null && memberrewardid == null) return new List<MemberRewardsModel>();
 
             query.Append($" where ");
             List<string> queryParams = new List<string>();
@@ -506,6 +531,7 @@ namespace Hertz.API.Controllers
             member.ALTERNATEID = vc.LOYALTYIDNUMBER;
             return member;
         }
+
         public static MemberDetailsModel GenerateMemberDetails(MemberModel member, IHertzTier tier = null)
         {
             MemberDetailsModel details = StrongRandom.GenerateRandom<MemberDetailsModel>();

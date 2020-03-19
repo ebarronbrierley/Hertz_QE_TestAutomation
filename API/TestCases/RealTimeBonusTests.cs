@@ -19,17 +19,17 @@ namespace Hertz.API.TestCases
     [TestFixture]
     public class Bonuses : BrierleyTestFixture
     {
-        [Category("Bonus_Positive")]
-        [Category("Bonus")]
-        [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")]
-        [TestCaseSource(typeof(GPRAAABonusActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(ACIActivation800Activity), "PositiveScenarios")]
-        [TestCaseSource(typeof(HorizonCardPointsActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(OngoingEMEABirthdayActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "PositiveScenarios")]
-        [TestCaseSource(typeof(LapsedOnGoingActivity), "PositiveScenarios")]
+        //[Category("Bonus_Positive")]
+        //[Category("Bonus")]
+        //[TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(EUSchneider3x2019Bonus), "PositiveScenarios")]
+        //[TestCaseSource(typeof(GPRAAABonusActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(ACIActivation800Activity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(HorizonCardPointsActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(OngoingEMEABirthdayActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "PositiveScenarios")]
+        //[TestCaseSource(typeof(LapsedOnGoingActivity), "PositiveScenarios")]
         public void RealTime_Bonus_Positive(MemberModel member, TxnHeaderModel[] transactionsIn, ExpectedPointEvent[] expectedPointEvents, string[] requiredPromotionCodes)
         {
             //Currently there are no async rules for Hertz should be all ran by return of UpdateMember
@@ -154,17 +154,17 @@ namespace Hertz.API.TestCases
 
         //[Category("Bonus_Negative")]
         //[Category("Bonus")]
-        [TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "NegativeScenarios")]
-        [TestCaseSource(typeof(Corp550Points_2016Activity), "NegativeScenarios")]
-        [TestCaseSource(typeof(EUSchneider3x2019Bonus), "NegativeScenarios")]
-        [TestCaseSource(typeof(GPRAAABonusActivity), "NegativeScenarios")]
-        [TestCaseSource(typeof(ACIActivation800Activity), "NegativeScenarios")]
-        [TestCaseSource(typeof(HorizonCardPointsActivity), "NegativeScenarios")]
-        [TestCaseSource(typeof(OngoingEMEABirthdayActivity), "NegativeScenarios")]
-        [TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "NegativeScenarios")]
-        [TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "NegativeScenarios")]
-        [TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "NegativeScenarios")]
-        [TestCaseSource(typeof(LapsedOnGoingActivity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(CorpNewMember550PointsOngoingActivity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(Corp550Points_2016Activity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(EUSchneider3x2019Bonus), "NegativeScenarios")]
+        //[TestCaseSource(typeof(GPRAAABonusActivity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(ACIActivation800Activity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(HorizonCardPointsActivity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(OngoingEMEABirthdayActivity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(TopGolf_2019_GPR2XBonus), "NegativeScenarios")]
+        //[TestCaseSource(typeof(VisaInfinite10RGBonusActivity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(EUCorp800Points_OngoingActivity), "NegativeScenarios")]
+        //[TestCaseSource(typeof(LapsedOnGoingActivity), "NegativeScenarios")]
         public void RealTime_Bonus_Negative(MemberModel member, TxnHeaderModel[] transactionsIn, ExpectedPointEvent[] pointEventsNotPresent, string[] requiredPromotionCodes = null)
         {
             int ruleTriggerWaitMS = 1000;

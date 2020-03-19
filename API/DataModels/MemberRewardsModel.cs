@@ -11,6 +11,11 @@ namespace Hertz.API.DataModels
 {
     public class MemberRewardsModel
     {
+        public sealed class OrderStatus
+        {
+            public static readonly string Cancelled = "Cancelled";
+        }
+
         public const string TableName = "BP_HTZ.LW_MEMBERREWARDS";
         [ModelAttribute("Id", ReportOption.Print)]
         public decimal ID { get; set; }
@@ -22,9 +27,11 @@ namespace Hertz.API.DataModels
         public long? FULFILLMENTOPTION { get; set; }
         [ModelAttribute("MemberId", ReportOption.Print)]
         public decimal MEMBERID { get; set; }
+        public long MEMBERREWARDID { get; set; }
         public decimal PRODUCTID { get; set; }
         public decimal PRODUCTVARIANTID { get; set; }
         public DateTime DATEISSUED { get; set; }
+        [ModelAttribute("ExpirationDate", ReportOption.Print)]
         public DateTime? EXPIRATION { get; set; }
         public DateTime? FULFILLMENTDATE { get; set; }
         public DateTime? REDEMPTIONDATE { get; set; }
