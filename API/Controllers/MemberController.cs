@@ -12,6 +12,7 @@ using Brierley.LoyaltyWare.ClientLib.DomainModel.Framework;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
 using System.Diagnostics;
 using System.Collections;
+using Hertz.Database.DataModels;
 
 namespace Hertz.API.Controllers
 {
