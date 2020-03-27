@@ -45,12 +45,12 @@ namespace Hertz.API.DataModels
             } 
         }
 
-        public IHertzTier RegularGold { get { return new Tier(this, "Regular Gold", "RG", 0M, 12, 2400); } }
-        public IHertzTier FiveStar { get { return new Tier( this, "5-Star", "FG", 0.25M, 20, 4000); } }
-        public IHertzTier PresidentsCircle { get { return new Tier(this, "Presidents Circle", "PC", 0.5M, 0, 0); } }
-        public IHertzTier Platinum { get { return new Tier(this, "Platinum", "PL", 0.5M, 0, 0); } }
-        public IHertzTier PlatinumSelect {  get { return new Tier(this, "Platinum Select", "PS", 0.5M, 0, 0); } }
-        public IHertzTier PlatinumVIP { get { return new Tier(this, "Platinum VIP", "VP", 0M, 0, 0); } }
+        public IHertzTier RegularGold { get { return new Tier(this, "Regular Gold", "RG", 0M, 12, 2400,1); } }
+        public IHertzTier FiveStar { get { return new Tier( this, "5-Star", "FG", 0.25M, 20, 4000,2); } }
+        public IHertzTier PresidentsCircle { get { return new Tier(this, "Presidents Circle", "PC", 0.5M, 0, 0,3); } }
+        public IHertzTier Platinum { get { return new Tier(this, "Platinum", "PL", 0.5M, 0, 0,4); } }
+        public IHertzTier PlatinumSelect {  get { return new Tier(this, "Platinum Select", "PS", 0.5M, 0, 0,5); } }
+        public IHertzTier PlatinumVIP { get { return new Tier(this, "Platinum VIP", "VP", 0M, 0, 0,6); } }
 
 
         public GoldPointsRewards()
@@ -118,6 +118,8 @@ namespace Hertz.API.DataModels
 
         public int RevenueToNextTier { get; private set; }
 
+        public int Rank { get; set; }
+
         public Tier(IHertzProgram parent, string Name, string Code, decimal EarningRateModifier , int rentalsToNextTier, int revenueToNextTier)
         {
             this.ParentProgram = parent;
@@ -126,6 +128,19 @@ namespace Hertz.API.DataModels
             this.EarningRateModifier = EarningRateModifier;
             this.RentalsToNextTier = rentalsToNextTier;
             this.RevenueToNextTier = revenueToNextTier;
+            this.Rank = 1;
+        }
+
+        public Tier(IHertzProgram parent, string Name, string Code, decimal EarningRateModifier,
+            int rentalsToNextTier, int revenueToNextTier, int rank)
+        {
+            this.ParentProgram = parent;
+            this.Name = Name;
+            this.Code = Code;
+            this.EarningRateModifier = EarningRateModifier;
+            this.RentalsToNextTier = rentalsToNextTier;
+            this.RevenueToNextTier = revenueToNextTier;
+            this.Rank = rank;
         }
     }
 
@@ -139,6 +154,7 @@ namespace Hertz.API.DataModels
         decimal CARDTYPE { get; }
         IEnumerable<IHertzTier> Tiers { get; }
     }
+
     public interface IHertzTier
     {
         IHertzProgram ParentProgram { get; }
@@ -147,6 +163,9 @@ namespace Hertz.API.DataModels
         decimal EarningRateModifier { get; }
         int RentalsToNextTier { get; }
         int RevenueToNextTier { get; }
-
+        /// <summary>
+        /// Used to order the tiers for tiering testing
+        /// </summary>
+        int Rank { get; }
     }
 }

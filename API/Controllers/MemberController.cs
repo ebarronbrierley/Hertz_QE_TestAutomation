@@ -595,5 +595,33 @@ select lm.*
             }
             return hertzTransferPoints;
         }
+
+        public HertzUpdateTierResponseModel HertzUpdateTier(string loyaltyMemberId, string agent, string newTier, string newTierEndDate, string marketingCode)
+        {
+            HertzUpdateTierResponseModel htzUpdateTier = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwHtzUpdateTier = lwSvc.HertzUpdateTier(loyaltyMemberId, agent, newTier, 
+                                            newTierEndDate, marketingCode, String.Empty, out double time);
+
+                    htzUpdateTier = LODConvert.FromLW<HertzUpdateTierResponseModel>(lwHtzUpdateTier);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("HertzUpdateTier", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return htzUpdateTier;
+        }
     }
 }
