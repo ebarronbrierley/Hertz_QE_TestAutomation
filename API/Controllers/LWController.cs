@@ -2,6 +2,7 @@
 using Brierley.TestAutomation.Core.Database;
 using Brierley.TestAutomation.Core.Reporting;
 using Brierley.TestAutomation.Core.Utilities;
+using Hertz.API.DataModels;
 using Hertz.API.Utilities;
 using System;
 using System.Collections.Generic;
@@ -50,5 +51,33 @@ namespace Hertz.API.Controllers
                 }
             }
         }
+
+        public HertzGetCSAgentResponseModel HertzGetCSAgent(string agent)
+        {
+            HertzGetCSAgentResponseModel hertzGetCSAgent = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwTransferPoints = lwSvc.HertzGetCSAgent(agent, String.Empty, out double time);
+                    hertzGetCSAgent = LODConvert.FromLW<HertzGetCSAgentResponseModel>(lwTransferPoints);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("HertzGetCSAgent", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return hertzGetCSAgent;
+        }
+
+
     }
 }
