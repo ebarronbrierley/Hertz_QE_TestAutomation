@@ -56,6 +56,7 @@
     <Compile Include="API\DataModels\AwardLoyaltyCurrencyResponseModel.cs" />
     <Compile Include="API\DataModels\ExpectedPointEvent.cs" />
     <Compile Include="API\DataModels\HertzAwardLoyaltyCurrencyResponseModel.cs" />
+    <Compile Include="API\DataModels\HertzGetCSAgentResponseModel.cs" />
     <Compile Include="API\DataModels\HertzProgram.cs" />
     <Compile Include="API\DataModels\HertzTransferPointsResponseModel.cs" />
     <Compile Include="API\DataModels\HertzUpdateTierResponseModel.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="API\TestCases\AddMemberRewards.cs" />
     <Compile Include="API\TestCases\AddMemberTests.cs" />
     <Compile Include="API\TestCases\GetMemberPromotionsCountTests.cs" />
+    <Compile Include="API\TestCases\HertzGetCSAgentTests.cs" />
     <Compile Include="API\TestCases\HertzTransferPointsTests.cs" />
     <Compile Include="API\TestCases\HTZUpdateTierTests.cs" />
     <Compile Include="API\TestData\CancelMemberRewardsTestData.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="API\TestCases\GetMemberPromotionTests.cs" />
     <Compile Include="API\TestData\GetAccountSummaryTestData.cs" />
     <Compile Include="API\TestData\GetMembersTestData.cs" />
+    <Compile Include="API\TestData\HertzGetCSAgentTestData.cs" />
     <Compile Include="API\TestData\HertzTransferPointsTestData.cs" />
     <Compile Include="API\TestData\HTZUpdateTierTestData.cs" />
     <Compile Include="API\TestData\RealTimeBonuses\ACIActivation800Activity.cs" />
