@@ -38,15 +38,6 @@ namespace Hertz.API.Controllers
             RewardDefModel rewardDef = dbContext.QuerySingleRow<RewardDefModel>(query);
             return rewardDef;
         }
-        public string GetMemberRewardIdFormDB(string memberRewardStatus)
-        {
-            string query = $@"Select mr.id From bp_htz.lw_memberrewards mr
-                                Where mr.orderstatus = '{memberRewardStatus}' And mr.redemptiondate Is Not Null 
-                                Order By mr.expiration Desc";
-
-            var retVal = dbContext.QuerySingleRow(query);
-            return retVal["ID"].ToString();
-        }
 
         #endregion
     }
