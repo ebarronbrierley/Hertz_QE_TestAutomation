@@ -7,8 +7,6 @@ using Hertz.API.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hertz.API.Controllers
 {
@@ -78,6 +76,48 @@ namespace Hertz.API.Controllers
             return hertzGetCSAgent;
         }
 
+      
+        public List<RewardCatalogSummaryResponseModel> GetRewardCatalog(bool ?activeOnly, string tier,
+            string language,long ? categoryId, bool ? returnRewardCategory,
+            List<ContentSearchAttribute> contentSearchAttributes, int ? startIndex,
+            int ? batchSize, long ? currencyToEarnLow, long ? currencyToEarnHigh )
+        {
+            List<RewardCatalogSummaryResponseModel> rewardCatalogSummary = new List<RewardCatalogSummaryResponseModel>();
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwGetRewardsCatalog = lwSvc.GetRewardCatalog(activeOnly,tier,language, categoryId,
+                        returnRewardCategory,
+                        contentSearchAttributes!=null?
+                        contentSearchAttributes.Select(x=> 
+                        new Brierley.LoyaltyWare.ClientLib.DomainModel.Client.ContentSearchAttributesStruct
+                        {
+                             AttributeName= x.AttributeName,
+                              AttributeValue= x.AttributeValue
+                        }).ToArray():null,
+                        startIndex, batchSize, currencyToEarnLow, currencyToEarnHigh,
+                         String.Empty, out double time);
+                    foreach (var lwGetRewardCatalog in lwGetRewardsCatalog)
+                    {
+                        rewardCatalogSummary.Add(LODConvert.FromLW<RewardCatalogSummaryResponseModel>(lwGetRewardCatalog));
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetRewardCatalog", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return rewardCatalogSummary;
+        }
 
     }
 }
