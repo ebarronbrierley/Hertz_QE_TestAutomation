@@ -599,5 +599,61 @@ select lm.*
             }
             return memberAwardCurrency;
         }
+
+
+        public HertzTransferPointsResponseModel HertzTransferPoints(string loyaltyIdSource, string agent, string points, string loyaltyIdDestination, string reasoncode)
+        {
+            HertzTransferPointsResponseModel hertzTransferPoints = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwTransferPoints = lwSvc.HertzTransferPoints(loyaltyIdSource, agent, points, loyaltyIdDestination, reasoncode, String.Empty, out double time);
+
+                    hertzTransferPoints = LODConvert.FromLW<HertzTransferPointsResponseModel>(lwTransferPoints);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("HertzTransferPoints", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return hertzTransferPoints;
+        }
+
+        public HertzUpdateTierResponseModel HertzUpdateTier(string loyaltyMemberId, string agent, string newTier, string newTierEndDate, string marketingCode)
+        {
+            HertzUpdateTierResponseModel htzUpdateTier = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwHtzUpdateTier = lwSvc.HertzUpdateTier(loyaltyMemberId, agent, newTier, 
+                                            newTierEndDate, marketingCode, String.Empty, out double time);
+
+                    htzUpdateTier = LODConvert.FromLW<HertzUpdateTierResponseModel>(lwHtzUpdateTier);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("HertzUpdateTier", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return htzUpdateTier;
+        }
     }
 }
