@@ -186,6 +186,31 @@ namespace Hertz.API.Controllers
                 }
             }
         }
+        public MemberRewardSummaryModel GetMemberRewardSummaryById(long memberRewardId, string language, string programCode, string externalId)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                MemberRewardSummaryModel memberRewardsModelOut = default;
+                try
+                {
+                    var lwOut = lwSvc.GetMemberRewardSummaryById(memberRewardId, language, programCode, externalId, out double time);
+                    memberRewardsModelOut = LODConvert.FromLW<MemberRewardSummaryModel>(lwOut.MemberRewardSummary);
+                    return memberRewardsModelOut;
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberRewardSummaryById", capture.Output, Attachment.Type.Text));
+                }
+            }
+        }
         public AwardLoyaltyCurrencyResponseModel AwardLoyaltyCurrency(string loyaltyID, decimal points)
         {
             using (ConsoleCapture capture = new ConsoleCapture())
@@ -380,7 +405,14 @@ select lm.*
             return dbContext.Query<MemberRewardsModel>(query.ToString());
         }
 
+        public IEnumerable<MemberRewardSummaryModel> GetMemberRewardsummaryFromDB(decimal? ipcode, long? memberrewardid)
+        {
+            string query = $@"select rd.howmanypointstoearn as POINTSCONSUMED, rd.name as REWARDNAME, mr.dateissued, mr.expiration from BP_HTZ.Lw_Memberrewards mr 
+                                inner join BP_HTZ.Lw_Rewardsdef rd on rd.id = mr.rewarddefid
+                                where mr.ID = {memberrewardid} and mr.memberid = {ipcode}";
 
+            return dbContext.Query<MemberRewardSummaryModel>(query.ToString());
+        }
 
         public decimal GetPointSumFromDB(string loyaltyid)
         {
@@ -566,6 +598,62 @@ select lm.*
                 }
             }
             return memberAwardCurrency;
+        }
+
+
+        public HertzTransferPointsResponseModel HertzTransferPoints(string loyaltyIdSource, string agent, string points, string loyaltyIdDestination, string reasoncode)
+        {
+            HertzTransferPointsResponseModel hertzTransferPoints = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwTransferPoints = lwSvc.HertzTransferPoints(loyaltyIdSource, agent, points, loyaltyIdDestination, reasoncode, String.Empty, out double time);
+
+                    hertzTransferPoints = LODConvert.FromLW<HertzTransferPointsResponseModel>(lwTransferPoints);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("HertzTransferPoints", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return hertzTransferPoints;
+        }
+
+        public HertzUpdateTierResponseModel HertzUpdateTier(string loyaltyMemberId, string agent, string newTier, string newTierEndDate, string marketingCode)
+        {
+            HertzUpdateTierResponseModel htzUpdateTier = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwHtzUpdateTier = lwSvc.HertzUpdateTier(loyaltyMemberId, agent, newTier, 
+                                            newTierEndDate, marketingCode, String.Empty, out double time);
+
+                    htzUpdateTier = LODConvert.FromLW<HertzUpdateTierResponseModel>(lwHtzUpdateTier);
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("HertzUpdateTier", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return htzUpdateTier;
         }
     }
 }
