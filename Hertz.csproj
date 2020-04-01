@@ -55,6 +55,7 @@
     <Compile Include="API\DataModels\AddMemberRewardsResponseModel.cs" />
     <Compile Include="API\DataModels\AwardLoyaltyCurrencyResponseModel.cs" />
     <Compile Include="API\DataModels\ExpectedPointEvent.cs" />
+    <Compile Include="API\DataModels\GetMemberRewardsResponseModel.cs" />
     <Compile Include="API\DataModels\HertzAwardLoyaltyCurrencyResponseModel.cs" />
     <Compile Include="API\DataModels\HertzGetCSAgentResponseModel.cs" />
     <Compile Include="API\DataModels\HertzProgram.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="API\DataModels\MemberPreferencesModel.cs" />
     <Compile Include="API\DataModels\MemberPromotionModel.cs" />
     <Compile Include="API\DataModels\MemberRewardsModel.cs" />
+    <Compile Include="API\DataModels\MemberRewardSummaryModel.cs" />
     <Compile Include="API\DataModels\PointEventModel.cs" />
     <Compile Include="API\DataModels\PointTransactionModel.cs" />
     <Compile Include="API\DataModels\PromotionModel.cs" />
@@ -74,8 +76,10 @@
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
     <Compile Include="API\TestCases\CancelMemberRewardTests.cs" />
+    <Compile Include="API\TestCases\GetMemberRewardSummaryByIdTests.cs" />
     <Compile Include="API\TestCases\GetLoyaltyEventNamesTestCase.cs" />
     <Compile Include="API\TestCases\GetRewardCatalogTests.cs" />
+    <Compile Include="API\TestCases\GetMemberRewardsTests.cs" />
     <Compile Include="API\TestCases\HertzAwardLoyaltyCurrencyTests.cs" />
     <Compile Include="API\TestCases\AddMemberPromotionsTests.cs" />
     <Compile Include="API\TestCases\AddMemberRewards.cs" />
@@ -95,6 +99,7 @@
     <Compile Include="API\TestCases\RealTimeBonusTests.cs" />
     <Compile Include="API\TestCases\UpdateMemberTests.cs" />
     <Compile Include="API\TestData\GetRewardCatalogTestData.cs" />
+    <Compile Include="API\TestData\GetMemberRewardSummaryByIdTestData.cs" />
     <Compile Include="API\TestData\HertzAwardLoyaltyCurrencyTestData.cs" />
     <Compile Include="API\TestData\AddMemberPromotionTestData.cs" />
     <Compile Include="API\TestData\AddMemberTestData.cs" />
@@ -120,6 +125,7 @@
     <Compile Include="API\Utilities\LODConvert.cs" />
     <Compile Include="API\Utilities\LWServiceException.cs" />
     <Compile Include="AssemblyInitializer.cs" />
+    <Compile Include="BrierleyParallelTestFixture.cs" />
     <Compile Include="BrierleyTestFixture.cs" />
     <Compile Include="Database\DataModels\CSAgentModel.cs" />
     <Compile Include="Database\DataModels\NovaLoadsModel.cs" />
