@@ -27,9 +27,11 @@ namespace Hertz.API.DataModels
         public long? FULFILLMENTOPTION { get; set; }
         [ModelAttribute("MemberId", ReportOption.Print)]
         public decimal MEMBERID { get; set; }
+        public long MEMBERREWARDID { get; set; }
         public decimal PRODUCTID { get; set; }
         public decimal PRODUCTVARIANTID { get; set; }
         public DateTime DATEISSUED { get; set; }
+        [ModelAttribute("ExpirationDate", ReportOption.Print)]
         public DateTime? EXPIRATION { get; set; }
         public DateTime? FULFILLMENTDATE { get; set; }
         public DateTime? REDEMPTIONDATE { get; set; }

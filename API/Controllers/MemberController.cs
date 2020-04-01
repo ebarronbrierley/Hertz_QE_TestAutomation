@@ -12,6 +12,7 @@ using Brierley.LoyaltyWare.ClientLib.DomainModel.Framework;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
 using System.Diagnostics;
 using System.Collections;
+using Hertz.Database.DataModels;
 
 namespace Hertz.API.Controllers
 {
@@ -318,6 +319,37 @@ namespace Hertz.API.Controllers
                 }
             }
         }
+        public List<GetMemberRewardsResponseModel> GetMemberRewards(string loyaltyID)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                List<GetMemberRewardsResponseModel> getMemberRewardsOut = new List<GetMemberRewardsResponseModel>();
+                MemberRewardsModel memberRewardsOut = default;
+                try
+                {
+                    var lwGetMemberRewards = lwSvc.GetMemberRewards(loyaltyID, null, null, null, null, null, null, out double time);
+                    foreach (var lwGMR in lwGetMemberRewards)
+                    {
+                        GetMemberRewardsResponseModel temp = LODConvert.FromLW<GetMemberRewardsResponseModel>(lwGMR);
+                        memberRewardsOut = LODConvert.FromLW<MemberRewardsModel>(lwGMR.MemberRewardInfo[0]);
+                        temp.MemberRewardsInfo = new List<MemberRewardsModel>();
+                        temp.MemberRewardsInfo.Add(memberRewardsOut);
+                        getMemberRewardsOut.Add(temp);
+                        memberRewardsOut = default;
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberRewards", capture.Output, Attachment.Type.Text));
+                }
+                return getMemberRewardsOut;
+
+            }
+        }
         #endregion
 
         #region Database Methods
@@ -394,7 +426,7 @@ select lm.*
             StringBuilder query = new StringBuilder();
             query.Append($"select * from {MemberRewardsModel.TableName}");
 
-            if (ipcode == null || memberrewardid == null) return new List<MemberRewardsModel>();
+            if (ipcode == null && memberrewardid == null) return new List<MemberRewardsModel>();
 
             query.Append($" where ");
             List<string> queryParams = new List<string>();
