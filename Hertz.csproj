@@ -45,6 +45,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Controllers\LWController.cs" />
     <Compile Include="API\Controllers\MemberController.cs" />
     <Compile Include="API\Controllers\PointController.cs" />
     <Compile Include="API\Controllers\PromotionController.cs" />
@@ -56,13 +57,17 @@
     <Compile Include="API\DataModels\ExpectedPointEvent.cs" />
     <Compile Include="API\DataModels\GetMemberRewardsResponseModel.cs" />
     <Compile Include="API\DataModels\HertzAwardLoyaltyCurrencyResponseModel.cs" />
+    <Compile Include="API\DataModels\HertzGetCSAgentResponseModel.cs" />
     <Compile Include="API\DataModels\HertzProgram.cs" />
+    <Compile Include="API\DataModels\HertzTransferPointsResponseModel.cs" />
+    <Compile Include="API\DataModels\HertzUpdateTierResponseModel.cs" />
     <Compile Include="API\DataModels\MemberAccountSummaryModel.cs" />
     <Compile Include="API\DataModels\MemberDetailsModel.cs" />
     <Compile Include="API\DataModels\MemberModel.cs" />
     <Compile Include="API\DataModels\MemberPreferencesModel.cs" />
     <Compile Include="API\DataModels\MemberPromotionModel.cs" />
     <Compile Include="API\DataModels\MemberRewardsModel.cs" />
+    <Compile Include="API\DataModels\MemberRewardSummaryModel.cs" />
     <Compile Include="API\DataModels\PointEventModel.cs" />
     <Compile Include="API\DataModels\PointTransactionModel.cs" />
     <Compile Include="API\DataModels\PromotionModel.cs" />
@@ -70,14 +75,20 @@
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
     <Compile Include="API\TestCases\CancelMemberRewardTests.cs" />
+    <Compile Include="API\TestCases\GetMemberRewardSummaryByIdTests.cs" />
+    <Compile Include="API\TestCases\GetLoyaltyEventNamesTestCase.cs" />
     <Compile Include="API\TestCases\GetMemberRewardsTests.cs" />
     <Compile Include="API\TestCases\HertzAwardLoyaltyCurrencyTests.cs" />
     <Compile Include="API\TestCases\AddMemberPromotionsTests.cs" />
     <Compile Include="API\TestCases\AddMemberRewards.cs" />
     <Compile Include="API\TestCases\AddMemberTests.cs" />
     <Compile Include="API\TestCases\GetMemberPromotionsCountTests.cs" />
+    <Compile Include="API\TestCases\HertzGetCSAgentTests.cs" />
+    <Compile Include="API\TestCases\HertzTransferPointsTests.cs" />
+    <Compile Include="API\TestCases\HTZUpdateTierTests.cs" />
     <Compile Include="API\TestData\CancelMemberRewardsTestData.cs" />
     <Compile Include="API\TestData\AddMemberRewardsData.cs" />
+    <Compile Include="API\TestData\GetLoyaltyEventNamesTestData.cs" />
     <Compile Include="API\TestData\GetMemberPromotionCountTestData.cs" />
     <Compile Include="API\TestData\GetMemberPromotionTestData.cs" />
     <Compile Include="API\TestCases\GetAccountSummaryTests.cs" />
@@ -85,12 +96,16 @@
     <Compile Include="API\TestCases\MultiThreadingTests.cs" />
     <Compile Include="API\TestCases\RealTimeBonusTests.cs" />
     <Compile Include="API\TestCases\UpdateMemberTests.cs" />
+    <Compile Include="API\TestData\GetMemberRewardSummaryByIdTestData.cs" />
     <Compile Include="API\TestData\HertzAwardLoyaltyCurrencyTestData.cs" />
     <Compile Include="API\TestData\AddMemberPromotionTestData.cs" />
     <Compile Include="API\TestData\AddMemberTestData.cs" />
     <Compile Include="API\TestCases\GetMemberPromotionTests.cs" />
     <Compile Include="API\TestData\GetAccountSummaryTestData.cs" />
     <Compile Include="API\TestData\GetMembersTestData.cs" />
+    <Compile Include="API\TestData\HertzGetCSAgentTestData.cs" />
+    <Compile Include="API\TestData\HertzTransferPointsTestData.cs" />
+    <Compile Include="API\TestData\HTZUpdateTierTestData.cs" />
     <Compile Include="API\TestData\RealTimeBonuses\ACIActivation800Activity.cs" />
     <Compile Include="API\TestData\RealTimeBonuses\BonusTestCategory.cs" />
     <Compile Include="API\TestData\RealTimeBonuses\Corp550Points_2016Activity.cs" />
