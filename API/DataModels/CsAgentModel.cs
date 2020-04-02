@@ -10,7 +10,8 @@ namespace Hertz.API.DataModels
 {
    public  enum AgentStatus
     {
-        Active = 1
+        Active = 1,
+        Invalid = 99999
     }
     public class CsAgentModel
     {
@@ -18,7 +19,7 @@ namespace Hertz.API.DataModels
 		
 		public decimal ID {get; set;}
 		[Model("RoleId", ReportOption.Print)]
-		public decimal ROLEID {get; set;}
+		public decimal? ROLEID {get; set;}
         [Model("GroupId")]
         public decimal? GROUPID {get; set;}
         [Model("AgentNumber")]

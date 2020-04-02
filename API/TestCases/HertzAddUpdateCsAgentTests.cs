@@ -72,5 +72,36 @@ namespace Hertz.API.TestCases
                 Assert.Fail();
             }
         }
+   
+
+    [TestCaseSource(typeof(HertzAddUpdateCsAgentTestData), "NegativeScenarios")]
+    public void HertzAddUpdateCsAgent_Negative(CsAgentModel csAgent, string agentRoleName,  int errorCode, string errorMessage)
+    {
+        CsAgentController CsAgentController = new CsAgentController(Database, TestStep);
+        try
+        {
+
+            CsAgentRoleModel csAgentRole = CsAgentController.GetFromDBRoleID(agentRoleName);
+            decimal caAgentRoleID = csAgentRole.ID;
+            csAgent.ROLEID = caAgentRoleID;       
+            TestStep.Start($"Make HertzAwardLoyaltyCurrency Call", $"Add member call should throw exception with error code = {errorCode}");
+            LWServiceException exception = Assert.Throws<LWServiceException>(() =>  CsAgentController.AddCsAgent(csAgent));
+            Assert.AreEqual(errorCode, exception.ErrorCode);
+            Assert.IsTrue(exception.Message.Contains(errorMessage));
+            TestStep.Pass("HertzAwardLoyaltyCurrency call threw expected exception", exception.ReportDetail());
+        }
+        catch (AssertModelEqualityException ex)
+        {
+            TestStep.Fail(ex.Message, ex.ComparisonFailures);
+            Assert.Fail();
+        }
+        catch (Exception ex)
+        {
+            TestStep.Abort(ex.Message);
+            Assert.Fail();
+        }
     }
+}
+
+
 }
