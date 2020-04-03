@@ -12,6 +12,7 @@ using Brierley.LoyaltyWare.ClientLib.DomainModel.Framework;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
 using System.Diagnostics;
 using System.Collections;
+using Brierley.LoyaltyWare.ClientLib.DomainModel;
 
 namespace Hertz.API.Controllers
 {
@@ -622,6 +623,67 @@ select lm.*
                 }
             }
             return htzUpdateTier;
+        }
+
+
+        public AddAttributeSetResponseModel AddAttributeSet( VirtualCardModel virtualCard,
+            AuctionHeaderModel auctionHeader)
+        {
+            AddAttributeSetResponseModel addAttributeSetResponse = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    string loyaltyId = virtualCard?.LOYALTYIDNUMBER ?? string.Empty;
+                    AuctionHeader attributeSet = null;
+                    if (auctionHeader != null)
+                    {
+                        attributeSet = new AuctionHeader()
+                        {
+                            AuctionEventName = auctionHeader.AuctionEventName,
+                            AuctionPointType = auctionHeader.AuctionPointType,
+                            AuctionTxnType = auctionHeader.AuctionTxnType,
+                            CDRewardID = auctionHeader.CDRewardID,
+                            HeaderGPRpts = auctionHeader.HeaderGPRpts
+                        };
+                        
+                        if (virtualCard != null)
+                        {
+                            attributeSet.AddTransientProperty("VcKey", virtualCard.VCKEY);
+                        }
+                    }
+                    
+                    var lwAddAttributeSet = lwSvc.AddAttributeSet(loyaltyId,
+                        attributeSet, String.Empty, out double time);
+                    if(lwAddAttributeSet!=null)
+                    {  
+                        addAttributeSetResponse = new AddAttributeSetResponseModel()
+                        {
+                            EarnedPoints = lwAddAttributeSet
+                                            .EarnedPoints
+                                            .Select(x => new EarnedPointResponseModel()
+                                            {
+                                                 PointType=x.PointType,
+                                                  PointValue=(decimal)(x.PointValue??0)
+                                            })
+                                            .ToList()
+                        };
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("AddAttributeSet", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return addAttributeSetResponse;
         }
     }
 }
