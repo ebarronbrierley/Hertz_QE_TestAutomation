@@ -53,7 +53,9 @@
     <Compile Include="API\Controllers\RANUMController.cs" />
     <Compile Include="API\Controllers\RewardController.cs" />
     <Compile Include="API\Controllers\TxnHeaderController.cs" />
+    <Compile Include="API\DataModels\AddAttributeSetResponseModel.cs" />
     <Compile Include="API\DataModels\AddMemberRewardsResponseModel.cs" />
+    <Compile Include="API\DataModels\AuctionHeaderModel.cs" />
     <Compile Include="API\DataModels\AwardLoyaltyCurrencyResponseModel.cs" />
     <Compile Include="API\DataModels\CsAgentModel.cs" />
     <Compile Include="API\DataModels\CsAgentRoleModel.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="API\DataModels\RewardDefModel.cs" />
     <Compile Include="API\DataModels\TxnHeaderModel.cs" />
     <Compile Include="API\DataModels\VirtualCardModel.cs" />
+    <Compile Include="API\TestCases\AddAttributeSetTests.cs" />
     <Compile Include="API\TestCases\CancelMemberRewardTests.cs" />
     <Compile Include="API\TestCases\HertzAddUpdateCsAgentTests.cs" />
     <Compile Include="API\TestCases\GetMemberRewardSummaryByIdTests.cs" />
@@ -92,6 +95,7 @@
     <Compile Include="API\TestCases\HertzGetCSAgentTests.cs" />
     <Compile Include="API\TestCases\HertzTransferPointsTests.cs" />
     <Compile Include="API\TestCases\HTZUpdateTierTests.cs" />
+    <Compile Include="API\TestData\AddAttributeSetTestData.cs" />
     <Compile Include="API\TestData\CancelMemberRewardsTestData.cs" />
     <Compile Include="API\TestData\AddMemberRewardsData.cs" />
     <Compile Include="API\TestData\GetLoyaltyEventNamesTestData.cs" />
