@@ -13,6 +13,7 @@ using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
 using System.Diagnostics;
 using System.Collections;
 using Brierley.LoyaltyWare.ClientLib.DomainModel;
+using Hertz.Database.DataModels;
 
 namespace Hertz.API.Controllers
 {
@@ -187,6 +188,31 @@ namespace Hertz.API.Controllers
                 }
             }
         }
+        public MemberRewardSummaryModel GetMemberRewardSummaryById(long memberRewardId, string language, string programCode, string externalId)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                MemberRewardSummaryModel memberRewardsModelOut = default;
+                try
+                {
+                    var lwOut = lwSvc.GetMemberRewardSummaryById(memberRewardId, language, programCode, externalId, out double time);
+                    memberRewardsModelOut = LODConvert.FromLW<MemberRewardSummaryModel>(lwOut.MemberRewardSummary);
+                    return memberRewardsModelOut;
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberRewardSummaryById", capture.Output, Attachment.Type.Text));
+                }
+            }
+        }
         public AwardLoyaltyCurrencyResponseModel AwardLoyaltyCurrency(string loyaltyID, decimal points)
         {
             using (ConsoleCapture capture = new ConsoleCapture())
@@ -294,6 +320,37 @@ namespace Hertz.API.Controllers
                 }
             }
         }
+        public List<GetMemberRewardsResponseModel> GetMemberRewards(string loyaltyID)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                List<GetMemberRewardsResponseModel> getMemberRewardsOut = new List<GetMemberRewardsResponseModel>();
+                MemberRewardsModel memberRewardsOut = default;
+                try
+                {
+                    var lwGetMemberRewards = lwSvc.GetMemberRewards(loyaltyID, null, null, null, null, null, null, out double time);
+                    foreach (var lwGMR in lwGetMemberRewards)
+                    {
+                        GetMemberRewardsResponseModel temp = LODConvert.FromLW<GetMemberRewardsResponseModel>(lwGMR);
+                        memberRewardsOut = LODConvert.FromLW<MemberRewardsModel>(lwGMR.MemberRewardInfo[0]);
+                        temp.MemberRewardsInfo = new List<MemberRewardsModel>();
+                        temp.MemberRewardsInfo.Add(memberRewardsOut);
+                        getMemberRewardsOut.Add(temp);
+                        memberRewardsOut = default;
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberRewards", capture.Output, Attachment.Type.Text));
+                }
+                return getMemberRewardsOut;
+
+            }
+        }
         #endregion
 
         #region Database Methods
@@ -370,7 +427,7 @@ select lm.*
             StringBuilder query = new StringBuilder();
             query.Append($"select * from {MemberRewardsModel.TableName}");
 
-            if (ipcode == null || memberrewardid == null) return new List<MemberRewardsModel>();
+            if (ipcode == null && memberrewardid == null) return new List<MemberRewardsModel>();
 
             query.Append($" where ");
             List<string> queryParams = new List<string>();
@@ -381,7 +438,14 @@ select lm.*
             return dbContext.Query<MemberRewardsModel>(query.ToString());
         }
 
+        public IEnumerable<MemberRewardSummaryModel> GetMemberRewardsummaryFromDB(decimal? ipcode, long? memberrewardid)
+        {
+            string query = $@"select rd.howmanypointstoearn as POINTSCONSUMED, rd.name as REWARDNAME, mr.dateissued, mr.expiration from BP_HTZ.Lw_Memberrewards mr 
+                                inner join BP_HTZ.Lw_Rewardsdef rd on rd.id = mr.rewarddefid
+                                where mr.ID = {memberrewardid} and mr.memberid = {ipcode}";
 
+            return dbContext.Query<MemberRewardSummaryModel>(query.ToString());
+        }
 
         public decimal GetPointSumFromDB(string loyaltyid)
         {
