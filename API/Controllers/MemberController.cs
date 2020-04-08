@@ -345,17 +345,17 @@ namespace Hertz.API.Controllers
             StringBuilder sb = new StringBuilder();
             //sample is percentage
             string sql = @"
-select lm.*
-  from BP_HTZ.LW_LOYALTYMEMBER SAMPLE(1) lm 
-  join bp_htz.ats_memberdetails md on lm.ipcode = md.a_ipcode
+            select lm.*
+              from BP_HTZ.LW_LOYALTYMEMBER SAMPLE(1) lm 
+              join bp_htz.ats_memberdetails md on lm.ipcode = md.a_ipcode
 
- where lm.MEMBERSTATUS = 1
-";
+             where lm.MEMBERSTATUS = 1
+            ";
             sb.Append(sql);
-            if (tier != null)
+            if (tier != null)        
             {
                 sb.Append(String.Format(" and md.a_earningpreference = 'N1' and md.a_tiercode = '{0}'  ", tier.Code));
-            }
+            }       
             return GetFromDB(ipCodeQuery: sb.ToString());
         } 
         public MemberModel GetRandomMemberDBForMemberPromotion(long memberStatus)
@@ -654,6 +654,29 @@ select lm.*
                 }
             }
             return htzUpdateTier;
+        }
+
+        public void HertzValidateToken(string loyaltyId, string token)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    lwSvc.HertzValidateToken(loyaltyId, token, String.Empty, out double time);                  
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("HertzAwardLoyaltyCurrency", capture.Output, Attachment.Type.Text));
+                }
+            }
         }
     }
 }

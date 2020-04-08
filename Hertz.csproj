@@ -45,7 +45,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-   <Compile Include="API\Controllers\LWController.cs" />
+    <Compile Include="API\Controllers\LWController.cs" />
     <Compile Include="API\Controllers\CsAgentController.cs" />
     <Compile Include="API\Controllers\MemberController.cs" />
     <Compile Include="API\Controllers\PointController.cs" />
@@ -80,6 +80,7 @@
     <Compile Include="API\TestCases\HertzAddUpdateCsAgentTests.cs" />
     <Compile Include="API\TestCases\GetMemberRewardSummaryByIdTests.cs" />
     <Compile Include="API\TestCases\GetLoyaltyEventNamesTestCase.cs" />
+    <Compile Include="API\TestCases\HertzValidateTokenTests.cs" />
     <Compile Include="API\TestCases\HertzAwardLoyaltyCurrencyTests.cs" />
     <Compile Include="API\TestCases\AddMemberPromotionsTests.cs" />
     <Compile Include="API\TestCases\AddMemberRewards.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="API\TestCases\UpdateMemberTests.cs" />
     <Compile Include="API\TestData\GetMemberRewardSummaryByIdTestData.cs" />
     <Compile Include="API\TestData\HertzAddUpdateCsAgentTestData.cs" />
+    <Compile Include="API\TestData\HertzValidateTokenTestData.cs" />
     <Compile Include="API\TestData\HertzAwardLoyaltyCurrencyTestData.cs" />
     <Compile Include="API\TestData\AddMemberPromotionTestData.cs" />
     <Compile Include="API\TestData\AddMemberTestData.cs" />
