@@ -12,6 +12,8 @@ using Brierley.LoyaltyWare.ClientLib.DomainModel.Framework;
 using Brierley.LoyaltyWare.ClientLib.DomainModel.Client;
 using System.Diagnostics;
 using System.Collections;
+using Brierley.LoyaltyWare.ClientLib.DomainModel;
+using Hertz.Database.DataModels;
 
 namespace Hertz.API.Controllers
 {
@@ -318,6 +320,37 @@ namespace Hertz.API.Controllers
                 }
             }
         }
+        public List<GetMemberRewardsResponseModel> GetMemberRewards(string loyaltyID)
+        {
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                List<GetMemberRewardsResponseModel> getMemberRewardsOut = new List<GetMemberRewardsResponseModel>();
+                MemberRewardsModel memberRewardsOut = default;
+                try
+                {
+                    var lwGetMemberRewards = lwSvc.GetMemberRewards(loyaltyID, null, null, null, null, null, null, out double time);
+                    foreach (var lwGMR in lwGetMemberRewards)
+                    {
+                        GetMemberRewardsResponseModel temp = LODConvert.FromLW<GetMemberRewardsResponseModel>(lwGMR);
+                        memberRewardsOut = LODConvert.FromLW<MemberRewardsModel>(lwGMR.MemberRewardInfo[0]);
+                        temp.MemberRewardsInfo = new List<MemberRewardsModel>();
+                        temp.MemberRewardsInfo.Add(memberRewardsOut);
+                        getMemberRewardsOut.Add(temp);
+                        memberRewardsOut = default;
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("GetMemberRewards", capture.Output, Attachment.Type.Text));
+                }
+                return getMemberRewardsOut;
+
+            }
+        }
         #endregion
 
         #region Database Methods
@@ -394,7 +427,7 @@ namespace Hertz.API.Controllers
             StringBuilder query = new StringBuilder();
             query.Append($"select * from {MemberRewardsModel.TableName}");
 
-            if (ipcode == null || memberrewardid == null) return new List<MemberRewardsModel>();
+            if (ipcode == null && memberrewardid == null) return new List<MemberRewardsModel>();
 
             query.Append($" where ");
             List<string> queryParams = new List<string>();
@@ -655,6 +688,70 @@ namespace Hertz.API.Controllers
             }
             return htzUpdateTier;
         }
+
+
+
+        public AddAttributeSetResponseModel AddAttributeSet( VirtualCardModel virtualCard,
+            AuctionHeaderModel auctionHeader)
+        {
+            AddAttributeSetResponseModel addAttributeSetResponse = default;
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    string loyaltyId = virtualCard?.LOYALTYIDNUMBER ?? string.Empty;
+                    AuctionHeader attributeSet = null;
+                    if (auctionHeader != null)
+                    {
+                        attributeSet = new AuctionHeader()
+                        {
+                            AuctionEventName = auctionHeader.AuctionEventName,
+                            AuctionPointType = auctionHeader.AuctionPointType,
+                            AuctionTxnType = auctionHeader.AuctionTxnType,
+                            CDRewardID = auctionHeader.CDRewardID,
+                            HeaderGPRpts = auctionHeader.HeaderGPRpts
+                        };
+                        
+                        if (virtualCard != null)
+                        {
+                            attributeSet.AddTransientProperty("VcKey", virtualCard.VCKEY);
+                        }
+                    }
+                    
+                    var lwAddAttributeSet = lwSvc.AddAttributeSet(loyaltyId,
+                        attributeSet, String.Empty, out double time);
+                    if(lwAddAttributeSet!=null)
+                    {  
+                        addAttributeSetResponse = new AddAttributeSetResponseModel()
+                        {
+                            EarnedPoints = lwAddAttributeSet
+                                            .EarnedPoints
+                                            .Select(x => new EarnedPointResponseModel()
+                                            {
+                                                 PointType=x.PointType,
+                                                  PointValue=(decimal)(x.PointValue??0)
+                                            })
+                                            .ToList()
+                        };
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("AddAttributeSet", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return addAttributeSetResponse;
+        }
+
+
 
         public void HertzValidateToken(string loyaltyId, string token)
         {
