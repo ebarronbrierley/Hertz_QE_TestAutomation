@@ -27,8 +27,27 @@ namespace Hertz.API.TestData
                     csAgent.STATUS = AgentStatus.Active;
                     csAgent.EMAILADDRESS = csAgent.EMAILADDRESS.ToUpper();
                     bool updateAgent = false;
-                    yield return new TestCaseData(csAgent, agentRole, updateAgent).SetName($"Add CS Agent Positive - Role : [{agentRole}]");
+                    yield return new TestCaseData(csAgent, agentRole, updateAgent).SetName($"Add CS Agent Positive - Role : [{agentRole}]  Status : [{csAgent.STATUS}]");
                 }
+
+                //foreach (var agentRole in roleName)
+                //{
+                //    CsAgentModel csAgent = CsAgentController.GenerateRandomAgent();
+                //    csAgent.STATUS = AgentStatus.Inactive;
+                //    csAgent.EMAILADDRESS = csAgent.EMAILADDRESS.ToUpper();
+                //    bool updateAgent = false;
+                //    yield return new TestCaseData(csAgent, agentRole, updateAgent).SetName($"Add CS Agent Positive - Role : [{agentRole}]  Status : [{csAgent.STATUS}]");
+                //}
+
+                //foreach (var agentRole in roleName)
+                //{
+                //    CsAgentModel csAgent = CsAgentController.GenerateRandomAgent();
+                //    csAgent.STATUS = AgentStatus.Locked;
+                //    csAgent.EMAILADDRESS = csAgent.EMAILADDRESS.ToUpper();
+                //    bool updateAgent = false;
+                //    yield return new TestCaseData(csAgent, agentRole, updateAgent).SetName($"Add CS Agent Positive - Role : [{agentRole}]  Status : [{csAgent.STATUS}]");
+                //}
+
 
                 foreach (var agentRole in roleName)
                 {
