@@ -11,6 +11,8 @@ namespace Hertz.API.DataModels
    public  enum AgentStatus
     {
         Active = 1,
+        Inactive = 0,
+        Locked = 2,
         Invalid = 99999
     }
     public class CsAgentModel
