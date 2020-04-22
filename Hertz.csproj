@@ -11,11 +11,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hertz</RootNamespace>
     <AssemblyName>Hertz</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,6 +63,7 @@
     <Compile Include="API\DataModels\ExpectedPointEvent.cs" />
     <Compile Include="API\DataModels\GetMemberRewardsResponseModel.cs" />
     <Compile Include="API\DataModels\HertzAwardLoyaltyCurrencyResponseModel.cs" />
+    <Compile Include="API\DataModels\HertzGetAccountActivitySummaryModel.cs" />
     <Compile Include="API\DataModels\HertzGetCSAgentResponseModel.cs" />
     <Compile Include="API\DataModels\HertzProgram.cs" />
     <Compile Include="API\DataModels\HertzTransferPointsResponseModel.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="API\DataModels\MemberRewardsModel.cs" />
     <Compile Include="API\DataModels\MemberRewardSummaryModel.cs" />
     <Compile Include="API\DataModels\PointEventModel.cs" />
+    <Compile Include="API\DataModels\PointsDetailModel.cs" />
     <Compile Include="API\DataModels\PointTransactionModel.cs" />
     <Compile Include="API\DataModels\PromotionModel.cs" />
     <Compile Include="API\DataModels\RewardCatalogSummaryResponseModel.cs" />
@@ -93,6 +96,7 @@
     <Compile Include="API\TestCases\AddMemberRewards.cs" />
     <Compile Include="API\TestCases\AddMemberTests.cs" />
     <Compile Include="API\TestCases\GetMemberPromotionsCountTests.cs" />
+    <Compile Include="API\TestCases\HertzGetAccountActivitySummaryTests.cs" />
     <Compile Include="API\TestCases\HertzGetCSAgentTests.cs" />
     <Compile Include="API\TestCases\HertzTransferPointsTests.cs" />
     <Compile Include="API\TestCases\HTZUpdateTierTests.cs" />
@@ -117,6 +121,7 @@
     <Compile Include="API\TestCases\GetMemberPromotionTests.cs" />
     <Compile Include="API\TestData\GetAccountSummaryTestData.cs" />
     <Compile Include="API\TestData\GetMembersTestData.cs" />
+    <Compile Include="API\TestData\HertzGetAccountActivitySummaryTestData.cs" />
     <Compile Include="API\TestData\HertzGetCSAgentTestData.cs" />
     <Compile Include="API\TestData\HertzTransferPointsTestData.cs" />
     <Compile Include="API\TestData\HTZUpdateTierTestData.cs" />

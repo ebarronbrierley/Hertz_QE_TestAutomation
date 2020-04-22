@@ -267,6 +267,60 @@ namespace Hertz.API.Controllers
             }
             return memberAccountSummaryOut;
         }
+
+        public List<HertzGetAccountActivitySummaryModel> HertzGetAccountActivitySummary(string loyaltyId, string programCode, DateTime startDate, DateTime endDate, bool getPointsHistory, bool getOtherPointHistory
+            , int summarystartindex, int batchsize, int otherStartIndex, int otherBatchSize , string externalId)
+        {
+            List <HertzGetAccountActivitySummaryModel> memberAccountActivitySummaryOut = new List<HertzGetAccountActivitySummaryModel>();
+            List<PointsDetailModel> pDetail = new List<PointsDetailModel>();
+            using (ConsoleCapture capture = new ConsoleCapture())
+            {
+                try
+                {
+                    var lwMemberPromo = lwSvc.HertzGetAccountActivitySummary(loyaltyId, programCode, startDate, endDate, getPointsHistory, getOtherPointHistory, summarystartindex
+                        , batchsize, otherStartIndex, otherBatchSize, externalId, out double time);
+                    var accountSummaryStruct = lwMemberPromo.HertzAccountActivitySummary;
+                    if (accountSummaryStruct != null && accountSummaryStruct.Any())
+                    { 
+                        for(int i = 0; i < accountSummaryStruct.Count(); i++)
+                        {
+                            var curAccountActivitySummaryOut = LODConvert.FromLW<HertzGetAccountActivitySummaryModel>(accountSummaryStruct[i]);
+                            if (curAccountActivitySummaryOut != null)
+                            { 
+                                var pointDetailStruct = accountSummaryStruct[i].PointsDetail;
+                                if (pointDetailStruct != null && pointDetailStruct.Any())
+                                {
+                                    for (int j = 0; j < pointDetailStruct.Count(); j++)
+                                    {
+                                        var pointDetailOut = LODConvert.FromLW<PointsDetailModel>(pointDetailStruct[j]);
+                                        if(pointDetailOut != null)
+                                        {
+                                            pDetail.Add(pointDetailOut);
+                                        }
+                                    }
+                                    curAccountActivitySummaryOut.pointDetails = pDetail;
+                                }
+                                memberAccountActivitySummaryOut.Add(curAccountActivitySummaryOut);
+                            }                                              
+                        }
+                    }
+                }
+                catch (LWClientException ex)
+                {
+                    throw new LWServiceException(ex.Message, ex.ErrorCode);
+                }
+                catch (Exception ex)
+                {
+                    throw new LWServiceException(ex.Message, -1);
+                }
+                finally
+                {
+                    stepContext.AddAttachment(new Attachment("HertzGetAccountActivitySummary", capture.Output, Attachment.Type.Text));
+                }
+            }
+            return memberAccountActivitySummaryOut;
+        }
+
         public List<MemberPromotionModel> GetMemberPromotion(string loyaltyId, int? startIndex, int? batchSize, bool? returnDefinition,
                                             string language, string channel, bool? returnAttributes, string externalId)
         {
@@ -505,6 +559,75 @@ namespace Hertz.API.Controllers
 
             MemberAccountSummaryModel memberAccountSummary = dbContext.QuerySingleRow<MemberAccountSummaryModel>(query.ToString());
             return memberAccountSummary;
+        }
+
+        public List<HertzGetAccountActivitySummaryModel> HertzGetMemberAccountActivitySummaryFromDB(string vckey, bool displayPoints)
+        {
+            try
+            { 
+                StringBuilder query = new StringBuilder();
+                
+                    query.Append("select h.a_txndate as Activitydate, decode(h.a_hodindicator, 0, 'RENTAL', 'HODRental') as Type, lc.a_locationname as Description, h.a_ranum as RANumber");
+                    query.Append(", 0 as Points, d.a_dispcode as DispositionCode, decode(d.a_dispcode, 0, 'NO ERROR', 'ERROR') as DispositionCodeDescription");
+                    query.Append(" from bp_htz.ats_txnheader h");
+                    query.Append(" inner join bp_htz.lw_virtualcard v on h.a_vckey = v.vckey");
+                    query.Append(" inner join bp_htz.ats_dispositioncodes d on h.a_rowkey = d.a_parentrowkey");
+                    query.Append(" left join bp_htz.ats_locations lc ");
+                    query.Append(" on NVL(h.a_chkoutlocationid, h.a_chkoutareanum||h.a_chkinlocnum) = NVL2(h.a_chkoutlocationid, lc.a_locationid, lc.a_revarealocid)");
+                    query.Append(" where 1=1");
+                    query.Append($" and v.vckey = {vckey}");
+                
+                var results = dbContext.Query<HertzGetAccountActivitySummaryModel>(query.ToString());
+                if(results != null && results.Any())
+                {
+                    if(displayPoints)
+                    {
+                        foreach(HertzGetAccountActivitySummaryModel summary in results)
+                        {
+                            var details = GetPointDetailFromDB(vckey, summary.RANUMBER);
+                            if (details != null && details.Any())
+                                summary.pointDetails = details;
+                        }
+                    }
+                    return results.ToList();
+                }                
+                else
+                    return null;
+            }
+            catch(Exception ex)
+            {
+                throw new LWServiceException(ex.Message, -1);
+            }
+        }
+
+        public List<PointsDetailModel> GetPointDetailFromDB(string vckey, string ranum)
+        {
+            try
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append("select h.a_txndate as \"DATE\", decode(lc.a_locationid, 'reprocess', pt.name || '-ReprocessActivity', pt.name) as Type");
+                query.Append(", CASE WHEN upper(pt.name) like '%BASE%' THEN lc.a_locationname ELSE pe.name END as Description, h.a_ranum as RANumber");
+                query.Append(", nvl(p.points, 0) as Points, nvl(p.notes, '') as Notes");
+                query.Append(" from bp_htz.ats_txnheader h");
+                query.Append(" inner join bp_htz.lw_virtualcard v on h.a_vckey = v.vckey");
+                query.Append(" left join bp_htz.lw_pointtransaction p on h.a_rowkey = p.rowkey");
+                query.Append(" left join bp_htz.lw_pointevent pe on p.pointeventid = pe.pointeventid");
+                query.Append(" left join bp_htz.lw_pointtype pt on pt.pointtypeid = p.pointtypeid");
+                query.Append(" left join bp_htz.ats_locations lc ");
+                query.Append(" on NVL(h.a_chkoutlocationid, h.a_chkoutareanum||h.a_chkinlocnum) = NVL2(h.a_chkoutlocationid, lc.a_locationid, lc.a_revarealocid)");
+                query.Append(" where 1=1");
+                query.Append($" and v.vckey = {vckey}");
+                query.Append($" and h.a_ranum = '{ranum}'");
+                var results = dbContext.Query<PointsDetailModel>(query.ToString());
+                if (results != null && results.Any())
+                    return dbContext.Query<PointsDetailModel>(query.ToString()).ToList();
+                else
+                    return null;
+            }
+            catch (Exception ex)
+            {
+                throw new LWServiceException(ex.Message, -1);
+            }
         }
 
         public MemberModel AssignUniqueLIDs(MemberModel member)
